@@ -1,0 +1,142 @@
+/* TopNavbar.module.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-radius: 0 0 16px 16px;
+}
+
+.logoSection {
+    display: flex;
+    align-items: center;
+    color: black;
+    cursor: pointer;
+}
+
+.logo {
+    height: 40px;
+    margin-right: 12px;
+}
+
+.brand {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.authButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.register {
+    background: linear-gradient(135deg, #7B61FF, #5A3FFF);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.register:hover {
+    background: linear-gradient(135deg, #6a4aff, #4831ff);
+}
+
+.login {
+    background-color: #E5ECFF;
+    color: #1E2A4A;
+    border: 1px solid #b4c7ff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login:hover {
+    background-color: #b4c7ff;
+}
+
+.navLinks {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    width: 30%;
+}
+
+.navLinks a {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.tool{
+    display: flex;
+    flex-direction: row;
+
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    color: black;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.tool li {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.tool li:hover {
+    color: #2D8CFF;
+}
+
+
+.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.navLinks a:hover {
+    color: #2D8CFF;
+}
+
+/* Всплывающее окно для каждой отдельной ссылки, но растягиваем его на весь блок navLinks */
+.tooltip {
+    position: absolute;
+    top: 100%; /* Подсказка будет располагаться под блоком ссылок */
+    left: 0;
+    width: 100%; /* Подсказка растягивается на всю ширину блока navLinks */
+    background-color: rgba(255, 255, 255); /* Легкий полупрозрачный фон */
+    color: black;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.navLinks:hover .tooltip {
+    opacity: 1; /* Показываем подсказку, когда находимся на блоке navLinks */
+    pointer-events: auto; /* Подсказка становится кликабельной */
+}

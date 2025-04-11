@@ -1,0 +1,49 @@
+.banner {
+        /*padding: 32px 40px;*/
+    background: linear-gradient(135deg, #5145FF, #2A2AC0);
+    color: white;
+    border-radius: 0 0 16px 16px;
+    margin-left: 15%;
+    width: 70%;
+}
+
+.contentWrapper {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.searchWrapper {
+    margin-bottom: 12px;
+}
+
+.input {
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    width: 100%;
+    max-width: 400px;
+    font-size: 14px;
+}
+
+.popular {
+    font-size: 14px;
+    margin-right: 240px;
+    color: #fff;
+}
+
+.link {
+    color: #cfd9ff;
+    cursor: pointer;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
