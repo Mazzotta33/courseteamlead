@@ -1,0 +1,134 @@
+.chatWindow {
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    height: 100%;
+    overflow: hidden;
+}
+
+.noChatSelected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #777;
+    font-size: 1.1rem;
+}
+
+.chatHeader {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f7f8fa;
+    flex-shrink: 0;
+}
+
+.chatHeader h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.messageList {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.noMessages {
+    text-align: center;
+    color: #aaa;
+    margin-top: 20px;
+}
+
+.messageItem {
+    display: flex;
+    max-width: 70%;
+}
+
+.messageContent {
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+}
+
+.messageText {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.messageTimestamp {
+    font-size: 0.75rem;
+    color: #888;
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+}
+
+.messageItem.sent {
+    align-self: flex-end;
+}
+.messageItem.sent .messageContent {
+    background-color: #7b61ff;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+.messageItem.sent .messageTimestamp {
+    color: #e0e0e0;
+}
+
+.messageItem.received {
+    align-self: flex-start;
+}
+.messageItem.received .messageContent {
+    background-color: #e4e6eb;
+    color: #050505;
+    border-bottom-left-radius: 5px;
+}
+
+.chatInputArea {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #f7f8fa;
+    flex-shrink: 0;
+    gap: 10px;
+}
+
+.chatInputArea textarea {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.4;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.chatInputArea textarea:focus {
+    outline: none;
+    border-color: #7b61ff;
+    box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.2);
+}
+
+.chatInputArea button {
+    padding: 10px 20px;
+    background-color: #7b61ff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.chatInputArea button:hover {
+    background-color: #6a50e0;
+}
+.chatInputArea button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

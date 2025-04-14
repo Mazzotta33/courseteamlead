@@ -1,0 +1,117 @@
+/* Стили для контейнера формы */
+.authContainer {
+    display: flex;
+    flex-direction: column; /* Если TopNavbar будет внутри */
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh; /* Занимает почти всю высоту экрана */
+    padding: 20px;
+    background-color: #f8f9fa; /* Светлый фон */
+}
+
+/* Стили для самой формы */
+.authForm {
+    background-color: #ffffff; /* Белый фон формы */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    width: 100%;
+    max-width: 420px; /* Ограничение ширины формы */
+    text-align: center;
+    border: 1px solid #e0e0e0; /* Тонкая граница */
+}
+
+.authForm h2 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.authForm p {
+    margin-bottom: 30px;
+    color: #666;
+    font-size: 1em;
+}
+
+/* Стили для группы ввода (лейбл + инпут) */
+.inputGroup {
+    margin-bottom: 20px;
+    text-align: left; /* Лейблы слева */
+}
+
+.inputGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500; /* Средняя жирность */
+    color: #555;
+    font-size: 0.95em;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 12px 15px; /* Увеличенный padding */
+    border: 1px solid #ced4da; /* Стандартная граница инпута */
+    border-radius: 6px; /* Немного скругленные углы */
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.inputGroup input:focus {
+    border-color: #8A2BE2; /* Фиолетовая граница при фокусе */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25); /* Легкое свечение */
+}
+
+.inputGroup input::placeholder {
+    color: #adb5bd; /* Цвет плейсхолдера */
+}
+
+/* Кнопка отправки формы */
+.submitButton {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #8A2BE2; /* Фиолетовый цвет как на картинке */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Небольшой отступ сверху */
+}
+
+.submitButton:hover {
+    background-color: #7b24ca; /* Более темный фиолетовый при наведении */
+}
+
+/* Ссылка для переключения между формами */
+.switchForm {
+    margin-top: 25px;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.switchForm a {
+    color: #8A2BE2; /* Фиолетовый цвет ссылки */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.switchForm a:hover {
+    text-decoration: underline;
+}
+
+/* Стиль для отображения ошибок */
+.error {
+    color: #dc3545; /* Красный цвет для ошибок */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    text-align: center;
+}

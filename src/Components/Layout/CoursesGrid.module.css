@@ -13,6 +13,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     justify-items: center;
+    width: 100%;
 }
 
 .image {
@@ -25,7 +26,6 @@
 
 .card {
     position: relative;
-    width: 100%;
     max-width: 220px;
     height: 130px;
     background-color: #ddd;

@@ -1,0 +1,236 @@
+/* --- Main Overlay/Container --- */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    /* Removed background dimming, as content is full screen */
+    /* background-color: rgba(0, 0, 0, 0.7); */
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+    /* We won't center content here anymore */
+    /* display: flex; align-items: center; justify-content: center; */
+    /* Allow background click to close ONLY if clicking overlay itself */
+    cursor: pointer;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* --- Full Screen Content Area --- */
+.modalContent {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f7f6; /* Light background for the full page */
+    position: relative; /* For close button */
+    display: flex;
+    flex-direction: column; /* Stack header and body vertically */
+    overflow: hidden; /* Prevent body scroll, handle internal scroll */
+    /* Remove styles from previous centered modal */
+    /* padding: 30px 40px; border-radius: 12px; box-shadow: ...; max-width: ...; */
+    transform: translateY(100%); /* Start off-screen */
+    animation: slideInUp 0.4s ease-out forwards;
+    cursor: default; /* Reset cursor for content area */
+}
+
+@keyframes slideInUp {
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+/* --- Close Button (Top Right Corner) --- */
+.closeButton {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.1); /* Slightly visible background */
+    border: none;
+    font-size: 1.8rem;
+    color: #555; /* Darker color for better contrast */
+    cursor: pointer;
+    padding: 0px 8px; /* Adjust padding */
+    line-height: 1;
+    border-radius: 50%; /* Circular button */
+    transition: background-color 0.2s, color 0.2s;
+    z-index: 10; /* Above other content */
+}
+
+.closeButton:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #000;
+}
+
+/* --- Modal Header --- */
+.modalHeader {
+    padding: 20px 40px;
+    border-bottom: 1px solid #dce3e1; /* Separator line */
+    background-color: #fff; /* White header background */
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.modalHeader h2 {
+    margin: 0 0 15px 0; /* Space below title */
+    text-align: center;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+/* --- Mode Switcher --- */
+.modeSwitcher {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between radio buttons */
+}
+
+.modeLabel {
+    display: inline-flex; /* Align items horizontally */
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.modeLabel input[type="radio"] {
+    margin-right: 8px;
+}
+
+.modeLabel:has(input:checked) { /* Style label when its radio is checked */
+    background-color: #e8eaff;
+    border-color: #c6cfff;
+    font-weight: 500;
+    color: #543fdb;
+}
+
+.modeLabel:hover {
+    background-color: #f0f0f0;
+}
+
+/* --- Modal Body (Scrollable Area) --- */
+.modalBody {
+    flex-grow: 1; /* Take remaining vertical space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 25px 40px; /* Padding inside the scrollable area */
+}
+
+/* --- Form Styling --- */
+.feedbackForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between form groups/rows */
+    max-width: 800px; /* Limit form width for readability */
+    margin: 0 auto; /* Center the form within the body */
+}
+
+/* Row for side-by-side fields */
+.formRow {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.formRow .formGroup {
+    flex: 1; /* Each group takes equal space */
+    min-width: 250px; /* Minimum width before wrapping */
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup textarea,
+.selectInput { /* Apply common styles to select too */
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.selectInput:focus {
+    outline: none;
+    border-color: #7b61ff;
+    box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.25);
+}
+
+.formGroup textarea {
+    resize: vertical;
+    min-height: 80px; /* Adjust default height */
+}
+
+.selectInput {
+    /* Add specific styles for select if needed, like appearance */
+    appearance: none; /* Remove default arrow in some browsers */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M2%200L0%202h4L2%200zM2%205L0%203h4L2%205z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 0.7em top 50%;
+    background-size: 0.65em auto;
+    padding-right: 2.5em; /* Make space for arrow */
+}
+
+
+.submitButton {
+    padding: 12px 30px; /* Larger button */
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #7b61ff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+    margin-top: 15px; /* Space above button */
+    align-self: center; /* Center button if form is centered */
+}
+
+.submitButton:hover {
+    background-color: #6a50e0;
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Feedback Messages - Keep similar styles */
+.successMessage,
+.errorMessage {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    max-width: 800px; /* Match form width */
+    margin-left: auto;
+    margin-right: auto; /* Center message */
+}
+
+.successMessage {
+    background-color: #d1e7dd;
+    border: 1px solid #a3cfbb;
+    color: #0f5132;
+}
+
+.errorMessage {
+    background-color: #f8d7da;
+    border: 1px solid #f1aeb5;
+    color: #842029;
+}

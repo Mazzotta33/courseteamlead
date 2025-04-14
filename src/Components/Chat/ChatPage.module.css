@@ -1,0 +1,12 @@
+.chatPageContainer {
+    display: flex;
+    height: calc(100vh - 60px); /* Example: Adjust based on your Navbar height */
+    overflow: hidden; /* Prevent page scroll */
+    background-color: #f9f9f9;
+
+}
+
+.navbar{
+    width: 100%;
+    border-bottom: 1px solid #e0e0e0;
+}

@@ -1,0 +1,144 @@
+.testContainer {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.testContainer h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.results {
+    background-color: #e8f4fd;
+    border: 1px solid #bde0fe;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.results h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+.questionBlock {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+.questionBlock:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+
+.questionText {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #444;
+    font-size: 1.1em;
+}
+
+.optionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Spacing between options */
+}
+
+.optionLabel {
+    display: block; /* Make label take full width */
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    position: relative; /* Needed for potential feedback icons */
+}
+
+.optionLabel:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.radioInput {
+    margin-right: 10px;
+    vertical-align: middle; /* Align radio button with text */
+}
+
+/* Styles for submitted answers */
+.optionLabel.correct {
+    background-color: #d1e7dd; /* Light green */
+    border-color: #a3cfbb;
+    color: #0f5132; /* Dark green */
+    font-weight: bold;
+}
+.optionLabel.correct::after { /* Optional: add a checkmark */
+    content: '✔';
+    color: #0f5132;
+    position: absolute;
+    right: 15px;
+}
+
+
+.optionLabel.incorrect {
+    background-color: #f8d7da; /* Light red */
+    border-color: #f1aeb5;
+    color: #842029; /* Dark red */
+    text-decoration: line-through; /* Strike through incorrect selection */
+}
+.optionLabel.incorrect::after { /* Optional: add a cross */
+    content: '✖';
+    color: #842029;
+    position: absolute;
+    right: 15px;
+}
+
+
+/* Disable hover effects for submitted options */
+.optionLabel.correct:hover,
+.optionLabel.incorrect:hover {
+    /* Keep submitted styles on hover */
+    background-color: inherit;
+    border-color: inherit;
+    cursor: default;
+}
+
+.submitButton {
+    display: block; /* Center button */
+    margin: 25px auto 0; /* Add top margin and center */
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #7b61ff; /* Use theme color */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #6a50e0; /* Darker shade */
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.submittedMessage {
+    text-align: center;
+    margin-top: 20px;
+    color: #555;
+    font-style: italic;
+}

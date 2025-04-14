@@ -1,23 +1,50 @@
-.courses{
+.courses {
     display: flex;
     padding: 2% 5%;
     gap: 32px;
 }
 
-.navbar{
+.navbar {
     width: 100%;
 }
 
 .sidebar {
     width: 30%;
+    min-width: 250px;
     background-color: #f7f8fa;
     border-radius: 12px;
     padding: 16px;
+    box-sizing: border-box;
 }
 
 .sidebar h2 {
+    margin-top: 0;
     margin-bottom: 16px;
     font-size: 20px;
+}
+
+.menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuItem {
+    background-color: white;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.menuItem:hover {
+    background-color: #f0f4ff;
+    border-color: #7b61ff;
+    color: #7b61ff;
 }
 
 .lessonList {
@@ -68,21 +95,75 @@
     background-color: #e8eaff;
 }
 
+.backButton {
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.backButton:hover {
+    background-color: #cccccc;
+}
+
 .content {
     flex: 1;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .videoWrapper {
     border-radius: 16px;
     overflow: hidden;
     margin-bottom: 20px;
+    background-color: #eee; /* Background while loading */
+    position: relative; /* For aspect ratio if needed */
 }
 
+.noVideoMessage.welcomeMessage {
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+
 .content h2 {
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 12px;
 }
 
 .content p {
     color: #444;
+    line-height: 1.6;
+    font-size: 16px;
+    margin-bottom: 1em;
 }
+
+.takeTestButton {
+    display: inline-block; /* Or block if you want it on its own line */
+    margin-top: 20px; /* Add some space above the button */
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #7b61ff; /* Match theme color */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.takeTestButton:hover {
+    background-color: #6a50e0; /* Darker shade on hover */
+}
+
+
