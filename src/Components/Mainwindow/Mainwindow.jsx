@@ -12,7 +12,7 @@ const Mainwindow = () => {
             <TopNavbar />
             <SearchBanner />
             <CoursesGrid />
-            <ReviewsSection />
+            {/*<ReviewsSection />*/}
         </div>
     );
 };

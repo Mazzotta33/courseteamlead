@@ -1,87 +1,80 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './AuthForm.module.css'; // Используем те же стили
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useLoginMutation } from '../../Redux/api/authApi';
+import { setCredentials } from '../../Redux/slices/authSlice';
+import styles from './AuthForm.module.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [login, { isLoading }] = useLoginMutation();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setError('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    if (!email || !password) {
-      setError('Пожалуйста, введите email и пароль.');
-      return;
-    }
+    const handleLogin = async (e) => {
 
-    // --- Симуляция входа ---
-    console.log('Вход:', { email, password });
-    // Здесь должен быть fetch или axios запрос к вашему API для проверки учетных данных
-    // Пример: fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //            if(data.success) {
-    //                // Сохранить токен/сессию, обновить состояние приложения (isLoggedIn = true)
-    //                // Например, используя Context API или Redux/Zustand
-    //                navigate('/'); // Перенаправить на главную
-    //            } else {
-    //                setError(data.message);
-    //            }
-    //         })
-    //         .catch(err => setError('Ошибка сети'));
+        e.preventDefault();
+        setError('');
 
-    alert('Вход успешен! (симуляция)'); // Временно
-    // В реальном приложении нужно обновить состояние (например, через Context API), что пользователь вошел
-    navigate('/'); // Перенаправляем на главную после "успешного" входа
-    // --- Конец симуляции ---
-  };
+        if (!email || !password) {
+            setError('Введите email и пароль');
+            return;
+        }
 
-  return (
-      <div className={styles.authContainer}>
-        {/* <TopNavbar /> */}
-        <form className={styles.authForm} onSubmit={handleLogin}>
-          <h2>Вход</h2>
-          <p>Войдите в свой аккаунт</p>
+        try {
+            // Запрос на сервер через RTK Query
+            const response = await login({ email, password }).unwrap();
+            console.log('login response:', response);
 
-          {error && <p className={styles.error}>{error}</p>}
+            // Сохраняем в store
+            dispatch(setCredentials(response));
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-                type="email"
-                id="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-          </div>
+            // И в localStorage, чтобы восстановить после перезагрузки
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('username', JSON.stringify(response.username));
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="password">Пароль</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Введите ваш пароль"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-          </div>
+            // alert(`Вы вошли как ${response.user.role}`);
+            // navigate(response.user.role === 'teacher' ? '/teacher' : '/mainwindow');
 
-          {/* Сюда можно добавить ссылку "Забыли пароль?" */}
+        } catch (err) {
+            console.error('Login error:', err);
+            setError('Неверный email или пароль');
+        }
+    };
 
-          <button type="submit" className={styles.submitButton}>Войти</button>
+    return (
+        <div className={styles.authContainer}>
+            <form className={styles.authForm} onSubmit={handleLogin}>
+                <h2>Вход</h2>
+                <p>Войдите в свой аккаунт</p>
 
-          <p className={styles.switchForm}>
-            Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
-          </p>
-        </form>
-      </div>
-  );
+                {error && <p className={styles.error}>{error}</p>}
+
+                <div className={styles.inputGroup}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email" id="email" placeholder="your@email.com"
+                        value={email} onChange={(e) => setEmail(e.target.value)} required
+                    />
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <label htmlFor="password">Пароль</label>
+                    <input
+                        type="password" id="password" placeholder="Введите ваш пароль"
+                        value={password} onChange={(e) => setPassword(e.target.value)} required
+                    />
+                </div>
+
+                <button type="submit" className={styles.submitButton} disabled={isLoading}>
+                    {isLoading ? 'Вход...' : 'Войти'}
+                </button>
+            </form>
+        </div>
+    );
 };
 
 export default Login;

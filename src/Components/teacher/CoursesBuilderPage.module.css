@@ -1,0 +1,229 @@
+/* CourseBuilder.module.css */
+.courseBuilderContainer {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.courseBuilderContainer h2,
+.courseBuilderContainer h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.progressBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.step {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #aaa;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+}
+
+.step.active {
+    border-color: #007bff;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+.connector {
+    flex-grow: 1;
+    height: 2px;
+    background-color: #ccc;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.connector.active {
+    background-color: #007bff;
+}
+
+
+.stepContent {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-top: 20px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.formGroup input[type="text"],
+.formGroup textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Учитывает padding и border в ширине */
+    font-size: 1em;
+}
+
+.formGroup textarea {
+    resize: vertical; /* Позволяет изменять высоту */
+}
+
+.imageUpload {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #fdfdfd;
+    margin-bottom: 15px;
+}
+
+.imagePlaceholder {
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.imagePlaceholder svg {
+    display: block;
+    margin: 0 auto 10px auto;
+}
+
+.previewImage {
+    max-width: 100%;
+    max-height: 200px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.uploadButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.uploadButton:hover {
+    background-color: #4cae4c;
+}
+
+
+.navigationButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.navButton {
+    padding: 10px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+.navButton:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для Этапа 2 */
+.lectureList ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.lectureList li {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.removeButton {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+.removeButton:hover {
+    text-decoration: underline;
+}
+
+.addLectureForm {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.addLectureForm h4 {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.addLectureForm button {
+    margin-right: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+}
+.addLectureForm button.activeType {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+.addLectureForm .addButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    padding: 10px 20px;
+}
+.addLectureForm .addButton:hover {
+    background-color: #218838;
+}
+
+
+/* Стили для Этапа 3 */
+.testPlaceholder {
+    text-align: center;
+    padding: 40px 20px;
+    border: 2px dashed #eee;
+    border-radius: 5px;
+    margin-top: 20px;
+    color: #aaa;
+}
+.testPlaceholder svg {
+    margin-bottom: 15px;
+}

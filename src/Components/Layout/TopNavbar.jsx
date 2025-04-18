@@ -23,14 +23,6 @@ const TopNavbar = () => {
         navigate('/');
     };
 
-    // const openFeedbackModal = () => {
-    //     setIsFeedbackModalOpen(true);
-    //     setVisibleTooltip(null);
-    // };
-    //
-    // const closeFeedbackModal = () => {
-    //     setIsFeedbackModalOpen(false);
-    // };
 
     // Handler for keyboard interaction (Enter/Space) on the feedback span
     const handleFeedbackKeyPress = (event) => {
@@ -44,7 +36,7 @@ const TopNavbar = () => {
         <>
             <div className={styles.navbar}>
                 <div className={styles.logoSection}>
-                    <Link to="/" className={styles.brand}>Барс Групп</Link>
+                    <Link to="/mainwindow" className={styles.brand}>Барс Групп</Link>
                     <img src={logo} alt="Логотип" className={styles.logo} />
                 </div>
 
@@ -65,6 +57,7 @@ const TopNavbar = () => {
                     </a>
 
                     <Link
+
                         to="/chat"
                         onMouseEnter={() => !isFeedbackModalOpen && setVisibleTooltip('courses')}
                         className={styles.navLinkItem}
