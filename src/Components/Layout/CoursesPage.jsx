@@ -99,13 +99,6 @@ const CoursesPage = (props) => {
 
     return (
         <div>
-            {/* Render TopNavbar only for User role */}
-            {role === 'User' && (
-                <div className={styles.navbar}>
-                    <TopNavbar/>
-                </div>
-            )}
-
             <div className={styles.courses}>
                 <aside className={styles.sidebar}>
                     {/* Conditionally render sidebar content based on sidebarView state */}

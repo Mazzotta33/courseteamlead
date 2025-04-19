@@ -93,12 +93,6 @@ const ChatPage = (props) => {
 
     return (
         <div>
-            {role === 'User' ? (
-                <div className={styles.navbar}>
-                    <TopNavbar/>
-                </div>
-            ) : null}
-
             <div className={styles.chatPageContainer}>
                 <ChatSidebar
                     users={chatUsers}

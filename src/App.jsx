@@ -11,24 +11,8 @@ import CoursesPage from "./Components/Layout/CoursesPage.jsx";
 import Mainwindow from "./Components/Mainwindow/Mainwindow.jsx";
 import AdminCourses from "./Components/teacher/Courses/AdminCourses.jsx";
 import CourseDetail from "./Components/teacher/Courses/CourseDetail.jsx";
-
-const TeacherLayout = () => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const role = localStorage.getItem('userRole');
-
-    if (!isLoggedIn || (role !== 'Admin' && role !== 'teacher')) {
-        return <Navigate to="/login" replace />;
-    }
-
-    return (
-        <div>
-            <TeacherNavbar />
-            <main><Outlet /></main>
-        </div>
-    );
-};
-
-
+import UserLayout from "./Components/Layout/UserLayout.jsx";
+import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
 
 function App() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -53,11 +37,11 @@ function App() {
 
 
                 {isLoggedIn && userRole === 'User' ? (
-                    <>
-                        <Route path="/mainwindow" element={<Mainwindow />} />
-                        <Route path="/courses" element={<CoursesPage role={userRole}/>} />
-                        <Route path="/chat" element={<ChatPage role={userRole}/>} />
-                    </>
+                    <Route path="/" element={<UserLayout />}>
+                        <Route path="mainwindow" element={<Mainwindow />} />
+                        <Route path="courses" element={<CoursesPage role={userRole} />} />
+                        <Route path="chat" element={<ChatPage role={userRole} />} />
+                    </Route>
                 ) : null}
 
                 <Route path="*" element={

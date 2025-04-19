@@ -9,7 +9,7 @@ import ReviewsSection from '../Layout/ReviewsSection';
 const Mainwindow = () => {
     return (
         <div className={styles.mainwindow}>
-            <TopNavbar />
+            {/*<TopNavbar />*/}
             <SearchBanner />
             <CoursesGrid />
             {/*<ReviewsSection />*/}
