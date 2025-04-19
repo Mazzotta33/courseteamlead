@@ -25,19 +25,22 @@ const Login = () => {
         }
 
         try {
-            // Запрос на сервер через RTK Query
             const response = await login({ email, password }).unwrap();
             console.log('login response:', response);
 
-            // Сохраняем в store
+            const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
+            const userRole = tokenPayload.role || 'User';
+
             dispatch(setCredentials(response));
 
-            // И в localStorage, чтобы восстановить после перезагрузки
             localStorage.setItem('token', response.token);
             localStorage.setItem('username', JSON.stringify(response.username));
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', userRole);
 
-            // alert(`Вы вошли как ${response.user.role}`);
-            // navigate(response.user.role === 'teacher' ? '/teacher' : '/mainwindow');
+            alert(`Вы вошли как ${userRole}`);
+            navigate(userRole === 'Admin' ? '/teacher' : '/mainwindow');
+            window.location.reload();
 
         } catch (err) {
             console.error('Login error:', err);

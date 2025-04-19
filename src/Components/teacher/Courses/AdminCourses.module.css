@@ -1,0 +1,111 @@
+.dashboardContainer {
+    padding: 20px;
+}
+
+.dashboardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.dashboardTitle {
+    margin: 0;
+    font-size: 26px;
+    color: #333;
+    font-weight: 600;
+}
+
+.createCourseButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.createCourseButton:hover {
+    background-color: #0056b3;
+}
+
+.createCourseButton:active {
+    opacity: 0.8;
+}
+
+.coursesGrid {
+    display: grid;
+    /* Устанавливаем 3 колонки. Ширина каждой колонки рассчитывается как */
+    /* (100% общей ширины - сумма отступов между колонками) / количество колонок */
+    /* У вас gap: 20px, между 3 колонками 2 отступа по 20px (всего 40px) */
+    grid-template-columns: repeat(3, calc((100% - (2 * 4%)) / 3));
+    gap: 20px; /* Пространство между карточками */
+    padding: 0; /* Убираем внутренний отступ если есть */
+    list-style: none; /* Убираем маркеры списка, если используете ul/li */
+
+    /* Опционально: добавьте медиа-запросы для адаптивности на меньших экранах */
+    /* @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, calc((100% - (1 * 20px)) / 2)); // 2 колонки на планшетах
+    }
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr); // 1 колонка на мобильных
+    } */
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    color: white;
+    font-weight: bold;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    border-radius: 0 0 12px 12px;
+    word-break: break-word;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.card:hover figcaption {
+    opacity: 1;
+}
+
+.image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px 12px 0 0;
+    flex-shrink: 0;
+}
+
+.card figcaption p {
+    margin: 0; /* Убираем отступы у параграфа внутри фигкэпшн */
+    font-size: 1em; /* Размер шрифта */
+}

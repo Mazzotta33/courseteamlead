@@ -41,7 +41,7 @@ const ChatPage = (props) => {
     const [messages, setMessages] = useState([]);
     const [chatUsers, setChatUsers] = useState(placeholderUsers);
 
-    const {userRole} = props; // Получаем роль пользователя из пропсов
+    const {role} = props; // Получаем роль пользователя из пропсов
 
     useEffect(() => {
         if (selectedChatId) {
@@ -93,7 +93,7 @@ const ChatPage = (props) => {
 
     return (
         <div>
-            {userRole === 'student' ? (
+            {role === 'User' ? (
                 <div className={styles.navbar}>
                     <TopNavbar/>
                 </div>

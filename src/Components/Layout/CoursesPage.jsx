@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Import useEffect
 import styles from './CoursesPage.module.css';
 // Assuming you have these components or placeholders
-// import TooltipForCourse from "./TooltipForCourse.jsx"; // Not used in the snippet provided, but kept import
-import TopNavbar from "./TopNavbar.jsx"; // Assuming this exists
-import TestComponent from "./TestComponent.jsx"; // Placeholder for your test component
+// import TooltipForCourse from "./TooltipForCourse.jsx";
+import TopNavbar from "./TopNavbar.jsx";
+import TestComponent from "./TestComponent.jsx";
 
+// Assuming lesson structure includes id, title, description, videoId
 const lessons = [
     {
-        id: 'intro-prog', // Added unique IDs for better key management
+        id: 'intro-prog',
         title: 'Введение в программирование',
         description: 'Базовые концепции и принципы программирования для начинающих',
         duration: '45 мин',
@@ -29,13 +30,42 @@ const lessons = [
     }
 ];
 
-const CoursesPage = () => {
+const CoursesPage = (props) => {
+    const { role } = props; // Destructure role from props
+
     // State to manage which lesson is selected (null if none or viewing test)
+    // Initialize with null, will be set in useEffect for Admin
     const [selectedLesson, setSelectedLesson] = useState(null);
+
     // State to manage what the sidebar shows: 'menu' or 'lessons'
-    const [sidebarView, setSidebarView] = useState('menu');
+    // Initialize based on role or default to 'menu'
+    const [sidebarView, setSidebarView] = useState(role === 'Admin' ? 'lessons' : 'menu');
+
     // State to manage what the main content shows: 'lesson', 'test', or 'welcome'/'none'
-    const [mainContentView, setMainContentView] = useState('welcome'); // Start with a welcome/empty state
+    // Initialize based on role or default to 'welcome'
+    const [mainContentView, setMainContentView] = useState(role === 'Admin' ? 'lesson' : 'welcome'); // Start with lesson for Admin
+
+    useEffect(() => {
+        // This effect runs after the initial render and whenever `role` or `lessons` change
+        if (role === 'Admin') {
+            setSidebarView('lessons');
+            // Select the first lesson if lessons exist
+            if (lessons.length > 0) {
+                setSelectedLesson(lessons[0]);
+                setMainContentView('lesson');
+            } else {
+                // Handle case with no lessons for Admin
+                setSelectedLesson(null);
+                setMainContentView('welcome'); // Or a specific 'no lessons' view
+            }
+        } else {
+            // Reset for User role if somehow state was changed before effect
+            setSidebarView('menu');
+            setMainContentView('welcome');
+            setSelectedLesson(null);
+        }
+        // Add lessons to dependency array if the lesson list can change during component's life
+    }, [role]); // Effect depends on the 'role' prop
 
     const handleShowLessons = () => {
         setSidebarView('lessons');
@@ -69,11 +99,17 @@ const CoursesPage = () => {
 
     return (
         <div>
-            <div className={styles.navbar}>
-                <TopNavbar />
-            </div>
+            {/* Render TopNavbar only for User role */}
+            {role === 'User' && (
+                <div className={styles.navbar}>
+                    <TopNavbar/>
+                </div>
+            )}
+
             <div className={styles.courses}>
                 <aside className={styles.sidebar}>
+                    {/* Conditionally render sidebar content based on sidebarView state */}
+                    {/* If Admin, sidebarView is initially 'lessons', skipping this block */}
                     {sidebarView === 'menu' && (
                         <>
                             <h2>Меню курса</h2>
@@ -88,18 +124,25 @@ const CoursesPage = () => {
                         </>
                     )}
 
+                    {/* This block is rendered initially for Admin because sidebarView is 'lessons' */}
                     {sidebarView === 'lessons' && (
                         <>
-                            {/* Add a way to go back */}
-                            <button onClick={handleBackToMenu} className={styles.backButton}>
-                                ← Назад к меню
-                            </button>
+                            {/* Add a way to go back to the menu, visible only if sidebarView can change back */}
+                            {/* For Admin, maybe this button goes back to the Course Detail page or Admin dashboard? */}
+                            {/* Assuming Admin might want to go back to the menu view sometimes: */}
+                            {role !== 'Admin' && ( // Only show "Назад к меню" button for User or if needed for Admin too
+                                <button onClick={handleBackToMenu} className={styles.backButton}>
+                                    ← Назад к меню
+                                </button>
+                            )}
+                            {/* If Admin always starts here and cannot go back to the menu, remove the button */}
+
                             <h2>Доступные уроки</h2>
                             {lessons.length > 0 ? (
                                 <ul className={styles.lessonList}>
                                     {lessons.map((lesson) => (
                                         <li
-                                            key={lesson.id} // Use unique ID for key
+                                            key={lesson.id}
                                             className={`${styles.lessonItem} ${selectedLesson?.id === lesson.id ? styles.active : ''}`}
                                             onClick={() => handleSelectLesson(lesson)}
                                         >
@@ -117,6 +160,8 @@ const CoursesPage = () => {
                 </aside>
 
                 <main className={styles.content}>
+                    {/* Conditionally render main content based on mainContentView state */}
+                    {/* If Admin, mainContentView is initially 'lesson', skipping this block */}
                     {mainContentView === 'welcome' && (
                         <div className={styles.welcomeMessage}>
                             <h2>Добро пожаловать!</h2>
@@ -124,6 +169,7 @@ const CoursesPage = () => {
                         </div>
                     )}
 
+                    {/* This block is rendered initially for Admin because mainContentView is 'lesson' */}
                     {mainContentView === 'lesson' && selectedLesson && (
                         <>
                             {selectedLesson.videoId ? (
@@ -131,8 +177,8 @@ const CoursesPage = () => {
                                     <iframe
                                         width="100%"
                                         height="400px"
-                                        // IMPORTANT: Use the correct YouTube embed URL format
-                                        src={`https://www.youtube.com/embed/${selectedLesson.videoId}`}
+                                        // Use the correct YouTube embed URL format
+                                        src={`http://www.youtube.com/embed/${selectedLesson.videoId}`} // Corrected embed URL format
                                         title={selectedLesson.title}
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -147,9 +193,18 @@ const CoursesPage = () => {
                             <h2>{selectedLesson.title}</h2>
                             <p>{selectedLesson.description}</p>
 
-                            <button onClick={handleShowTest} className={styles.takeTestButton}>
-                                Пройти тест по этому уроку
-                            </button>
+                            {/* Buttons container, potentially adapting styles */}
+                            <div className={styles.lessonButtons || ''}> {/* Use a class if defined in CSS */}
+                                <button onClick={handleShowTest} className={styles.takeTestButton}>
+                                    Пройти тест по этому уроку
+                                </button>
+                                {/* Новая кнопка "Редактировать урок" для Admin */}
+                                {role === 'Admin' && (
+                                    <button onClick={() => console.log("Редактировать урок")} className={styles.editLessonButton}> {/* Add actual handler */}
+                                        Редактировать урок
+                                    </button>
+                                )}
+                            </div>
                         </>
                     )}
 
