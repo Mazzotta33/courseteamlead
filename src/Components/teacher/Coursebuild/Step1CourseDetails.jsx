@@ -14,9 +14,6 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
             const imageUrl = URL.createObjectURL(file);
             setCourseData(prev => ({ ...prev, previewImage: imageUrl, imageName: file.name }));
             console.log("Изображение 'загружено':", file.name);
-            // Важно: Отозвать URL после использования, чтобы избежать утечек памяти
-            // Например, в useEffect при размонтировании или когда картинка меняется
-            // return () => URL.revokeObjectURL(imageUrl); <<-- сделать так в основном компоненте при необходимости
         }
     };
 
@@ -40,7 +37,7 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
                     value={courseData.courseName}
                     onChange={handleInputChange}
                     placeholder="Введите название курса"
-                    required // Добавим required для базовой валидации браузером
+                    required
                 />
             </div>
             <div className={styles.formGroup}>
@@ -75,7 +72,6 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
                     </label>
                 </div>
             </div>
-            {/* Кнопка Продолжить теперь внутри компонента шага */}
             <div className={styles.navigationButtons} style={{ justifyContent: 'flex-end' }}> {/* Выравнивание кнопки вправо */}
                 <button onClick={handleNextClick} className={styles.navButton}>Продолжить</button>
             </div>

@@ -1,11 +1,13 @@
 .wrapper {
     /*padding: 40px;*/
     /*margin: 80px;*/
-    margin-top: 70px;
-    margin-bottom: 70px;
+    /*margin-top: 70px;*/
+    /*margin-bottom: 70px;*/
     background-color: #f9faff;
     margin-left: 15%;
     width: 70%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 90.5vh;
 }
 
 .grid {

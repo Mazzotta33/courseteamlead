@@ -41,12 +41,11 @@ const ChatPage = (props) => {
     const [messages, setMessages] = useState([]);
     const [chatUsers, setChatUsers] = useState(placeholderUsers);
 
-    const {role} = props; // Получаем роль пользователя из пропсов
+    const {role} = props;
 
     useEffect(() => {
         if (selectedChatId) {
             console.log(`Loading messages for chat: ${selectedChatId}`);
-            // Simulate fetching messages
             setMessages(placeholderMessages[selectedChatId] || []);
         } else {
             setMessages([]);

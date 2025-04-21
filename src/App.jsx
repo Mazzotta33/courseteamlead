@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'; // Добавили useEffect для чтения из localStorage
-import {Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import TeacherNavbar from "./Components/teacher/TeacherNavbar.jsx";
+import React from 'react';
+import {Routes, Route, Navigate } from 'react-router-dom';
 import Login from "./Components/AuthAndReg/Login.jsx";
 import Register from "./Components/AuthAndReg/Register.jsx";
 import TeacherDashboard from "./Components/teacher/TeacherDashboard.jsx";
@@ -8,13 +7,14 @@ import CourseBuilderPage from "./Components/teacher/CourseBuilderPage.jsx";
 import StatisticsPage from "./Components/teacher/StatisticsPage.jsx";
 import ChatPage from "./Components/Chat/ChatPage.jsx";
 import CoursesPage from "./Components/Layout/CoursesPage.jsx";
-import Mainwindow from "./Components/Mainwindow/Mainwindow.jsx";
 import AdminCourses from "./Components/teacher/Courses/AdminCourses.jsx";
 import CourseDetail from "./Components/teacher/Courses/CourseDetail.jsx";
 import UserLayout from "./Components/Layout/UserLayout.jsx";
 import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
+import CoursesGrid from "./Components/Layout/CoursesGrid.jsx";
+import ProfilePage from "./Components/Layout/ProfilePage.jsx";
 
-function App() {
+function App(props) {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userRole = localStorage.getItem('userRole');
 
@@ -38,9 +38,10 @@ function App() {
 
                 {isLoggedIn && userRole === 'User' ? (
                     <Route path="/" element={<UserLayout />}>
-                        <Route path="mainwindow" element={<Mainwindow />} />
+                        <Route path="mainwindow" element={<CoursesGrid/>} />
                         <Route path="courses" element={<CoursesPage role={userRole} />} />
                         <Route path="chat" element={<ChatPage role={userRole} />} />
+                        <Route path="profile" element={<ProfilePage/>}/>
                     </Route>
                 ) : null}
 

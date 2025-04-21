@@ -31,6 +31,7 @@ const Login = () => {
             const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
             const userRole = tokenPayload.role || 'User';
 
+
             dispatch(setCredentials(response));
 
             localStorage.setItem('token', response.token);
@@ -40,7 +41,7 @@ const Login = () => {
 
             alert(`Вы вошли как ${userRole}`);
             navigate(userRole === 'Admin' ? '/teacher' : '/mainwindow');
-            window.location.reload();
+            // window.location.reload();
 
         } catch (err) {
             console.error('Login error:', err);

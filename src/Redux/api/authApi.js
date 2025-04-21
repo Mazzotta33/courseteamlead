@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5231/api', // ← укажи свой бэкенд
+        baseUrl: 'http://localhost:5231/api',
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.token;
             if (token) {
@@ -21,23 +21,14 @@ export const authApi = createApi({
                 body: credentials,
             }),
         }),
-        registerUser: builder.mutation({
-            query: (newUser) => ({
-                url: 'account/registeruser',
-                method: 'POST',
-                body: newUser,
-            }),
-        }),
         registerAdmin: builder.mutation({
             query: (newAdmin) => ({
-                url: 'account/registeradmin',
+                url: 'account/register',
                 method: 'POST',
                 body: newAdmin,
             }),
         }),
-        getMe: builder.query({
-            query: () => '/me',
-        }),
+
     }),
 });
 

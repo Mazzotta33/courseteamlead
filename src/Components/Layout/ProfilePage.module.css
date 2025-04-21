@@ -1,0 +1,60 @@
+.profileContainer {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.avatarSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+
+}
+
+.avatarUpload input {
+    display: none;
+}
+
+.avatarUpload {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.infoSection {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.courseProgressSection {
+    margin-top: 30px;
+}
+
+.courseItem {
+    margin-bottom: 15px;
+}
+
+.progressBar {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 20px;
+    background-color: #28a745;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+}

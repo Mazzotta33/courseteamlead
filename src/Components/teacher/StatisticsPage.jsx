@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import styles from './StatisticsPage.module.css';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import {useNavigate} from "react-router-dom";
 
 const StatisticsPage = () => {
+    const navigate = useNavigate();
+
     const [stats] = useState({
         totalUsers: 124,
         totalCourses: 12,
@@ -16,8 +19,17 @@ const StatisticsPage = () => {
             { course: 'React', progress: 80 },
             { course: 'JavaScript', progress: 65 },
             { course: 'CSS', progress: 45 },
+        ],
+        courses: [
+            {name: "Основы React", id: 1},
+            {name: "Основы JavaScript", id: 2},
+            {name: "Основы CSS", id: 3}
         ]
     });
+
+    const handleCourseClick = (courseId) => {
+        navigate(`/teacher/mycourses/detail/${courseId}`);
+    };
 
     return (
         <div className={styles.statisticsContainer}>
@@ -56,6 +68,17 @@ const StatisticsPage = () => {
                     {stats.topStudents.map((student, index) => (
                         <li key={index} className={styles.studentItem}>
                             {index + 1}. {student.name} — <strong>{student.completed}</strong> курсов
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div>
+                <h3>Список курсов</h3>
+                <ul className={styles.studentsList}>
+                    {stats.courses.map((course, index) => (
+                        <li key={index} className={styles.studentItem} onClick={() => {handleCourseClick(course.id)}}>
+                            {index + 1}. {course.name}
                         </li>
                     ))}
                 </ul>

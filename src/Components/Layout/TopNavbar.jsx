@@ -63,11 +63,19 @@ const TopNavbar = () => {
                     )}
                 </div>
 
-                <div className={styles.authButtons}>
-                    <>
-                        <button onClick={handleLogout} className={styles.logout}>Выйти</button>
-                    </>
+                <div className={styles.lastpart}>
+                    <div>
+                        <button onClick={() => navigate('/profile')}>Профиль</button>
+                    </div>
+
+                    <div className={styles.authButtons}>
+                        <>
+                            <button onClick={handleLogout} className={styles.logout}>Выйти</button>
+                        </>
+                    </div>
                 </div>
+
+
             </div>
         </>
     );

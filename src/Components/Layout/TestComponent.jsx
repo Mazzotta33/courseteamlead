@@ -51,7 +51,6 @@ const TestComponent = () => {
         }
     };
 
-    // Handler for submitting the test
     const handleSubmit = () => {
         if (submitted) return; // Prevent re-submission
 
@@ -67,7 +66,7 @@ const TestComponent = () => {
     };
 
     const getOptionClassName = (question, option) => {
-        if (!submitted) return styles.optionLabel; // Default style before submission
+        if (!submitted) return styles.optionLabel;
 
         const isCorrect = option === question.correctAnswer;
         const isSelected = answers[question.id] === option;

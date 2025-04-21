@@ -15,9 +15,6 @@ const CourseBuilderPage = () => {
         // Можно добавить id курса, если он генерируется в начале
     });
     const [lectures, setLectures] = useState([]);
-    // const [testData, setTestData] = useState({}); // Для будущего
-
-    // Очистка временного URL изображения при размонтировании компонента или смене картинки
     useEffect(() => {
         const imageUrl = courseData.previewImage;
         return () => {
@@ -45,18 +42,13 @@ const CourseBuilderPage = () => {
         console.log("--- Финальные данные курса ---");
         console.log("Детали:", courseData);
         console.log("Лекции:", lectures);
-        // console.log("Тест:", testData); // Когда будет реализовано
         alert('Курс успешно создан! (смотрите финальные данные в консоли)');
 
-        // Опционально: сброс состояния для создания нового курса
         setCurrentStep(1);
         setCourseData({ courseName: '', courseDescription: '', previewImage: null, imageName: '' });
         setLectures([]);
-        // setTestData({});
-        // TODO: Перенаправление на страницу списка курсов или дашборд
     };
 
-    // Функция для рендеринга текущего шага
     const renderStep = () => {
         switch (currentStep) {
             case 1:
@@ -74,8 +66,6 @@ const CourseBuilderPage = () => {
                 />;
             case 3:
                 return <Step3TestCreator
-                    // testData={testData} // Передать, если нужно
-                    // setTestData={setTestData} // Передать, если нужно
                     onPrev={handlePrev}
                     onFinish={handleFinish}
                 />;
@@ -87,7 +77,6 @@ const CourseBuilderPage = () => {
     return (
         <div className={styles.courseBuilderContainer}>
             <h2>Конструктор курсов</h2>
-            {/* Индикатор прогресса */}
             <div className={styles.progressBar}>
                 <div className={`${styles.step} ${currentStep >= 1 ? styles.active : ''}`}>1. Детали</div>
                 <div className={`${styles.connector} ${currentStep > 1 ? styles.active : ''}`}></div>
@@ -96,7 +85,6 @@ const CourseBuilderPage = () => {
                 <div className={`${styles.step} ${currentStep >= 3 ? styles.active : ''}`}>3. Тест</div>
             </div>
 
-            {/* Содержимое текущего шага */}
             <div className={styles.stepContent}>
                 {renderStep()}
             </div>

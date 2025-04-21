@@ -91,6 +91,7 @@
 }
 
 .active {
+    border-radius: 10px;
     border: 2px solid #7b61ff;
     background-color: #e8eaff;
 }
@@ -150,7 +151,7 @@
 
 .takeTestButton {
     display: inline-block; /* Or block if you want it on its own line */
-    margin-top: 20px; /* Add some space above the button */
+    margin-top: 20px;
     padding: 10px 20px;
     font-size: 15px;
     font-weight: 500;

@@ -152,3 +152,21 @@
         align-self: stretch; /* Make button full width */
     }
 }
+
+.studentGrid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, auto); /* Три строки */
+    gap: 10px;
+    overflow-x: auto; /* Прокрутка по горизонтали, если много колонок */
+    padding-bottom: 12px;
+}
+
+.studentCard {
+    background-color: #fff;
+
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 180px;
+}

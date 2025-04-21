@@ -18,7 +18,7 @@ const Step3TestCreator = ({ onPrev, onFinish }) => {
 
     // Добавление нового пустого варианта ответа
     const handleAddAnswerOption = () => {
-        // Добавляем не больше, например, 6 вариантов ответа
+
         if (currentAnswers.length < 6) {
             setCurrentAnswers([...currentAnswers, { id: Date.now(), text: '', isCorrect: false }]);
         } else {

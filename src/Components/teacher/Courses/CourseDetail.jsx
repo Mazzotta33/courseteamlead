@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './CourseDetail.module.css';
+import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 // В реальном приложении эти данные должны быть загружены из API
 // Перенесем их за пределы компонента CourseDetail или загрузим в useEffect
@@ -43,62 +44,62 @@ const placeholderCoursesData = [
     },
 ];
 
+const StudentList = [
+    { id: 1, name: "Иван Иванов", percentageCourse: 75, percentageTests: 45},
+    { id: 2, name: "Иван Иванов", percentageCourse: 75, percentageTests: 75},
+    { id: 3, name: "Иван Иванов", percentageCourse: 75, percentageTests: 77},
+    { id: 4, name: "Иван Иванов", percentageCourse: 75, percentageTests: 64},
+    { id: 5, name: "Иван Иванов", percentageCourse: 75, percentageTests: 0},
+    { id: 6, name: "Иван Иванов", percentageCourse: 75, percentageTests: 35},
+    { id: 7, name: "Иван Иванов", percentageCourse: 75, percentageTests: 28},
+    { id: 8, name: "Иван Иванов", percentageCourse: 75, percentageTests: 20}
+]
+
+const CourseStat = [
+    {name: "Пользователи", value: 124},
+    {name: "Курсы", value: 12},
+    {name: "Завершено", value: 89}
+]
 
 const CourseDetail = () => {
-    const { courseId } = useParams(); // Получаем courseId из URL
-    const navigate = useNavigate(); // Инициализируем useNavigate
+    const { courseId } = useParams();
+    const navigate = useNavigate();
 
-    const [course, setCourse] = useState(null); // Состояние для хранения данных текущего курса
-    const [loading, setLoading] = useState(true); // Состояние загрузки данных
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Здесь должна быть логика загрузки данных курса по courseId из API
-        const foundCourse = placeholderCoursesData.find(c => c.id === parseInt(courseId)); // Парсим ID в число
+        const foundCourse = placeholderCoursesData.find(c => c.id === parseInt(courseId));
 
         if (foundCourse) {
             setCourse(foundCourse);
         } else {
-            // Обработка случая, когда курс не найден (например, редирект на 404 или страницу курсов)
-            navigate('/teacher/mycourses', { replace: true }); // Перенаправляем назад, если курс не найден
+            navigate('/teacher/mycourses', { replace: true });
         }
-        setLoading(false); // Убираем состояние загрузки
-    }, [courseId, navigate]); // Перезапускаем эффект при изменении courseId
+        setLoading(false);
+    }, [courseId, navigate]);
 
     const handleGoBackToCourses = () => {
-        // Навигация назад к списку курсов AdminCourses
         navigate('/teacher/mycourses');
     };
 
-    // НОВАЯ ФУНКЦИЯ: Обработка клика по уроку для перехода на CoursesPage
     const handleLessonClick = (lessonId) => { // Принимаем ID урока, если нужно
         console.log(`Клик по уроку ID: ${lessonId}. Перенаправление на /courses`);
-        // Перенаправление на страницу CoursesPage
-        // Если CoursesPage должна показать конкретный урок/курс, вам нужно передать ID:
-        // navigate(`/courses?courseId=${course.id}&lessonId=${lessonId}`);
-        // Или просто перейти на CoursesPage:
         navigate('/teacher/courses');
     };
 
 
     if (loading) {
-        return <div>Загрузка...</div>; // Или любой другой индикатор загрузки
+        return <div>Загрузка...</div>;
     }
 
-    // Если курс не найден после загрузки (хотя useEffect уже редиректит), можно вернуть null или сообщение
     if (!course) {
         return null;
     }
 
     return (
-        // Используем класс для страницы, а не оверлея
         <div className={styles.courseDetailPage}>
-            <div className={styles.courseDetailContainer}> {/* Переименовали .modalContent */}
-
-                {/* Кнопка "Назад" для возврата к списку AdminCourses */}
-                <button className={styles.closeButton} onClick={handleGoBackToCourses}>
-                    × {/* Или используйте стрелку назад: ← */}
-                </button>
-
+            <div className={styles.courseDetailContainer}>
 
                 <div className={styles.detailHeader}>
                     <h3 className={styles.courseTitle}>{course.name}</h3>
@@ -106,8 +107,6 @@ const CourseDetail = () => {
 
                 <div className={styles.detailBody}>
                     <div className={styles.previewArea}>
-                        {/* This is where the course preview would go */}
-                        {/* For now, using a placeholder */}
                         <div className={styles.previewPlaceholder}>
                             Тут должна быть превью курса
                         </div>
@@ -130,9 +129,9 @@ const CourseDetail = () => {
                         <ul>
                             {course.lessons.map((lesson, index) => (
                                 <li
-                                    key={lesson.id || index} // Используем ID, если есть, иначе index
-                                    className={styles.lessonItemInList} // Добавим стиль для элемента списка урока
-                                    onClick={() => handleLessonClick(lesson.id)} // ДОБАВЛЕН ОБРАБОТЧИК КЛИКА
+                                    key={lesson.id || index}
+                                    className={styles.lessonItemInList}
+                                    onClick={() => handleLessonClick(lesson.id)}
                                 >
                                     {`Урок ${index + 1}: "${lesson.title}"`}
                                 </li>
@@ -146,7 +145,23 @@ const CourseDetail = () => {
 
                 <div className={styles.studentsArea}>
                     <h4>Список учеников</h4>
-                    <p>Список учеников будет здесь...</p>
+                    <div className={styles.studentGrid}>
+                        {StudentList.map((student, index) => (
+                            <div key={student.id || index} className={styles.studentCard}>
+                                <strong>{index + 1}. {student.name}</strong><br />
+                                Прогресс по курсу: {student.percentageCourse}%<br />
+                                Прогресс по тестам: {student.percentageTests}%
+                            </div>
+                        ))}
+                    </div>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={CourseStat} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="value" fill="#4f46e5" radius={[10, 10, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
 
             </div>

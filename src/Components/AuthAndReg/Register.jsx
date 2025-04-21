@@ -10,8 +10,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
-  const [registerUser, {isLoading  }] = useRegisterUserMutation();
-  const [registerAdmin, {}] = useRegisterAdminMutation(); // Assuming you have a separate mutation for admin registration
+  const [registerAdmin, {isLoading}] = useRegisterAdminMutation(); // Assuming you have a separate mutation for admin registration
 
   const navigate = useNavigate();
 
@@ -30,19 +29,9 @@ const Register = () => {
     }
 
     try {
-      if (role === 'user') {
-        const newUser = {username, email, password};
-
-        await registerUser(newUser).unwrap();
-      }
-
-      else if (role === 'admin') {
-        const newAdmin = {username, email, password};
-
+        const newAdmin = {username, email, password, role};
         await registerAdmin(newAdmin).unwrap();
-      }
 
-      alert(`Регистрация как ${role === 'teacher' ? 'Учитель' : 'Ученик'} прошла успешно!`);
       navigate('/login');
     } catch (err) {
       console.error('Ошибка регистрации:', err);
