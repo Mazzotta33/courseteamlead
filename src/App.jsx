@@ -14,7 +14,7 @@ import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
 import CoursesGrid from "./Components/Layout/CoursesGrid.jsx";
 import ProfilePage from "./Components/Layout/ProfilePage.jsx";
 
-function App(props) {
+function App() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userRole = localStorage.getItem('userRole');
 

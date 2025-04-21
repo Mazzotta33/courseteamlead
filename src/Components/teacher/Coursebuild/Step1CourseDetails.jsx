@@ -1,8 +1,8 @@
-// src/components/Teacher/CourseBuilder/Step1CourseDetails.js
+// src/components/Teacher/Coursebuild/Step1CourseDetails.jsx
 import React from 'react';
 import styles from '../CoursesBuilderPage.module.css'; // Используем те же стили
 
-const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
+const Step1CourseDetails = ({ courseData, setCourseData, onNext, isSaving }) => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCourseData(prev => ({ ...prev, [name]: value }));
@@ -12,22 +12,36 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             const imageUrl = URL.createObjectURL(file);
-            setCourseData(prev => ({ ...prev, previewImage: imageUrl, imageName: file.name }));
-            console.log("Изображение 'загружено':", file.name);
+
+            setCourseData(prev => ({
+                ...prev,
+                previewImage: imageUrl,
+                previewImageFile: file,
+                imageName: file.name
+            }));
+            console.log("Изображение выбрано:", file.name, "Blob URL:", imageUrl);
+        } else {
+            setCourseData(prev => ({
+                ...prev,
+                previewImage: null,
+                previewImageFile: null,
+                imageName: ''
+            }));
         }
     };
 
     const handleNextClick = () => {
-        if (!courseData.courseName || !courseData.courseDescription) {
-            alert('Пожалуйста, заполните название и описание курса.');
+        if (!courseData.courseName || !courseData.courseDescription || !courseData.previewImageFile) {
+            alert('Пожалуйста, заполните все поля и загрузите изображение.');
             return;
         }
-        onNext();
+        onNext(); // Вызываем обработчик перехода в родительском компоненте
     }
 
     return (
         <div>
-            <h3>Этап 1: Создание нового курса</h3>
+            <h3>Этап 1: Детали курса</h3>
+
             <div className={styles.formGroup}>
                 <label htmlFor="courseName">Название курса</label>
                 <input
@@ -38,8 +52,10 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
                     onChange={handleInputChange}
                     placeholder="Введите название курса"
                     required
+                    disabled={isSaving}
                 />
             </div>
+
             <div className={styles.formGroup}>
                 <label htmlFor="courseDescription">Описание курса</label>
                 <textarea
@@ -50,8 +66,10 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
                     placeholder="Опишите ваш курс"
                     rows="4"
                     required
+                    disabled={isSaving}
                 />
             </div>
+
             <div className={styles.formGroup}>
                 <label htmlFor="coursePreview">Превью курса</label>
                 <div className={styles.imageUpload}>
@@ -66,14 +84,24 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext }) => {
                             <span>Загрузите изображение для превью курса</span>
                         </div>
                     )}
-                    <label className={styles.uploadButton}>
-                        <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }}/>
+                    <label className={styles.uploadButton} style={{ pointerEvents: isSaving ? 'none' : 'auto', opacity: isSaving ? 0.6 : 1 }}>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} disabled={isSaving}/>
                         {courseData.imageName ? `Изменить (${courseData.imageName})` : 'Загрузить изображение'}
                     </label>
+                    {courseData.imageName && !isSaving && (
+                        <span className={styles.fileNameDisplay}>{courseData.imageName}</span>
+                    )}
                 </div>
             </div>
-            <div className={styles.navigationButtons} style={{ justifyContent: 'flex-end' }}> {/* Выравнивание кнопки вправо */}
-                <button onClick={handleNextClick} className={styles.navButton}>Продолжить</button>
+
+            <div className={styles.navigationButtons} style={{ justifyContent: 'flex-end' }}>
+                <button
+                    onClick={handleNextClick}
+                    className={styles.navButton}
+                    disabled={isSaving}
+                >
+                    {isSaving ? 'Создание курса...' : 'Продолжить'}
+                </button>
             </div>
         </div>
     );

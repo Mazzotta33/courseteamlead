@@ -2,47 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './CourseDetail.module.css';
 import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-
-// В реальном приложении эти данные должны быть загружены из API
-// Перенесем их за пределы компонента CourseDetail или загрузим в useEffect
-const placeholderCoursesData = [
-    {
-        id: 1,
-        link: "https://avatars.mds.yandex.net/i?id=80c92e08b6f3e2b7d7b0c50265a9c907_l-5875850-images-thumbs&n=13",
-        name: "Основы React",
-        description: "Изучите базовые концепции React от нуля до первого приложения.",
-        preview: "placeholder_preview_link_1", // Placeholder for preview image/video
-        lessons: [
-            { id: 101, title: "Введение в React" }, // Добавлены ID уроков для примера, хотя они не используются в этой версии навигации
-            { id: 102, title: "Компоненты и Пропсы" },
-            { id: 103, title: "Состояние и Жизненный цикл" },
-        ]
-    },
-    {
-        id: 2,
-        link: "https://avatars.mds.yandex.net/i?id=80c92e08b6f3e2b7d7b0c50265a9c907_l-5875850-images-thumbs&n=13",
-        name: "Продвинутый JavaScript",
-        description: "Глубокое погружение в современные возможности JavaScript.",
-        preview: "placeholder_preview_link_2",
-        lessons: [
-            { id: 201, title: "Async/Await" },
-            { id: 202, title: "Модули ES6" },
-            { id: 203, title: "Работа с API" },
-        ]
-    },
-    {
-        id: 3,
-        link: "https://avatars.mds.yandex.net/i?id=80c92e08b6f3e2b7d7b0c50265a9c907_l-5875850-images-thumbs&n=13",
-        name: "CSS-модули",
-        description: "Эффективное управление стилями в больших проектах.",
-        preview: "placeholder_preview_link_3",
-        lessons: [
-            { id: 301, title: "Что такое CSS-модули" },
-            { id: 302, title: "Настройка и использование" },
-            { id: 303, title: "Преимущества и недостатки" },
-        ]
-    },
-];
+import {useGetCoursesQuery, useGetLessonsQuery, useGetUsersQuery} from "../../../Redux/api/coursesApi.js";
 
 const StudentList = [
     { id: 1, name: "Иван Иванов", percentageCourse: 75, percentageTests: 45},
@@ -68,8 +28,12 @@ const CourseDetail = () => {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery()
+    const {data: usersData = [], isLoading, error} = useGetUsersQuery(courseId)
+    const {data: lessonsData = [], isLoading: lessonsLoading, error: lessonsError} = useGetLessonsQuery(courseId)
+
     useEffect(() => {
-        const foundCourse = placeholderCoursesData.find(c => c.id === parseInt(courseId));
+        const foundCourse = coursesData.find(c => c.id === parseInt(courseId));
 
         if (foundCourse) {
             setCourse(foundCourse);
@@ -79,15 +43,10 @@ const CourseDetail = () => {
         setLoading(false);
     }, [courseId, navigate]);
 
-    const handleGoBackToCourses = () => {
-        navigate('/teacher/mycourses');
-    };
-
     const handleLessonClick = (lessonId) => { // Принимаем ID урока, если нужно
         console.log(`Клик по уроку ID: ${lessonId}. Перенаправление на /courses`);
         navigate('/teacher/courses');
     };
-
 
     if (loading) {
         return <div>Загрузка...</div>;
@@ -108,14 +67,14 @@ const CourseDetail = () => {
                 <div className={styles.detailBody}>
                     <div className={styles.previewArea}>
                         <div className={styles.previewPlaceholder}>
-                            Тут должна быть превью курса
+                            <img src={course.previewPhotoKey}/>
                         </div>
                     </div>
 
                     <div className={styles.infoArea}>
                         <div className={styles.nameAndDescription}>
                             <h4>Название курса</h4>
-                            <p>{course.name}</p>
+                            <p>{course.title}</p>
                             <h4>Описание курса</h4>
                             <p>{course.description}</p>
                         </div>
@@ -125,9 +84,9 @@ const CourseDetail = () => {
 
                 <div className={styles.lessonsArea}>
                     <h4>Уроки:</h4>
-                    {course.lessons && course.lessons.length > 0 ? (
+                    {lessonsData && lessonsData.length ? (
                         <ul>
-                            {course.lessons.map((lesson, index) => (
+                            {lessonsData.map((lesson, index) => (
                                 <li
                                     key={lesson.id || index}
                                     className={styles.lessonItemInList}
@@ -146,7 +105,7 @@ const CourseDetail = () => {
                 <div className={styles.studentsArea}>
                     <h4>Список учеников</h4>
                     <div className={styles.studentGrid}>
-                        {StudentList.map((student, index) => (
+                        {usersData.map((student, index) => (
                             <div key={student.id || index} className={styles.studentCard}>
                                 <strong>{index + 1}. {student.name}</strong><br />
                                 Прогресс по курсу: {student.percentageCourse}%<br />

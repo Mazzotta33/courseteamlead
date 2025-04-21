@@ -59,21 +59,24 @@
 }
 
 .previewArea {
-    flex: 1; /* Takes available space */
-    /* Ensure preview area doesn't shrink too much */
-    min-width: 250px;
-    /* Allow preview to take full width if needed on smaller screens */
-    width: 100%;
+    flex: 1;
 }
 
 .previewPlaceholder {
-    width: 100%;
+    width: 200px;
     height: 200px; /* Adjust height as needed for a larger view */
     background-color: #ddd; /* Placeholder color */
     display: flex;
     justify-content: center;
     align-items: center;
     color: #555;
+    border-radius: 4px; /* Keep subtle border radius */
+    object-fit: cover;
+}
+
+.previewPlaceholder img {
+    max-width: 200px;
+    max-height: 200px;
     border-radius: 4px; /* Keep subtle border radius */
 }
 
