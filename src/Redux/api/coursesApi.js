@@ -15,27 +15,29 @@ export const coursesGetApi = createApi({
     endpoints: (builder) => ({
         getCourses: builder.query({
             query: () => ({
-                url: 'course/mycourses',
+                url: 'courses/mycourses',
                 method: 'GET',
             })
         }),
         createCourse: builder.mutation({
             query: (courseData) => ({
-                url: 'course',
+                url: 'courses',
                 method: 'POST',
                 body: courseData,
             }),
         }),
         createLesson: builder.mutation({
-            query: ({ courseId, lessonData }) => ({
+            // Теперь принимаем все три: courseId, params, lessonData
+            query: ({ courseId, params, lessonData }) => ({
                 url: `courses/${courseId}/lessons`,
                 method: 'POST',
-                body: lessonData,
+                body: lessonData, // Отправляем FormData в теле
+                params: params,   // <-- ВОТ ЧТО НУЖНО ДОБАВИТЬ, чтобы отправить query-параметры
             }),
         }),
         getUsers: builder.query({
             query: (id) => ({
-                url: `course/${id}/users`,
+                url: `courses/${id}/users`,
                 method: 'GET'
             })
         }),
@@ -44,9 +46,16 @@ export const coursesGetApi = createApi({
                 url: `courses/${courseId}/lessons`,
                 method: 'GET'
             })
+        }),
+        getSoloLesson: builder.query({
+            query: ({courseId, lessonId}) => ({
+                url: `courses/${courseId}/lessons/${lessonId}`,
+                method: 'GET',
+            })
         })
     })
 });
 
 export const { useGetCoursesQuery, useCreateCourseMutation,
-    useCreateLessonMutation, useGetUsersQuery, useGetLessonsQuery} = coursesGetApi;
+    useCreateLessonMutation, useGetUsersQuery, useGetLessonsQuery,
+useGetSoloLessonQuery} = coursesGetApi;

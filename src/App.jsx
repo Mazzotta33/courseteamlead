@@ -13,6 +13,7 @@ import UserLayout from "./Components/Layout/UserLayout.jsx";
 import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
 import CoursesGrid from "./Components/Layout/CoursesGrid.jsx";
 import ProfilePage from "./Components/Layout/ProfilePage.jsx";
+import {coursesGetApi} from "./Redux/api/coursesApi.js";
 
 function App() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -31,7 +32,7 @@ function App() {
                         <Route path="chat" element={<ChatPage role={userRole}/>} />
                         <Route path="mycourses" element={<AdminCourses/>}/>
                         <Route path="mycourses/detail/:courseId" element={<CourseDetail/>}/>
-                        <Route path="courses" element={<CoursesPage role={userRole}/>} />
+                        <Route path="courses/:courseId" element={<CoursesPage role={userRole}/>} />
                     </Route>
                 ) : null}
 

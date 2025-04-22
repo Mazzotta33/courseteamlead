@@ -4,17 +4,6 @@ import styles from './CourseDetail.module.css';
 import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import {useGetCoursesQuery, useGetLessonsQuery, useGetUsersQuery} from "../../../Redux/api/coursesApi.js";
 
-const StudentList = [
-    { id: 1, name: "Иван Иванов", percentageCourse: 75, percentageTests: 45},
-    { id: 2, name: "Иван Иванов", percentageCourse: 75, percentageTests: 75},
-    { id: 3, name: "Иван Иванов", percentageCourse: 75, percentageTests: 77},
-    { id: 4, name: "Иван Иванов", percentageCourse: 75, percentageTests: 64},
-    { id: 5, name: "Иван Иванов", percentageCourse: 75, percentageTests: 0},
-    { id: 6, name: "Иван Иванов", percentageCourse: 75, percentageTests: 35},
-    { id: 7, name: "Иван Иванов", percentageCourse: 75, percentageTests: 28},
-    { id: 8, name: "Иван Иванов", percentageCourse: 75, percentageTests: 20}
-]
-
 const CourseStat = [
     {name: "Пользователи", value: 124},
     {name: "Курсы", value: 12},
@@ -43,9 +32,9 @@ const CourseDetail = () => {
         setLoading(false);
     }, [courseId, navigate]);
 
-    const handleLessonClick = (lessonId) => { // Принимаем ID урока, если нужно
+    const handleLessonClick = (lessonId) => {
         console.log(`Клик по уроку ID: ${lessonId}. Перенаправление на /courses`);
-        navigate('/teacher/courses');
+        navigate(`/teacher/courses/${courseId}`);
     };
 
     if (loading) {
@@ -92,7 +81,7 @@ const CourseDetail = () => {
                                     className={styles.lessonItemInList}
                                     onClick={() => handleLessonClick(lesson.id)}
                                 >
-                                    {`Урок ${index + 1}: "${lesson.title}"`}
+                                    {`Урок ${index + 1}: "${lesson.name}"`}
                                 </li>
                             ))}
                         </ul>

@@ -1,9 +1,7 @@
 // src/components/Teacher/Coursebuild/Step4TestCreator.js
-// Был Step3TestCreator.js
 import React, { useState, useEffect } from 'react';
 import styles from '../CoursesBuilderPage.module.css';
 
-// Убрали пропс courseId
 const Step4TestCreator = ({ initialQuestions = [], onPrev, onFinish, isSaving }) => {
     const [questions, setQuestions] = useState(initialQuestions);
     const [currentQuestionText, setCurrentQuestionText] = useState('');
@@ -78,13 +76,12 @@ const Step4TestCreator = ({ initialQuestions = [], onPrev, onFinish, isSaving })
                 return;
             }
         }
-        onFinish(questions); // Передаем массив вопросов в родительский компонент
+        onFinish(questions);
     };
 
     return (
         <div>
             <h3>Этап 4: Создание теста</h3>
-            {/* Убрали отображение Course ID */}
             <p>Добавьте вопросы и варианты ответа для теста вашего курса.</p>
 
             <div className={styles.questionList}>

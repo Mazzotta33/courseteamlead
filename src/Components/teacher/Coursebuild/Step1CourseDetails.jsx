@@ -35,7 +35,7 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext, isSaving }) => 
             alert('Пожалуйста, заполните все поля и загрузите изображение.');
             return;
         }
-        onNext(); // Вызываем обработчик перехода в родительском компоненте
+        onNext();
     }
 
     return (
