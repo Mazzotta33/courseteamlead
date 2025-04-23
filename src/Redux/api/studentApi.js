@@ -13,7 +13,7 @@ export const myCoursesGetApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getCourses: builder.query({
+        getMyCourses: builder.query({
             query: () => ({
                 url: 'courses/mycourses',
                 method: 'GET',
@@ -24,9 +24,20 @@ export const myCoursesGetApi = createApi({
                 url: 'courses',
                 method: 'GET',
             })
-        })
-
+        }),
+        getCourse: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}`,
+                method: 'GET',
+            })
+        }),
+        isRegistered: builder.query({
+            query: (id) => ({
+                url: `courses/${id}/checkregister`,
+                method: 'GET',
+            })
+        }),
     })
 });
 
-export const { useGetCoursesQuery, useGetAllCoursesQuery } = myCoursesGetApi;
+export const { useGetMyCoursesQuery, useGetAllCoursesQuery, useGetCourseQuery, useIsRegisteredQuery } = myCoursesGetApi;

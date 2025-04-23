@@ -92,7 +92,7 @@ function App() {
             {isLoggedIn && userRole === 'User' ? (
                 <Route path="/" element={<UserLayout />}>
                     <Route path="mainwindow" element={<CoursesGrid/>} />
-                    <Route path="courses" element={<CoursesPage role={userRole} />} />
+                    <Route path="courses/:courseId" element={<CoursesPage role={userRole} />} />
                     <Route path="chat" element={<ChatPage role={userRole} />} />
                     <Route path="profile" element={<ProfilePage/>}/>
                 </Route>

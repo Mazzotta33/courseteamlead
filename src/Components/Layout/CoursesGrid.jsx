@@ -12,7 +12,7 @@ const CoursesGrid = () => {
             <div className={styles.wrapper}>
                 <div className={styles.grid}>
                     {coursesData.map((course, idx) => (
-                        <figure className={styles.card} key={idx} onClick={() => navigate('/courses')}>
+                        <figure className={styles.card} key={idx} onClick={() => navigate(`/courses/${course.id}`)}>
                             <img src={course.previewPhotoKey} alt={`${course.title}`} className={styles.image}/>
                             <figcaption>{course.title}</figcaption>
                             <p className={styles.description}>{course.description}</p>
