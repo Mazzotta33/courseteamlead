@@ -27,12 +27,11 @@ export const coursesGetApi = createApi({
             }),
         }),
         createLesson: builder.mutation({
-            // Теперь принимаем все три: courseId, params, lessonData
             query: ({ courseId, params, lessonData }) => ({
                 url: `courses/${courseId}/lessons`,
                 method: 'POST',
-                body: lessonData, // Отправляем FormData в теле
-                params: params,   // <-- ВОТ ЧТО НУЖНО ДОБАВИТЬ, чтобы отправить query-параметры
+                body: lessonData,
+                params: params,
             }),
         }),
         getUsers: builder.query({

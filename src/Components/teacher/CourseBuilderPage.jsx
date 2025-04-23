@@ -54,7 +54,11 @@ const CourseBuilderPage = () => {
         reset: resetCreateTests
     }] = useCreateTestsMutation();
 
-    const [lessonCreationAttempted, setLessonCreationAttempted] = useState(false);
+    // Этот ref уже был для урока
+    const lessonCreationAttemptedRef = useRef(false);
+    // <-- НОВЫЙ REF ДЛЯ ОТСЛЕЖИВАНИЯ ПОПЫТКИ СОЗДАНИЯ ТЕСТОВ
+    const testCreationAttemptedRef = useRef(false);
+
 
     const isAnySaving = isCreatingCourse || isCreatingLesson || isCreatingTests;
     const isAnyError = isCreateCourseError || isCreateLessonError || isCreateTestsError;
@@ -74,7 +78,10 @@ const CourseBuilderPage = () => {
         setFirstLessonDetails({ title: '', description: '' });
         setContentItemsData([]);
         setTestQuestionsData([]);
-        setLessonCreationAttempted(false);
+        // <-- СБРОС РЕФОВ ПРИ СБРОСЕ КОНСТРУКТОРА
+        lessonCreationAttemptedRef.current = false;
+        testCreationAttemptedRef.current = false;
+
 
         if (typeof resetCreateCourse === 'function') resetCreateCourse();
         if (typeof resetCreateLesson === 'function') resetCreateLesson();
@@ -97,10 +104,12 @@ const CourseBuilderPage = () => {
         };
     }, [courseData.previewImage]);
 
+    // Effect для запуска создания урока после успешного создания курса
     useEffect(() => {
-        if (isCourseCreatedSuccess && courseCreationResult?.id && !isCreatingLesson && !lessonCreationAttempted) {
+        // Используем lessonCreationAttemptedRef для предотвращения двойной попытки создания урока
+        if (isCourseCreatedSuccess && courseCreationResult?.id && !isCreatingLesson && !lessonCreationAttemptedRef.current) {
             console.log("Effect 2: Курс успешно создан. ID:", courseCreationResult.id, " - Подготовка к созданию урока...");
-            setLessonCreationAttempted(true);
+            lessonCreationAttemptedRef.current = true; // Устанавливаем реф, что попытка создания урока будет
 
             if (!firstLessonDetails.title || firstLessonDetails.title.trim() === '') {
                 console.error("Effect 2: Ошибка: Отсутствуют детали первого урока.");
@@ -167,6 +176,7 @@ const CourseBuilderPage = () => {
                         break;
                     case 'audio':
                         if (item.content instanceof File) {
+                            // Аудио идут в Audios
                             lessonFormData.append('Audios', item.content, item.content.name);
                             hasContent = true;
                         } else {
@@ -209,7 +219,7 @@ const CourseBuilderPage = () => {
         isCourseCreatedSuccess,
         courseCreationResult,
         isCreatingLesson,
-        lessonCreationAttempted,
+        // lessonCreationAttempted, // Удаляем зависимость от state, используем ref
         createLesson,
         firstLessonDetails,
         contentItemsData,
@@ -217,10 +227,36 @@ const CourseBuilderPage = () => {
         createCourseError
     ]);
 
+    // Effect для обработки результата создания урока И тестов
     useEffect(() => {
-        // Если урок успешно создан И есть данные теста И тесты еще не создаются
-        if (isLessonCreatedSuccess && lessonCreationResult?.id && testQuestionsData && testQuestionsData.length > 0 && !isCreatingTests) {
+        console.log("Effect 3 запущен. Проверка условий для создания тестов...");
+        console.log("Effect 3 условия:", {
+            isLessonCreatedSuccess: isLessonCreatedSuccess,
+            lessonCreationResultId: lessonCreationResult?.id,
+            testQuestionsDataExists: !!testQuestionsData,
+            testQuestionsDataLength: testQuestionsData?.length,
+            isCreatingTests: isCreatingTests,
+            // <-- ЛОГИРУЕМ СОСТОЯНИЕ НОВОГО РЕФА
+            testCreationAttempted: testCreationAttemptedRef.current
+        });
+
+
+        // Условие для запуска создания тестов:
+        // - Урок успешно создан И есть его ID
+        // - Есть данные теста и они не пустые
+        // - Мутация создания тестов в данный момент НЕ идет
+        // - Мутация создания тестов еще НЕ БЫЛА ЗАПУЩЕНА для этого урока (проверка через ref)
+        if (isLessonCreatedSuccess && lessonCreationResult?.id &&
+            testQuestionsData && testQuestionsData.length > 0 &&
+            !isCreatingTests &&
+            !testCreationAttemptedRef.current // <-- ДОБАВЛЕНА ПРОВЕРКА РЕФА
+        )
+        {
+            console.log("Effect 3: Условия для создания тестов ВЫПОЛНЕНЫ.");
             console.log("Effect 3: Урок успешно создан. ID:", lessonCreationResult.id, " - Подготовка к созданию тестов...");
+
+            // Устанавливаем реф, что попытка создания тестов будет
+            testCreationAttemptedRef.current = true; // <-- УСТАНАВЛИВАЕМ РЕФ В true ПЕРЕД ВЫЗОВОМ МУТАЦИИ
 
             const formattedTestsData = testQuestionsData.map(q => {
                 const correctAnswer = q.answers.find(a => a.isCorrect);
@@ -237,23 +273,27 @@ const CourseBuilderPage = () => {
                 };
             }).filter(q => q !== null);
 
+
             if (formattedTestsData.length > 0) {
                 console.log("Effect 3: Отправка POST /tests/lesson/...", lessonCreationResult.id);
-                // ТЕПЕРЬ ОТПРАВЛЯЕМ МАССИВ НАПРЯМУЮ, КАК НА ФОТО
                 console.log("Effect 3: Отправляемое тело запроса для тестов:", formattedTestsData);
 
-
                 createTests({
-                    lessonId: lessonCreationResult.id, // Используем ID только что созданного урока
-                    testsData: formattedTestsData // <-- ОТПРАВЛЯЕМ ФОРМАТИРОВАННЫЙ МАССИВ
+                    lessonId: lessonCreationResult.id,
+                    testsData: formattedTestsData
                 });
+                console.log("Effect 3: Мутация createTests ЗАПУЩЕНА.");
+
             } else {
                 console.warn("Effect 3: Все вопросы теста оказались некорректными или пустыми после форматирования. Тесты не будут созданы.");
                 alert('Курс и первый урок успешно созданы. Тест не был создан из-за некорректных вопросов.');
                 resetBuilder();
             }
+        } else {
+            console.log("Effect 3: Условия для создания тестов НЕ выполнены.");
         }
 
+        // --- Обработка результатов мутаций (оставляем как есть) ---
         if (isTestsCreatedSuccess) {
             console.log("Effect 3: Тесты успешно созданы!");
             alert('Курс, первый урок и тесты успешно созданы!');
@@ -269,14 +309,13 @@ const CourseBuilderPage = () => {
         if (isCreateTestsError) {
             console.error('Effect 3: Ошибка создания тестов (API error):', createTestsError);
             const testsApiError = createTestsError;
-            console.error('Детали ошибки тестов:', testsApiError?.data); // Логируем детали ошибки
-            // Улучшенное сообщение об ошибке теста
+            console.error('Детали ошибки тестов:', testsApiError?.data);
             alert(`Ошибка создания тестов: ${testsApiError?.data?.title || testsApiError?.data?.message || testsApiError?.error || 'Неизвестная ошибка'}\n\nПодробности: ${JSON.stringify(testsApiError?.data?.errors || 'Нет деталей ошибки.')}`);
-
         }
 
+        console.log("Effect 3 завершен.");
 
-    }, [
+    }, [ // Зависимости - ref не добавляем в зависимости
         isLessonCreatedSuccess,
         isTestsCreatedSuccess,
         isCreateLessonError,
@@ -287,8 +326,10 @@ const CourseBuilderPage = () => {
         resetBuilder,
         createLessonError,
         createTestsError
+        // testCreationAttemptedRef // НЕ ДОБАВЛЯЕМ ref в зависимости
     ]);
 
+    // ... остальная часть компонента (handleStepComplete, renderStep, etc.)
     const handleStep1Complete = () => { setCurrentStep(2); };
 
     const handleStep2Complete = (lessonDetails) => {
@@ -318,7 +359,10 @@ const CourseBuilderPage = () => {
         }
 
         console.log("handleStep4Complete: Сброс состояния мутаций для новой попытки создания...");
-        setLessonCreationAttempted(false);
+        // Сбрасываем рефы и состояния мутаций
+        lessonCreationAttemptedRef.current = false; // Сбрасываем реф урока
+        testCreationAttemptedRef.current = false; // Сбрасываем реф теста
+
         if (typeof resetCreateCourse === 'function') resetCreateCourse();
         if (typeof resetCreateLesson === 'function') resetCreateLesson();
         if (typeof resetCreateTests === 'function') resetCreateTests();
@@ -356,6 +400,7 @@ const CourseBuilderPage = () => {
     };
 
     const totalSteps = 4;
+
 
     return (
         <div className={styles.courseBuilderContainer}>
