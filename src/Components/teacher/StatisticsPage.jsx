@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import styles from './StatisticsPage.module.css';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {useGetCoursesQuery, useGetPlatformProgressQuery} from "../../Redux/api/coursesApi.js";
 
 const StatisticsPage = () => {
     const navigate = useNavigate();
+    const { courseId } = useParams();
+
+    const {data: coursesData = [], isLoading, error} = useGetCoursesQuery();
+    const {data: platformProgress = [], isLoading: platformLoading, error: platformError} = useGetPlatformProgressQuery();
 
     const [stats] = useState({
         totalUsers: 124,
@@ -38,15 +43,15 @@ const StatisticsPage = () => {
             <div className={styles.cardsContainer}>
                 <div className={styles.statCard}>
                     <h3>👤 Всего пользователей</h3>
-                    <p className={styles.statNumber}>{stats.totalUsers}</p>
+                    <p className={styles.statNumber}>{platformProgress.allUsersCount}</p>
                 </div>
                 <div className={styles.statCard}>
                     <h3>📚 Всего курсов</h3>
-                    <p className={styles.statNumber}>{stats.totalCourses}</p>
+                    <p className={styles.statNumber}>{platformProgress.allCoursesCount}</p>
                 </div>
                 <div className={styles.statCard}>
                     <h3>✅ Завершено курсов</h3>
-                    <p className={styles.statNumber}>{stats.completedCourses}</p>
+                    <p className={styles.statNumber}>{platformProgress.allCompletedCourseCount}</p>
                 </div>
             </div>
 
@@ -65,20 +70,25 @@ const StatisticsPage = () => {
             <div className={styles.topStudentsSection}>
                 <h3 className={styles.sectionTitle}>🏆 Топ студентов по завершённым курсам</h3>
                 <ul className={styles.studentsList}>
-                    {stats.topStudents.map((student, index) => (
-                        <li key={index} className={styles.studentItem}>
-                            {index + 1}. {student.name} — <strong>{student.completed}</strong> курсов
-                        </li>
-                    ))}
+                    {platformProgress?.bestUsers && Array.isArray(platformProgress.bestUsers) && (
+                        platformProgress.bestUsers.map((student, index) => (
+                            <li key={index} className={styles.studentItem}>
+                                {index + 1}. {student}
+                            </li>
+                        ))
+                    )}
+                    {(!platformProgress || !platformProgress.bestUsers || platformProgress.bestUsers.length === 0) && !isLoading && (
+                        <p>Нет данных о лучших пользователях или данные еще загружаются.</p>
+                    )}
                 </ul>
             </div>
 
             <div>
                 <h3>Список курсов</h3>
                 <ul className={styles.studentsList}>
-                    {stats.courses.map((course, index) => (
+                    {coursesData.map((course, index) => (
                         <li key={index} className={styles.studentItem} onClick={() => {handleCourseClick(course.id)}}>
-                            {index + 1}. {course.name}
+                            {index + 1}. {course.title}
                         </li>
                     ))}
                 </ul>

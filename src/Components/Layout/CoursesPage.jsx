@@ -1,5 +1,5 @@
 // src/components/Teacher/CoursesPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './CoursesPage.module.css'; // Убедитесь, что этот CSS файл подключен и содержит все стили из наших последних обсуждений
 import TestComponent from "./TestComponent.jsx";
 import { useGetLessonsQuery, useGetSoloLessonQuery } from "../../Redux/api/coursesApi.js";
@@ -54,7 +54,7 @@ const CoursesPage = (props) => {
         }
     };
 
-    const getFileTypeFromKey = (key) => {
+    const getFileTypeFromKey = useCallback((key) => { // Добавил useCallback, чтобы функция была стабильной для useEffect (хотя здесь она не используется в зависимостях Effect)
         if (!key) return 'unknown';
         const url = key.split('?')[0];
         const extension = url.split('.').pop()?.toLowerCase();
@@ -73,7 +73,8 @@ const CoursesPage = (props) => {
 
 
         return 'unknown';
-    };
+    }, []); // Пустой массив зависимостей, так как функция не зависит от пропсов или состояния
+
 
     const RenderFileItem = ({ fileKey, index, sectionName }) => {
         const fileType = getFileTypeFromKey(fileKey);
@@ -81,22 +82,26 @@ const CoursesPage = (props) => {
 
         let content;
 
+        // Логика для встраиваемых типов (image, audio, video_file, pdf) из разных разделов (photoKeys, audioKeys, ebookKeys, lectureKeys)
         if (fileType === 'image') {
             content = <img src={fileKey} alt={fileName} className={styles.embeddedImage} />;
         } else if (fileType === 'audio') {
-            console.log('Аудиофайл:', fileKey); // <-- отладочный вывод
             content = (
                 <audio controls src={fileKey} className={styles.audioPlayer}>
                     Ваш браузер не поддерживает аудио.
                 </audio>
             );
-        } else if (fileType === 'video_file') {
+        }
+            // Обратите внимание: видео из videoKeys рендерится отдельно в основном компоненте.
+        // Этот блок нужен для видеофайлов, которые могут попасть в другие списки ключей.
+        else if (fileType === 'video_file') {
             content = (
                 <video controls src={fileKey} className={styles.videoPlayer}>
                     Ваш браузер не поддерживает видео.
                 </video>
             );
-        } else if (fileType === 'pdf') {
+        }
+        else if (fileType === 'pdf') {
             content = (
                 <div className={styles.pdfEmbedContainer}>
                     <iframe
@@ -105,6 +110,7 @@ const CoursesPage = (props) => {
                         height="100%"
                         style={{border: 'none'}}
                         title={`Просмотр PDF: ${fileName}`}
+                        allowFullScreen // Добавлен allowFullScreen для iframe
                     >
                         Ваш браузер не поддерживает встраивание PDF.
                     </iframe>
@@ -112,37 +118,39 @@ const CoursesPage = (props) => {
             );
         }
 
-        if (['image', 'audio', 'video_file', 'pdf'].includes(fileType)) {
+        // Если тип файла - один из встраиваемых И контент был успешно создан
+        if (['image', 'audio', 'video_file', 'pdf'].includes(fileType) && content) {
             return (
                 <li key={index} className={styles.fileItem}>
                     <div className={styles.filePreview}>
-                        {content}
+                        {content} {/* Отображаем встроенный контент */}
                     </div>
                     <div className={styles.fileDetails}>
-
-                        {fileType === 'pdf' && (
-                            <a href={fileKey} target="_blank" rel="noopener noreferrer" download className={styles.downloadLink}>
-                                Скачать PDF
-                            </a>
-                        )}
-                        {fileType === 'image' && (
-                            <a href={fileKey} target="_blank" rel="noopener noreferrer" download className={styles.downloadLink}>
-                                Скачать Изображение
-                            </a>
-                        )}
+                        {/* Отображаем ссылку на скачивание для встраиваемых типов */}
+                        <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName} className={styles.downloadLink}>
+                            Скачать {fileType.charAt(0).toUpperCase() + fileType.slice(1)}{fileType !== 'pdf' && fileType !== 'image' ? 'файл' : ''}
+                        </a>
                     </div>
                 </li>
             );
         }
 
+        // Рендеринг для скачиваемых файлов (text, document, ebook, archive, unknown, и встраиваемые типы, если встраивание не удалось или не применимо)
+        // Текстовые лекции из lessonInfo.textLectures обрабатываются отдельно.
+        // Этот RenderFileItem используется для файлов, ссылки на которые приходят в ключах (lectureKeys, photoKeys, ebookKeys, audioKeys).
         return (
             <li key={index} className={styles.fileItem}>
-                <a href={fileKey} target="_blank" rel="noopener noreferrer" download className={styles.fileLinkContent}>
+                <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName} className={styles.fileLinkContent}>
                     <div className={styles.fileIcon}>
                         {fileType === 'document' && '📄'}
                         {fileType === 'ebook' && '📚'}
                         {fileType === 'text' && '📝'}
                         {fileType === 'archive' && '📦'}
+                        {/* Добавляем значки для встраиваемых типов, если они здесь оказались (например, если прямое встраивание не используется для них) */}
+                        {fileType === 'image' && '🖼️'}
+                        {fileType === 'audio' && '🎵'}
+                        {fileType === 'video_file' && '🎥'}
+                        {fileType === 'pdf' && '📄'} {/* PDF может быть иконкой, если не встраивается */}
                         {fileType === 'unknown' && '❓'}
                     </div>
                     <div className={styles.fileInfo}>
@@ -157,6 +165,7 @@ const CoursesPage = (props) => {
                 </a>
             </li>
         );
+
     };
 
     if (isLoadingLessons) {
@@ -164,7 +173,9 @@ const CoursesPage = (props) => {
     }
 
     if (lessonsError) {
-        return <div className={styles.error}>Ошибка загрузки уроков: {lessonsError.message || JSON.stringify(lessonsError)}</div>;
+        // Улучшенное сообщение об ошибке для уроков
+        const lessonListErrorMsg = lessonsError?.data?.message || lessonsError?.error || JSON.stringify(lessonsError);
+        return <div className={styles.error}>Ошибка загрузки уроков: {lessonListErrorMsg}</div>;
     }
 
     if (!lessonsList || lessonsList.length === 0) {
@@ -183,7 +194,8 @@ const CoursesPage = (props) => {
                     >
                         <h3>{lesson.name}</h3>
                         <p>{lesson.description}</p>
-                        {lesson.duration && <span className={styles.duration}>{lesson.duration}</span>}
+                        {/* Возможно, добавить здесь отображение длительности урока, если она есть */}
+                        {lesson.duration && <span className={styles.duration}>{lesson.duration}</span>} {/* Если у урока есть поле duration */}
                     </div>
                 ))}
             </aside>
@@ -191,46 +203,81 @@ const CoursesPage = (props) => {
             <main className={styles.content}>
                 {mainContentView === 'lesson' && (
                     <>
+                        {/* Отображение сообщений о загрузке или ошибке при получении данных конкретного урока */}
                         {isLoadingLessonInfo && <div className={styles.loading}>Загрузка данных урока...</div>}
-                        {lessonInfoError && <div className={styles.error}>Ошибка загрузки данных урока: {lessonInfoError.message || JSON.stringify(lessonInfoError)}</div>}
+                        {lessonInfoError && (
+                            // Улучшенное сообщение об ошибке для данных урока
+                            <div className={styles.error}>
+                                Ошибка загрузки данных урока: {lessonInfoError?.data?.message || lessonInfoError?.error || JSON.stringify(lessonInfoError)}
+                            </div>
+                        )}
 
+
+                        {/* Отображаем контент урока, только если данные загружены и нет ошибок */}
                         {!isLoadingLessonInfo && !lessonInfoError && lessonInfo && (
                             <div>
+                                {/* Секция Видео из videoKeys (встраивается через iframe) */}
+                                {/* Проверяем наличие videoKeys и что это массив с элементами */}
                                 {lessonInfo.videoKeys && lessonInfo.videoKeys.length > 0 ? (
                                     <div className={styles.videoWrapper}>
                                         <iframe
-                                            src={lessonInfo.videoKeys[0]}
-                                            title={lessonInfo.title || 'Урок'}
+                                            src={lessonInfo.videoKeys[0]} // Используем первый ключ видео для iframe
+                                            title={lessonInfo.name || 'Видео урока'} // Используем имя урока как заголовок iframe
                                             frameBorder="0"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-
-                                        ></iframe>
+                                            allowFullScreen // Убедитесь, что allowFullScreen здесь тоже есть, если нужно
+                                        >
+                                            Ваш браузер не поддерживает встроенное видео.
+                                        </iframe>
                                     </div>
                                 ) : (
-                                    (lessonInfo.photoKeys?.some(key => getFileTypeFromKey(key) === 'video_file') ||
-                                        lessonInfo.ebookKeys?.some(key => getFileTypeFromKey(key) === 'video_file') ||
-                                        lessonInfo.lectureKeys?.some(key => getFileTypeFromKey(key) === 'video_file') ||
-                                        lessonInfo.audioKeys?.some(key => getFileTypeFromKey(key) === 'video_file')) ? null /* Видеофайл будет в другой секции */ : (
+                                    // Сообщение "Видео для этого урока недоступно.",
+                                    // только если НЕТ видео в videoKeys И нет видеофайлов в других секциях, которые рендерятся ниже
+                                    !lessonInfo.photoKeys?.some(key => getFileTypeFromKey(key) === 'video_file') &&
+                                    !lessonInfo.ebookKeys?.some(key => getFileTypeFromKey(key) === 'video_file') &&
+                                    !lessonInfo.lectureKeys?.some(key => getFileTypeFromKey(key) === 'video_file') &&
+                                    !lessonInfo.audioKeys?.some(key => getFileTypeFromKey(key) === 'video_file')
+                                    && (
                                         <div className={styles.noVideoMessage}>
                                             <p>Видео для этого урока недоступно.</p>
                                         </div>
                                     )
                                 )}
 
-                                <h2>{lessonInfo.title}</h2>
+                                {/* НОВАЯ Секция для Текстовых лекций из lessonInfo.textLectures */}
+                                {/* Отображаем, только если есть текстовые лекции и это массив с элементами */}
+                                {lessonInfo.textLectures && lessonInfo.textLectures.length > 0 && (
+                                    <div className={styles.contentSection}> {/* Можно переиспользовать стиль секции */}
+                                        <h3>Текстовые лекции:</h3> {/* Заголовок для секции текста */}
+                                        {/* Перебираем и отображаем каждую текстовую лекцию */}
+                                        {lessonInfo.textLectures.map((text, index) => (
+                                            // Используйте тег <p> или <div> для каждого блока текста
+                                            <p key={index} className={styles.lectureText}>{text}</p> // Убедитесь, что стиль .lectureText существует в CSS
+                                        ))}
+                                    </div>
+                                )}
+
+
+                                {/* Основная информация об уроке (название, описание) */}
+                                {/* Теперь идет ПОСЛЕ видео и текстовых лекций, как просили */}
+                                <h2>{lessonInfo.name}</h2> {/* Используем name из lessonInfo */}
                                 <p>{lessonInfo.description}</p>
 
+
+                                {/* Секция Материалы лекции (файлы) */}
                                 {lessonInfo.lectureKeys && lessonInfo.lectureKeys.length > 0 && (
                                     <div className={styles.contentSection}>
-                                        <h3>Материалы лекции:</h3>
+                                        <h3>Материалы лекции (файлы):</h3> {/* Уточнил название */}
                                         <ul className={styles.fileList}>
                                             {lessonInfo.lectureKeys.map((key, index) => (
-                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Лекция" />
+                                                // RenderFileItem теперь обрабатывает все типы файлов из lectureKeys как скачиваемые или встраиваемые (кроме inline text)
+                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Материал лекции" />
                                             ))}
                                         </ul>
                                     </div>
                                 )}
 
+                                {/* Остальные секции файлов остаются на месте */}
                                 {lessonInfo.photoKeys && lessonInfo.photoKeys.length > 0 && (
                                     <div className={styles.contentSection}>
                                         <h3>Фотографии и Документы:</h3>
@@ -244,7 +291,6 @@ const CoursesPage = (props) => {
 
                                 {lessonInfo.audioKeys && lessonInfo.audioKeys.length > 0 && (
                                     <div className={styles.contentSection}>
-
                                         <h3>Аудиозаписи:</h3>
                                         <ul className={styles.fileList}>
                                             {lessonInfo.audioKeys.map((key, index) => (
@@ -265,6 +311,7 @@ const CoursesPage = (props) => {
                                     </div>
                                 )}
 
+                                {/* Секция с кнопками (Тест, Редактировать) */}
                                 <div className={styles.lessonButtons}>
                                     {lessonInfo.tests && lessonInfo.tests.length > 0 && (
                                         <button onClick={handleShowTest} className={styles.takeTestButton}>
@@ -286,7 +333,9 @@ const CoursesPage = (props) => {
                     </>
                 )}
 
+                {/* Рендеринг компонента теста, если выбран вид "test" */}
                 {mainContentView === 'test' && (
+                    // Передаем данные тестов урока в TestComponent
                     <TestComponent lessonTests={lessonInfo?.tests} />
                 )}
             </main>

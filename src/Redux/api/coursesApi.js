@@ -52,10 +52,17 @@ export const coursesGetApi = createApi({
                 url: `courses/${courseId}/lessons/${lessonId}`,
                 method: 'GET',
             })
+        }),
+        getPlatformProgress: builder.query({
+            query: () => ({
+                url: `courses/platformprogress`,
+                method: 'GET',
+            })
         })
+
     })
 });
 
 export const { useGetCoursesQuery, useCreateCourseMutation,
     useCreateLessonMutation, useGetUsersQuery, useGetLessonsQuery,
-useGetSoloLessonQuery} = coursesGetApi;
+useGetSoloLessonQuery, useGetPlatformProgressQuery} = coursesGetApi;

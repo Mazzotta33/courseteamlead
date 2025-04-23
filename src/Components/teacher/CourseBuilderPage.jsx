@@ -5,7 +5,9 @@ import Step1CourseDetails from "./Coursebuild/Step1CourseDetails.jsx";
 import Step2LessonDetails from "./Coursebuild/Step2LessonDetails.jsx";
 import Step3ContentEditor from "./Coursebuild/Step3ContentEditor.jsx";
 import Step4TestCreator from "./Coursebuild/Step4TestCreator.jsx";
-import { useCreateCourseMutation, useCreateLessonMutation /*, useCreateTestMutation */ } from '../../Redux/api/coursesApi';
+
+import { useCreateCourseMutation, useCreateLessonMutation} from '../../Redux/api/coursesApi';
+import {useCreateTestsMutation} from "../../Redux/api/testApi.js";
 
 const CourseBuilderPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -44,12 +46,21 @@ const CourseBuilderPage = () => {
         reset: resetCreateLesson
     }] = useCreateLessonMutation();
 
-    // Флаг для предотвращения повторной попытки создания урока в том же цикле useEffect
+    const [createTests, {
+        isLoading: isCreatingTests,
+        isSuccess: isTestsCreatedSuccess,
+        isError: isCreateTestsError,
+        error: createTestsError,
+        reset: resetCreateTests
+    }] = useCreateTestsMutation();
+
     const [lessonCreationAttempted, setLessonCreationAttempted] = useState(false);
 
-    const isAnySaving = isCreatingCourse || isCreatingLesson;
-    const isAnyError = isCreateCourseError || isCreateLessonError;
-    const anyError = isCreateLessonError ? createLessonError : createCourseError;
+    const isAnySaving = isCreatingCourse || isCreatingLesson || isCreatingTests;
+    const isAnyError = isCreateCourseError || isCreateLessonError || isCreateTestsError;
+
+    const anyError = isCreateTestsError ? createTestsError : (isCreateLessonError ? createLessonError : createCourseError);
+
 
     const courseDataRef = useRef(courseData);
     useEffect(() => {
@@ -63,21 +74,19 @@ const CourseBuilderPage = () => {
         setFirstLessonDetails({ title: '', description: '' });
         setContentItemsData([]);
         setTestQuestionsData([]);
-        setLessonCreationAttempted(false); // Сброс флага попытки
+        setLessonCreationAttempted(false);
 
-        // Безопасно вызываем reset функции, если они существуют (могут быть undefined до первого вызова мутации)
         if (typeof resetCreateCourse === 'function') resetCreateCourse();
         if (typeof resetCreateLesson === 'function') resetCreateLesson();
+        if (typeof resetCreateTests === 'function') resetCreateTests();
 
-        // Очистка Blob URL для превью изображения при сбросе
         const currentImage = courseDataRef.current?.previewImage;
         if (currentImage && typeof currentImage === 'string' && currentImage.startsWith('blob:')) {
             URL.revokeObjectURL(currentImage);
             console.log("Отозван URL при сбросе:", currentImage);
         }
-    }, [resetCreateCourse, resetCreateLesson]); // Зависимости для useCallback
+    }, [resetCreateCourse, resetCreateLesson, resetCreateTests]);
 
-    // Очистка Blob URL для превью изображения при размонтировании компонента или смене изображения
     useEffect(() => {
         const imageUrl = courseData.previewImage;
         return () => {
@@ -86,167 +95,200 @@ const CourseBuilderPage = () => {
                 console.log("Отозван URL в Effect cleanup:", imageUrl);
             }
         };
-    }, [courseData.previewImage]); // Зависит только от previewImage
+    }, [courseData.previewImage]);
 
-    // Effect для запуска создания урока после успешного создания курса
     useEffect(() => {
-        // Проверяем, что курс успешно создан, есть его ID, урок еще не создается
-        // и мы еще не пытались создать урок в этом цикле создания курса
         if (isCourseCreatedSuccess && courseCreationResult?.id && !isCreatingLesson && !lessonCreationAttempted) {
             console.log("Effect 2: Курс успешно создан. ID:", courseCreationResult.id, " - Подготовка к созданию урока...");
-            setLessonCreationAttempted(true); // Устанавливаем флаг, что попытка будет
+            setLessonCreationAttempted(true);
 
-            // Проверяем, что есть данные для первого урока
             if (!firstLessonDetails.title || firstLessonDetails.title.trim() === '') {
                 console.error("Effect 2: Ошибка: Отсутствуют детали первого урока.");
                 alert('Внутренняя ошибка: Не удалось получить данные урока для отправки.');
-                return; // Прерываем выполнение эффекта
+                return;
             }
 
-            // Параметры запроса для урока (имя, описание)
             const lessonQueryParams = {
                 Name: firstLessonDetails.title,
-                ...(firstLessonDetails.description && { Description: firstLessonDetails.description }) // Добавляем описание, если оно есть
+                ...(firstLessonDetails.description && { Description: firstLessonDetails.description })
             };
 
-            // FormData для контента (файлы и текст)
             const lessonFormData = new FormData();
-            let hasContent = false; // Флаг для проверки, добавили ли что-то в FormData
+            let hasContent = false;
 
-            // --- ВОЗВРАЩЕНИЕ К СТАНДАРТНОМУ МЕТОДУ ОТПРАВКИ МАССИВА В FormData ---
-            // Бэкенд ожидает массив строк для 'Lectures'.
-            // В FormData это достигается многократным добавлением одного ключа с разными значениями.
-            // Собираем все текстовые лекции и добавляем их индивидуально.
             contentItemsData.forEach(item => {
-                if (item.type === 'text' && item.content && item.content.trim()) {
-                    // Предполагаем, что бэкенд ожидает текст лекции под ключом 'Lectures'
-                    // Добавляем каждое текстовое содержимое как отдельный элемент массива
-                    lessonFormData.append('Lectures', item.content.trim()); // Добавлено .trim()
-                    hasContent = true;
+                if (!item.content) {
+                    console.warn(`Элемент контента типа '${item.type}' не содержит содержимого.`);
+                    return;
                 }
-            });
-            // --- КОНЕЦ ВОЗВРАЩЕНИЯ К СТАНДАРТНОМУ МЕТОДУ ---
 
+                if (item.type === 'text' && (!item.content || item.content.trim() === '')) {
+                    console.warn("Пропускаем пустой текстовый элемент.");
+                    return;
+                }
 
-            // Добавляем остальные файловые типы контента
-            contentItemsData.forEach(item => {
-                // Пропускаем текст, так как он уже обработан выше
-                if (item.type === 'text') return;
-
-                // Обработка файловых типов
-                if (item.content instanceof File) {
-                    switch (item.type) {
-                        case 'video':
-                            // Предполагаем ключ 'Videos' для видео
-                            lessonFormData.append('Videos', item.content, item.content.name);
+                switch (item.type) {
+                    case 'text':
+                        if (typeof item.content === 'string' && item.content.trim()) {
+                            console.log("Добавление текстовой лекции в FormData (TextLectures):", item.content.trim().substring(0, 50) + '...');
+                            lessonFormData.append('TextLectures', item.content.trim());
                             hasContent = true;
-                            break;
-                        case 'photo':
-                            // Предполагаем ключ 'Photos' для фото/документов
+                        }
+                        break;
+                    case 'photo':
+                        if (item.content instanceof File) {
                             lessonFormData.append('Photos', item.content, item.content.name);
                             hasContent = true;
-                            break;
-                        case 'book':
-                            // Предполагаем ключ 'Books' для книг
-                            lessonFormData.append('Books', item.content, item.content.name);
+                        } else {
+                            console.warn(`Элемент контента типа 'photo' не содержит File:`, item.content);
+                        }
+                        break;
+                    case 'book':
+                        if (item.content instanceof File) {
+                            const fileName = item.content.name;
+                            const fileExtension = fileName.split('.').pop().toLowerCase();
+                            if (['pdf', 'doc', 'docx', 'ppt', 'pptx'].includes(fileExtension)) {
+                                lessonFormData.append('Lectures', item.content, item.content.name);
+                                hasContent = true;
+                            } else {
+                                console.warn(`Элемент контента типа 'book' имеет неподдерживаемое расширение файла: ${fileExtension}`);
+                            }
+                        } else {
+                            console.warn(`Элемент контента типа 'book' не содержит File:`, item.content);
+                        }
+                        break;
+                    case 'video':
+                        if (item.content instanceof File) {
+                            lessonFormData.append('Videos', item.content, item.content.name);
                             hasContent = true;
-                            break;
-                        case 'audio':
-                            // Предполагаем ключ 'Audios' для аудио
+                        } else {
+                            console.warn(`Элемент контента типа 'video' не содержит File:`, item.content);
+                        }
+                        break;
+                    case 'audio':
+                        if (item.content instanceof File) {
                             lessonFormData.append('Audios', item.content, item.content.name);
                             hasContent = true;
-                            break;
-                        default:
-                            console.warn(`Неизвестный тип контента для FormData: ${item.type}`);
-                            break;
-                    }
-                } else {
-                    console.warn(`Элемент контента типа '${item.type}' не содержит File:`, item.content);
+                        } else {
+                            console.warn(`Элемент контента типа 'audio' не содержит File:`, item.content);
+                        }
+                        break;
+                    default:
+                        console.warn(`Неизвестный или необработанный тип контента для FormData: ${item.type}`);
+                        break;
                 }
             });
+
 
             console.log("Effect 2: Отправка POST /lessons для курса ID:", courseCreationResult.id);
             console.log("Effect 2: Query Params:", lessonQueryParams);
+
+            console.log("Effect 2: FormData entries:");
             if (hasContent) {
-                // Вывод содержимого FormData для отладки
-                console.log("Effect 2: FormData entries:");
                 for (let [key, value] of lessonFormData.entries()) {
-                    // Для лекций выводим начало текста, если это строка
-                    const displayValue = key === 'Lectures' && typeof value === 'string'
-                        ? `${value.substring(0, 100)}${value.length > 100 ? '...' : ''}`
-                        : (value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value);
+                    const displayValue = value instanceof File
+                        ? `File: ${value.name} (${value.size} bytes, type: ${value.type})`
+                        : (value instanceof Blob ? `Blob: (${value.size} bytes, type: ${value.type})` : value);
                     console.log(`  ${key}:`, displayValue);
                 }
             } else {
                 console.log("Effect 2: FormData: (empty)");
             }
 
-
-            // Запускаем мутацию создания урока
             createLesson({
                 courseId: courseCreationResult.id,
                 params: lessonQueryParams,
-                lessonData: lessonFormData // Это наш FormData
+                lessonData: lessonFormData
             });
         }
-        // Обработка ошибки создания курса, если она произошла
         if (isCreateCourseError) {
             console.error('Effect 2: Ошибка создания курса (API error):', createCourseError);
-            // Ошибка уже могла быть показана в основном блоке рендеринга, но можно добавить логику здесь
         }
 
     }, [
-        isCourseCreatedSuccess, // Запускаем, когда курс создан
-        courseCreationResult,   // Запускаем, если результат создания курса изменился
-        isCreatingLesson,       // Запускаем, если статус создания урока меняется
-        lessonCreationAttempted,// Запускаем, если меняется флаг попытки
-        createLesson,           // Функция мутации стабильна, но хорошая практика добавить
-        firstLessonDetails,     // Зависит от деталей первого урока
-        contentItemsData,       // Зависит от контента урока
-        isCreateCourseError,    // Запускаем, если произошла ошибка создания курса
-        createCourseError       // Запускаем, если объект ошибки изменился
+        isCourseCreatedSuccess,
+        courseCreationResult,
+        isCreatingLesson,
+        lessonCreationAttempted,
+        createLesson,
+        firstLessonDetails,
+        contentItemsData,
+        isCreateCourseError,
+        createCourseError
     ]);
 
-    // Effect для обработки результата создания урока
     useEffect(() => {
-        if (isLessonCreatedSuccess) {
-            console.log("Effect 3: Урок успешно создан (API response):", lessonCreationResult);
-            alert('Первый урок успешно создан!');
+        // Если урок успешно создан И есть данные теста И тесты еще не создаются
+        if (isLessonCreatedSuccess && lessonCreationResult?.id && testQuestionsData && testQuestionsData.length > 0 && !isCreatingTests) {
+            console.log("Effect 3: Урок успешно создан. ID:", lessonCreationResult.id, " - Подготовка к созданию тестов...");
 
-            // Здесь можно было бы запускать создание теста, если бы была такая мутация
-            if (testQuestionsData && testQuestionsData.length > 0 /* && useCreateTestMutation */) {
-                console.log("Effect 3: Есть данные теста. Логика создания теста еще не добавлена.");
-                alert('Курс и первый урок созданы. Логика создания теста пока отсутствует.');
-                // Здесь должен быть вызов мутации создания теста
-                resetBuilder(); // Сброс формы пока что здесь
+            const formattedTestsData = testQuestionsData.map(q => {
+                const correctAnswer = q.answers.find(a => a.isCorrect);
+
+                if (!correctAnswer || !correctAnswer.text.trim()) {
+                    console.error("Effect 3: Вопрос без правильного ответа или с пустым текстом ответа:", q);
+                    return null;
+                }
+
+                return {
+                    question: q.text.trim(),
+                    answers: q.answers.map(a => a.text.trim()),
+                    correctAnswer: correctAnswer.text.trim()
+                };
+            }).filter(q => q !== null);
+
+            if (formattedTestsData.length > 0) {
+                console.log("Effect 3: Отправка POST /tests/lesson/...", lessonCreationResult.id);
+                // ТЕПЕРЬ ОТПРАВЛЯЕМ МАССИВ НАПРЯМУЮ, КАК НА ФОТО
+                console.log("Effect 3: Отправляемое тело запроса для тестов:", formattedTestsData);
+
+
+                createTests({
+                    lessonId: lessonCreationResult.id, // Используем ID только что созданного урока
+                    testsData: formattedTestsData // <-- ОТПРАВЛЯЕМ ФОРМАТИРОВАННЫЙ МАССИВ
+                });
             } else {
-                console.log("Effect 3: Нет данных теста или логика теста отсутствует. Процесс завершен.");
-                alert('Курс и первый урок успешно созданы!');
-                resetBuilder(); // Сброс формы, так как процесс завершен
+                console.warn("Effect 3: Все вопросы теста оказались некорректными или пустыми после форматирования. Тесты не будут созданы.");
+                alert('Курс и первый урок успешно созданы. Тест не был создан из-за некорректных вопросов.');
+                resetBuilder();
             }
         }
 
-        // Обработка ошибки создания урока
+        if (isTestsCreatedSuccess) {
+            console.log("Effect 3: Тесты успешно созданы!");
+            alert('Курс, первый урок и тесты успешно созданы!');
+            resetBuilder();
+        }
+
         if (isCreateLessonError) {
             console.error('Effect 3: Ошибка создания урока (API error):', createLessonError);
             const lessonApiError = createLessonError;
-            // Показываем пользователю сообщение об ошибке урока
             alert(`Ошибка создания урока: ${lessonApiError?.data?.message || lessonApiError?.error || 'Неизвестная ошибка'}`);
-            // Возможно, здесь нужно не сбрасывать всю форму, а позволить пользователю попробовать снова или отредактировать
-            // В данном случае, оставляем форму на текущем шаге с ошибкой
         }
 
-    }, [ // Зависимости Effect 3
-        isLessonCreatedSuccess, // Запускаем при успехе создания урока
-        isCreateLessonError,    // Запускаем при ошибке создания урока
-        lessonCreationResult,   // Запускаем, если результат создания урока изменился
-        testQuestionsData,      // Зависит от данных теста
-        resetBuilder            // Зависит от функции сброса
-        // Если бы была мутация создания теста, ее и ее состояние добавили бы сюда
+        if (isCreateTestsError) {
+            console.error('Effect 3: Ошибка создания тестов (API error):', createTestsError);
+            const testsApiError = createTestsError;
+            console.error('Детали ошибки тестов:', testsApiError?.data); // Логируем детали ошибки
+            // Улучшенное сообщение об ошибке теста
+            alert(`Ошибка создания тестов: ${testsApiError?.data?.title || testsApiError?.data?.message || testsApiError?.error || 'Неизвестная ошибка'}\n\nПодробности: ${JSON.stringify(testsApiError?.data?.errors || 'Нет деталей ошибки.')}`);
+
+        }
+
+
+    }, [
+        isLessonCreatedSuccess,
+        isTestsCreatedSuccess,
+        isCreateLessonError,
+        isCreateTestsError,
+        lessonCreationResult,
+        createTests,
+        testQuestionsData,
+        resetBuilder,
+        createLessonError,
+        createTestsError
     ]);
 
-
-    // Переход к следующему шагу
     const handleStep1Complete = () => { setCurrentStep(2); };
 
     const handleStep2Complete = (lessonDetails) => {
@@ -259,21 +301,13 @@ const CourseBuilderPage = () => {
     };
 
     const handleStep3Complete = (contentItems) => {
-        // Оставляем возможность создать урок без контента
-        // if (contentItems.length === 0) {
-        //     if (!window.confirm("Вы не добавили ни одного элемента контента. Продолжить без контента?")) {
-        //         return;
-        //     }
-        // }
         setContentItemsData(contentItems);
-        setCurrentStep(4); // Переходим к созданию теста
+        setCurrentStep(4);
     };
 
-    // Завершение всего процесса - запуск создания курса
     const handleStep4Complete = async (questions) => {
-        setTestQuestionsData(questions); // Сохраняем данные теста
+        setTestQuestionsData(questions);
 
-        // Финальные проверки перед запуском создания курса
         if (!courseData.courseName || !courseData.courseDescription || !courseData.previewImageFile) {
             alert('Ошибка: Отсутствуют необходимые данные курса (Шаг 1).');
             setCurrentStep(1); return;
@@ -282,44 +316,34 @@ const CourseBuilderPage = () => {
             alert('Ошибка: Отсутствует название первого урока (Шаг 2).');
             setCurrentStep(2); return;
         }
-        // Контент и тест могут быть опциональными, поэтому их не проверяем на наличие
 
         console.log("handleStep4Complete: Сброс состояния мутаций для новой попытки создания...");
-        // Сбрасываем флаг попытки создания урока и состояние мутаций
         setLessonCreationAttempted(false);
         if (typeof resetCreateCourse === 'function') resetCreateCourse();
         if (typeof resetCreateLesson === 'function') resetCreateLesson();
+        if (typeof resetCreateTests === 'function') resetCreateTests();
 
-        // Подготовка FormData для создания курса
         const courseFormData = new FormData();
-        // Используем ключи, соответствующие Swagger API для создания курса
         courseFormData.append('Title', courseData.courseName);
         courseFormData.append('Description', courseData.courseDescription);
         courseFormData.append('PreviewPhoto', courseData.previewImageFile, courseData.previewImageFile.name);
 
         console.log("handleStep4Complete: Отправка POST запроса на создание курса...");
         try {
-            // Запускаем мутацию создания курса
-            // .unwrap() позволяет обработать ошибку напрямую здесь с помощью try/catch
             await createCourse(courseFormData).unwrap();
             console.log("handleStep4Complete: createCourse mutation triggered successfully.");
-            // Успех создания курса обрабатывается в отдельном useEffect (Effect 2),
-            // который затем запускает создание урока.
+
         } catch (err) {
             console.error("handleStep4Complete: createCourse mutation failed:", err);
-            // Ошибка будет также показана в основном блоке рендеринга через anyError
         }
     };
 
-    // Переход к предыдущему шагу
     const handlePrevStep = () => {
-        if (isAnySaving) return; // Запрещаем переход во время сохранения
-        setCurrentStep(prev => Math.max(1, prev - 1)); // Не уходим ниже шага 1
+        if (isAnySaving) return;
+        setCurrentStep(prev => Math.max(1, prev - 1));
     };
 
-    // Рендеринг текущего шага
     const renderStep = () => {
-        // Отключаем интерактивность шагов во время сохранения
         const isStepDisabled = isAnySaving;
 
         switch (currentStep) {
@@ -331,22 +355,17 @@ const CourseBuilderPage = () => {
         }
     };
 
-    const totalSteps = 4; // Общее количество шагов в конструкторе
+    const totalSteps = 4;
 
     return (
         <div className={styles.courseBuilderContainer}>
             <h2>Конструктор курсов</h2>
 
-            {/* Индикатор прогресса */}
             <div className={styles.progressBar}>
-                {/* Заливка прогресса */}
                 <div
                     className={styles.progress}
-                    // Ширина прогресса: 0% на шаге 1, 100% на последнем шаге (или перед ним, если хотите)
-                    // (currentStep - 1) / (totalSteps - 1) дает значение от 0 до 1
                     style={{ width: `${currentStep <= 1 ? 0 : ((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
                 ></div>
-                {/* Круги-индикаторы шагов */}
                 {[...Array(totalSteps)].map((_, index) => (
                     <div
                         key={index + 1}
@@ -357,30 +376,22 @@ const CourseBuilderPage = () => {
                 ))}
             </div>
 
-            {/* Оверлей загрузки/сохранения */}
             {isAnySaving && (
                 <div className={styles.loadingOverlay}>
-                    {/* Текст статуса сохранения */}
-                    {isCreatingCourse ? 'Создание курса...' : isCreatingLesson ? 'Создание первого урока...' : 'Сохранение...'} {/* Добавить текст для теста, когда будет реализовано */}
+                    {isCreatingCourse ? 'Создание курса...' : isCreatingLesson ? 'Создание первого урока...' : isCreatingTests ? 'Создание тестов...' : 'Сохранение...'}
                 </div>
             )}
 
-            {/* Сообщение об ошибке */}
             {isAnyError && !isAnySaving && (
                 <div className={styles.errorMessage}>
                     Ошибка: {anyError?.data?.message || anyError?.error || 'Неизвестная ошибка API'}
                 </div>
             )}
 
-            {/* Контент текущего шага */}
-            {/* Показываем шаги только если нет фатальной ошибки (когда !isAnyError) ИЛИ если идет процесс сохранения (чтобы оверлей был над контентом) */}
             <div className={styles.stepContent}>
                 {( !isAnyError || isAnySaving ) && renderStep()}
             </div>
 
-            {/* Кнопка "Начать заново" */}
-            {/* Показываем, если мы не на первом шаге ИЛИ если уже ввели какие-то данные курса */}
-            {/* Скрываем во время сохранения */}
             {(currentStep > 1 || courseData.courseName || courseData.courseDescription || courseData.previewImageFile) && !isAnySaving && (
                 <button onClick={resetBuilder} className={styles.resetButton} disabled={isAnySaving}>
                     Начать заново
