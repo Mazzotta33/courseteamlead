@@ -33,6 +33,7 @@
     background-color: #ddd;
     border-radius: 12px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .card figcaption {
