@@ -6,10 +6,7 @@ import { useGetLessonTestQuery, useSubmitTestResultMutation } from '../../Redux/
 
 // Компонент теперь принимает lessonId и courseId
 const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем lessonId и courseId
-    // Удаляем хардкодный массив questions
-    // const questions = [...];
 
-    // Используем хук для загрузки тестов по lessonId
     const {
         data: lessonTests,
         isLoading: isLoadingTests,
@@ -49,6 +46,7 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
             console.error("Ошибка отправки результатов теста:", submitResultError);
             const submitErrorMsg = submitResultError?.data?.message || submitResultError?.error || JSON.stringify(submitResultError);
             alert(`Ошибка отправки результатов теста: ${submitErrorMsg}`);
+            console.log(submitErrorMsg);
         }
     }, [isResultSubmittedSuccess, isSubmitResultError, submitResultError]);
 
@@ -62,7 +60,7 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (submitted || !lessonTests || !courseId || !lessonId) return; // Добавляем проверки courseId и lessonId
 
         let correctAnswersCount = 0;
@@ -78,17 +76,20 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
         setSubmitted(true); // Отмечаем тест как завершенный
 
         // <-- ОТПРАВКА РЕЗУЛЬТАТОВ ТЕСТА НА БЭКЕНД
-        const resultData = {
-            courseId: parseInt(courseId, 10), // Преобразуем courseId в число, если он строка
-            score: finalScore // Отправляем рассчитанный счет
+        const resultParams = {
+            // courseId: parseInt(courseId, 10), // Преобразуем courseId в число, если он строка
+            params: finalScore,// Отправляем рассчитанный счет
+            testid: 46,
         };
 
-        console.log(`Отправка результатов теста для урока ${lessonId}:`, resultData);
+        // console.log(`Отправка результатов теста для урока ${lessonId}:`, resultData);
+        // console.log("handleSubmit: Вызов submitTestResult с объектом:", resultData);
+        console.log(`Отправка результатов теста для урока ${lessonId} (Тест ID: 46). Query Parameters:`, resultParams); // Логируем параметры запроса
 
         // Вызываем мутацию для отправки результатов
         submitTestResult({
             lessonId: lessonId, // ID урока для URL
-            body: resultData    // Тело запроса с courseId и score
+            params: resultParams    // Тело запроса с courseId и score
         });
     };
 
