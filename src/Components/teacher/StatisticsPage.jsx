@@ -1,3 +1,5 @@
+// src/components/Teacher/Statisticpage.jsx
+
 import React, { useState } from 'react';
 import styles from './StatisticsPage.module.css';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';

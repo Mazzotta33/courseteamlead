@@ -57,11 +57,35 @@ export const coursesGetApi = createApi({
                 url: `courses/platformprogress`,
                 method: 'GET',
             })
+        }),
+        getCourseProgress: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}/allusersprogress`,
+                method: 'GET',
+            })
+        }),
+        deleteLesson: builder.mutation({
+            query: ({courseId, lessonId}) => ({
+                url: `courses/${courseId}/lessons/${lessonId}`,
+                method: 'DELETE',
+            })
+        }),
+        deleteCourse: builder.mutation({
+            query: (courseId) =>({
+                url: `courses/${courseId}`,
+                method: 'DELETE'
+            })
         })
-
     })
 });
 
-export const { useGetCoursesQuery, useCreateCourseMutation,
-    useCreateLessonMutation, useGetUsersQuery, useGetLessonsQuery,
-useGetSoloLessonQuery, useGetPlatformProgressQuery} = coursesGetApi;
+export const { useGetCoursesQuery,
+    useCreateCourseMutation,
+    useCreateLessonMutation,
+    useGetUsersQuery,
+    useGetLessonsQuery,
+    useGetSoloLessonQuery,
+    useGetPlatformProgressQuery,
+    useGetCourseProgressQuery,
+    useDeleteLessonMutation,
+    useDeleteCourseMutation} = coursesGetApi;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './CoursesPage.module.css';
 import TestComponent from "./TestComponent.jsx";
-import { useGetLessonsQuery, useGetSoloLessonQuery } from "../../Redux/api/coursesApi.js";
+import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../Redux/api/coursesApi.js";
 import { useParams } from "react-router-dom";
 
 const CoursesPage = (props) => {
@@ -25,6 +25,8 @@ const CoursesPage = (props) => {
         skip: !selectedLessonId || !courseId,
     });
 
+    const [deleteLesson, { isLoading: isDeletingLesson, error: deleteLessonError }] = useDeleteLessonMutation();
+
     useEffect(() => {
         if (lessonsList && lessonsList.length > 0 && selectedLessonId === null) {
             setSelectedLessonId(lessonsList[0].id);
@@ -38,6 +40,35 @@ const CoursesPage = (props) => {
 
     const handleShowTest = () => {
         setMainContentView('test');
+    };
+
+    const handleDeleteLesson = async () => {
+        if (!selectedLessonId || !courseId) {
+            console.error("Не выбран урок или курс для удаления");
+            return;
+        }
+
+        // Запрос подтверждения у пользователя
+        const isConfirmed = window.confirm(`Вы уверены, что хотите удалить урок "${lessonInfo?.name || 'без названия'}"?`);
+
+        if (!isConfirmed) {
+            return; // Если пользователь отменил, ничего не делаем
+        }
+
+        try {
+            // Вызываем мутацию удаления
+            await deleteLesson({ courseId, lessonId: selectedLessonId }).unwrap(); // .unwrap() для обработки ошибок
+
+            // При успешном удалении обновляем список уроков
+            refetchLessons();
+            // Очищаем выбранный урок, так как он удален
+            setSelectedLessonId(null);
+            console.log(`Урок ${selectedLessonId} успешно удален.`);
+
+        } catch (error) {
+            console.error("Ошибка при удалении урока:", error);
+            alert(`Не удалось удалить урок: ${error?.data?.message || error?.error || JSON.stringify(error)}`);
+        }
     };
 
     const getFileNameFromKey = (key, defaultName) => {
@@ -290,10 +321,11 @@ const CoursesPage = (props) => {
 
                                     {props.role === 'Admin' && (
                                         <button
-                                            onClick={() => console.log("Редактировать урок", lessonInfo.id)}
-                                            className={styles.editLessonButton}
+                                            onClick={handleDeleteLesson} // Привязываем обработчик удаления
+                                            className={styles.deleteLessonButton} // Можете создать отдельный стиль для кнопки удаления
+                                            disabled={isDeletingLesson} // Отключаем кнопку во время выполнения удаления
                                         >
-                                            Редактировать урок
+                                            {isDeletingLesson ? 'Удаление...' : 'Удалить урок'}
                                         </button>
                                     )}
                                 </div>
@@ -302,11 +334,10 @@ const CoursesPage = (props) => {
                     </>
                 )}
 
-                {/* В режиме "test" отображаем TestComponent */}
-                {/* <-- ПЕРЕДАЕМ lessonId И courseId В TestComponent */}
                 {mainContentView === 'test' && (
-                    <TestComponent lessonId={selectedLessonId} courseId={courseId} />
+                    <TestComponent lessonId={selectedLessonId} courseId={courseId}/>
                 )}
+
             </main>
         </div>
     );
