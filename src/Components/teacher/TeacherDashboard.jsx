@@ -1,7 +1,12 @@
 import React from 'react';
 import styles from './TeacherDashboard.module.css';
+import {useGetCoursesQuery} from "../../Redux/api/coursesApi.js";
+import {useNavigate} from "react-router-dom";
 
 const TeacherDashboard = () => {
+    const navigate = useNavigate();
+    const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery()
+
     const assignedCourses = [
         { id: 1, name: 'Введение в React', students: 25 },
         { id: 2, name: 'Основы JavaScript', students: 30 },
@@ -18,7 +23,7 @@ const TeacherDashboard = () => {
         activeStudents: 73,
         coursesTaught: 3,
         pendingSubmissions: 5,
-        overallProgress: 78, // в %
+        overallProgress: 78,
     };
 
     return (
@@ -29,15 +34,14 @@ const TeacherDashboard = () => {
             </p>
 
             <div className={styles.dashboardGrid}>
-
                 <div className={styles.widgetCard}>
                     <h3 className={styles.widgetTitle}>Мои курсы</h3>
                     {assignedCourses.length > 0 ? (
                         <ul className={styles.widgetList}>
-                            {assignedCourses.map(course => (
+                            {coursesData.map(course => (
                                 <li key={course.id} className={styles.widgetListItem}>
-                                    <span>{course.name} ({course.students} студ.)</span>
-                                    <button onClick={() => alert(`Переход к курсу ${course.name}`)}>Перейти</button>
+                                    <span>{course.title} </span>
+                                    <button onClick={() => navigate(`/teacher/courses/${course.id}`)}>Перейти</button>
                                 </li>
                             ))}
                         </ul>
