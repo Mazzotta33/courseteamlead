@@ -57,6 +57,12 @@ export const coursesGetApi = createApi({
                 url: `courses/platformprogress`,
                 method: 'GET',
             })
+        }),
+        isAdminOfCourse: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}/checkadmin`,
+                method: 'GET',
+            })
         })
 
     })
@@ -64,4 +70,4 @@ export const coursesGetApi = createApi({
 
 export const { useGetCoursesQuery, useCreateCourseMutation,
     useCreateLessonMutation, useGetUsersQuery, useGetLessonsQuery,
-useGetSoloLessonQuery, useGetPlatformProgressQuery} = coursesGetApi;
+useGetSoloLessonQuery, useGetPlatformProgressQuery, useIsAdminOfCourseQuery} = coursesGetApi;

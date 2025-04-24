@@ -33,7 +33,8 @@ const CoursePreview = (props) => {
             <div className={styles.courseInfo}>
                 <h2 className={styles.courseName}>{courseData.title}</h2>
                 <p className={styles.courseDescription}>{courseData.description}</p>
-                <button className={styles.enrollButton} onClick={() => handleEnrollClick()}>Записаться на курс</button>
+                {props.isAdmin && <button className={styles.enrollButton} onClick={() => handleEnrollClick()}>Записаться на
+                    курс</button>}
             </div>
             <div className={styles.courseImageContainer}>
                 <img src={courseData.previewPhotoKey} alt={courseData.name} className={styles.courseImage} />
