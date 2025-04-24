@@ -1,26 +1,12 @@
 import React, { useState } from 'react';
 import styles from './ProfilePage.module.css';
-
-const mockCourses = [
-    { title: 'React для начинающих', progress: 80 },
-    { title: 'Алгоритмы и структуры данных', progress: 50 },
-    { title: 'Введение в Node.js', progress: 100 },
-];
+import {useGetProfileQuery} from "../../Redux/api/studentApi.js";
 
 const ProfilePage = () => {
-    const [avatar, setAvatar] = useState(null);
-    const [phone, setPhone] = useState('+7 (999) 123-45-67');
-    const [telegramId, setTelegramId] = useState('@username');
+    const {data: userData, isLoading, error} = useGetProfileQuery()
 
     const handleAvatarChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setAvatar(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        console.log("change avatar");
     };
 
     return (
@@ -29,7 +15,7 @@ const ProfilePage = () => {
 
             <div className={styles.avatarSection}>
                 <img
-                    src={avatar || 'https://via.placeholder.com/150'}
+                    src={userData?.avatarKey} //todo
                     alt="Аватар"
                     className={styles.avatar}
                 />

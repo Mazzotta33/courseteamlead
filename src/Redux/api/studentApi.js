@@ -51,9 +51,15 @@ export const myCoursesGetApi = createApi({
                     'Content-Type': 'application/json'
                 }
             })
-        })
+        }),
+        getProfile: builder.query({
+            query: () => ({
+                url: 'account/userinfo',
+                method: 'GET',
+            })
+        }),
     })
 });
 
 export const { useGetMyCoursesQuery, useGetAllCoursesQuery, useGetCourseQuery, useIsRegisteredQuery,
-useGetCoursePreviewQuery, useRegisterUserMutation} = myCoursesGetApi;
+useGetCoursePreviewQuery, useRegisterUserMutation, useGetProfileQuery} = myCoursesGetApi;
