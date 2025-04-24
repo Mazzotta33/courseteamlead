@@ -21,6 +21,8 @@
 .courseImageContainer {
     width: 50%; /* Take up the other half of the container width */
     overflow: hidden; /* Clip the image to the container */
+    height: 90vh;
+
 }
 
 .courseImage {

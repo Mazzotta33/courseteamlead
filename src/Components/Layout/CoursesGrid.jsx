@@ -7,7 +7,6 @@ const CoursesGrid = () => {
     const navigate = useNavigate();
 
     const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetAllCoursesQuery();
-    console.log(coursesData);
     return (
             <div className={styles.wrapper}>
                 <div className={styles.grid}>

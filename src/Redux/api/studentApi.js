@@ -37,7 +37,23 @@ export const myCoursesGetApi = createApi({
                 method: 'GET',
             })
         }),
+        getCoursePreview: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}/foruser`,
+                method: 'GET',
+            })
+        }),
+        registerUser: builder.mutation({
+            query: (courseId) => ({
+                url: `courses/register?courseId=${courseId}`,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        })
     })
 });
 
-export const { useGetMyCoursesQuery, useGetAllCoursesQuery, useGetCourseQuery, useIsRegisteredQuery } = myCoursesGetApi;
+export const { useGetMyCoursesQuery, useGetAllCoursesQuery, useGetCourseQuery, useIsRegisteredQuery,
+useGetCoursePreviewQuery, useRegisterUserMutation} = myCoursesGetApi;
