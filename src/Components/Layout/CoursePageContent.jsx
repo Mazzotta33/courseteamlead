@@ -116,7 +116,7 @@ const CoursesPageContent = (props) => {
             content = <img src={fileKey} alt={fileName} className={styles.embeddedImage}/>;
         } else if (fileType === 'audio') {
             content = (
-                <audio controls src={fileKey} className={styles.audioPlayer}>
+                <audio controls src={fileKey}>
                     Ваш браузер не поддерживает аудио.
                 </audio>
             );

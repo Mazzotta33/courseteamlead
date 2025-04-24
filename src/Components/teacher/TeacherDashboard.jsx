@@ -1,11 +1,15 @@
 import React from 'react';
 import styles from './TeacherDashboard.module.css';
-import {useGetCoursesQuery} from "../../Redux/api/coursesApi.js";
+import {
+    useGetAdminCoursesProgressQuery,
+    useGetCoursesQuery
+} from "../../Redux/api/coursesApi.js";
 import {useNavigate} from "react-router-dom";
 
 const TeacherDashboard = () => {
     const navigate = useNavigate();
-    const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery()
+    const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery();
+    const {data: coursesProgress = [], isLoading: loading, error: progressError} = useGetAdminCoursesProgressQuery();
 
     const assignedCourses = [
         { id: 1, name: 'Введение в React', students: 25 },
@@ -71,19 +75,15 @@ const TeacherDashboard = () => {
                     <div className={styles.widgetList}>
                         <div className={styles.statItem}>
                             <span className={styles.statLabel}>Активных студентов:</span>
-                            <span className={styles.statValue}>{stats.activeStudents}</span>
+                            <span className={styles.statValue}>{coursesProgress.usersCount}</span>
                         </div>
                         <div className={styles.statItem}>
                             <span className={styles.statLabel}>Ведется курсов:</span>
-                            <span className={styles.statValue}>{stats.coursesTaught}</span>
-                        </div>
-                        <div className={styles.statItem}>
-                            <span className={styles.statLabel}>Ожидают проверки:</span>
-                            <span className={styles.statValue}>{stats.pendingSubmissions}</span>
+                            <span className={styles.statValue}>{coursesProgress.coursesCount}</span>
                         </div>
                         <div className={styles.statItem}>
                             <span className={styles.statLabel}>Общий прогресс (усредн.):</span>
-                            <span className={styles.statValue}>{stats.overallProgress}%</span>
+                            <span className={styles.statValue}>{coursesProgress.completePercentage}%</span>
                         </div>
                     </div>
                 </div>

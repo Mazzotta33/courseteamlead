@@ -75,6 +75,12 @@ export const coursesGetApi = createApi({
                 url: `courses/${courseId}`,
                 method: 'DELETE'
             })
+        }),
+        getAdminCoursesProgress: builder.query({
+           query: () => ({
+               url: `courses/admincoursesprogress`,
+               method: 'GET',
+           })
         })
     })
 });
@@ -88,4 +94,5 @@ export const { useGetCoursesQuery,
     useGetPlatformProgressQuery,
     useGetCourseProgressQuery,
     useDeleteLessonMutation,
-    useDeleteCourseMutation} = coursesGetApi;
+    useDeleteCourseMutation,
+    useGetAdminCoursesProgressQuery} = coursesGetApi;
