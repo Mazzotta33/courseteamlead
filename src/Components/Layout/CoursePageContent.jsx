@@ -1,6 +1,6 @@
 // src/components/Teacher/CoursesPage.js
 import React, { useState, useEffect, useCallback } from 'react';
-import styles from './CoursesPageContent.module.css';
+import styles from './CoursePageContent.module.css';
 import TestComponent from "./TestComponent.jsx";
 import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../Redux/api/coursesApi.js";
 import { useParams } from "react-router-dom";
