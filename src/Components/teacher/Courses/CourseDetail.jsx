@@ -5,8 +5,10 @@ import {
     useGetCoursesQuery,
     useGetLessonsQuery,
     useCreateLessonMutation,
-    useGetCourseProgressQuery, useDeleteLessonMutation, useDeleteCourseMutation
-} from "../../../Redux/api/coursesApi.js";
+    useGetCourseProgressQuery,
+    useDeleteLessonMutation,
+    useDeleteCourseMutation,
+    useLazyDownloadCourseProgressQuery} from "../../../Redux/api/coursesApi.js";
 import {useCreateTestsMutation} from "../../../Redux/api/testApi.js";
 
 import Step2LessonDetails from "../Coursebuild/Step2LessonDetails.jsx";
@@ -53,6 +55,8 @@ const CourseDetail = () => {
 
     const [deleteCourse, { isLoading: isDeletingLesson, error: deleteLessonError }] = useDeleteCourseMutation();
 
+    const [triggerDownloadProgress, { isFetching: isDownloadingProgress, error: downloadProgressError, data: downloadUrl }] = useLazyDownloadCourseProgressQuery(); // data теперь содержит URL строку
+
     const isAnyMutationLoading = isCreatingLesson || isCreatingTests;
     const isAnyMutationError = isCreateLessonError || isCreateTestsError;
     const mutationError = isCreateTestsError ? createTestsError : createLessonError;
@@ -63,18 +67,15 @@ const CourseDetail = () => {
             return;
         }
 
-        // Запрос подтверждения у пользователя
         const isConfirmed = window.confirm(`Вы уверены, что хотите удалить курс?`);
 
         if (!isConfirmed) {
-            return; // Если пользователь отменил, ничего не делаем
+            return;
         }
 
         try {
-            // Вызываем мутацию удаления
-            await deleteCourse(courseId).unwrap(); // .unwrap() для обработки ошибок
+            await deleteCourse(courseId).unwrap();
 
-            // При успешном удалении обновляем список уроков
             refetchLessons();
             navigate("/teacher/mycourses");
             console.log(`Урок ${courseId} успешно удален.`);
@@ -82,6 +83,36 @@ const CourseDetail = () => {
         } catch (error) {
             console.error("Ошибка при удалении урока:", error);
             alert(`Не удалось удалить урок: ${error?.data?.message || error?.error || JSON.stringify(error)}`);
+        }
+    };
+
+    const handleDownloadCourseProgress = async () => {
+        if (!courseId) {
+            console.error("Не выбран курс для загрузки прогресса");
+            return;
+        }
+
+        const isConfirmed = window.confirm(`Вы уверены, что хотите выгрузить прогресс по курсу "${course?.name}" в эксель таблицу?`);
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        try {
+            const result = await triggerDownloadProgress(courseId).unwrap(); // unwrap для перехвата ошибок API
+
+            if (result && typeof result === 'string') {
+                console.log(`Получена ссылка для скачивания: ${result}`);
+                window.open(result, '_blank');
+                console.log(`Выгрузка прогресса курса ${courseId} успешно начата.`);
+            } else {
+                console.error("Ошибка загрузки прогресса: Ответ не является строкой URL.", result);
+                alert("Не удалось получить ссылку для скачивания файла прогресса.");
+            }
+
+        } catch (error) {
+            console.error("Ошибка при загрузке прогресса курса:", error);
+            alert(`Не удалось загрузить эксель: ${error?.data?.message || error?.error || 'Неизвестная ошибка API при получении ссылки'}`);
         }
     };
 
@@ -245,8 +276,7 @@ const CourseDetail = () => {
 
         } catch (err) {
             console.error("handleSubmitLesson: Ошибка при создании урока или тестов:", err); // Этот лог покажет, если unwrap() отклонится (произойдет ошибка API)
-            const apiError = err; // Объект ошибки из unwrap() находится в переменной 'err'
-            // Отображаем более понятное сообщение об ошибке пользователю
+            const apiError = err;
             alert(`Ошибка при добавлении урока или тестов: ${apiError?.data?.message || apiError?.error || 'Неизвестная ошибка'}`);
         }
     };
@@ -412,7 +442,12 @@ const CourseDetail = () => {
                         <p>Уроки для этого курса пока не добавлены.</p>
                     )}
                     {lessonsData && lessonsData.length > 0 && (
-                        <button className={styles.exportButton}>Выгрузка в эксель</button>
+                        <button className={styles.exportButton} onClick={handleDownloadCourseProgress} disabled={isDownloadingProgress}>
+                            {isDownloadingProgress ? 'Выгрузка...' : 'Выгрузка в эксель'}
+                        </button>
+                    )}
+                    {downloadProgressError && (
+                        <p className={styles.errorMessage}>Ошибка выгрузки: {downloadProgressError.message || JSON.stringify(downloadProgressError)}</p> // Используем .message для объекта ошибки
                     )}
                 </div>
 

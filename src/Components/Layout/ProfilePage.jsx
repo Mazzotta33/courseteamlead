@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ProfilePage.module.css';
+import {useGetUserInfoQuery} from "../../Redux/api/authApi.js";
 
 const mockCourses = [
     { title: 'React для начинающих', progress: 80 },
@@ -10,7 +11,6 @@ const mockCourses = [
 const ProfilePage = () => {
     const [avatar, setAvatar] = useState(null);
     const [phone, setPhone] = useState('+7 (999) 123-45-67');
-    const [telegramId, setTelegramId] = useState('@username');
 
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
@@ -22,6 +22,11 @@ const ProfilePage = () => {
             reader.readAsDataURL(file);
         }
     };
+
+    const {data: userInfo = [], isLoading, error} = useGetUserInfoQuery();
+
+    const bestCourse = userInfo.bestCourse;
+    const courseProgresses = userInfo.courseProgresses || [];
 
     return (
         <div className={styles.profileContainer}>
@@ -41,28 +46,36 @@ const ProfilePage = () => {
 
             <div className={styles.infoSection}>
                 <p><strong>Телефон:</strong> {phone}</p>
-                <p><strong>Telegram ID:</strong> {telegramId}</p>
-                <p><strong>Завершённые курсы:</strong> {mockCourses.filter(c => c.progress === 100).length}</p>
-                <p><strong>Пройденные тесты:</strong> 5</p>
-                <p><strong>Средний балл по тестам:</strong> 78%</p>
-                <p><strong>Лучший результат:</strong> 95%</p>
+                <p><strong>Telegram ID:</strong> {userInfo.telegramusername}</p>
+                <p><strong>Завершённые курсы:</strong> {userInfo.endedCourses}</p>
+                <p>
+                    <strong>Лучший результат:</strong>
+                    {bestCourse && bestCourse.courseName
+                        ? `${bestCourse.courseName} (${bestCourse.completionPercentage || 0}%)`
+                        : 'Нет данных о лучшем результате'
+                    }
+                </p>
             </div>
 
             <div className={styles.courseProgressSection}>
                 <h3>Прогресс по курсам</h3>
-                {mockCourses.map((course, index) => (
-                    <div key={index} className={styles.courseItem}>
-                        <p>{course.title}</p>
-                        <div className={styles.progressBar}>
-                            <div
-                                className={styles.progressFill}
-                                style={{ width: `${course.progress}%` }}
-                            >
-                                {course.progress}%
+                {courseProgresses.length > 0 ? (
+                    courseProgresses.map((course, index) => (
+                        <div key={course.courseName || index} className={styles.courseItem}> {/* Используем courseName или index для ключа */}
+                            <p>{course.courseName}</p>
+                            <div className={styles.progressBar}>
+                                <div
+                                    className={styles.progressFill}
+                                    style={{ width: `${course.completionPercentage || 0}%` }} // Используем completionPercentage
+                                >
+                                    {course.completionPercentage || 0}%
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <p>Нет данных о прогрессе по курсам.</p>
+                )}
             </div>
         </div>
     );

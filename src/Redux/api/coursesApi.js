@@ -81,6 +81,30 @@ export const coursesGetApi = createApi({
                url: `courses/admincoursesprogress`,
                method: 'GET',
            })
+        }),
+        isAdminOfCourse: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}/checkadmin`,
+                method: 'GET',
+            })
+        }),
+        downloadCourseProgress: builder.query({
+            query: (courseId) => ({
+                url: `courses/${courseId}/usersprogress/download`,
+                method: 'GET',
+                responseHandler: async (response) => {
+                    if (!response.ok) {
+                        try {
+                            const errorBody = await response.json();
+                            throw new Error(`HTTP error ${response.status}: ${errorBody.message || JSON.stringify(errorBody)}`);
+                        } catch (e) {
+                            const errorText = await response.text();
+                            throw new Error(`HTTP error ${response.status}: ${errorText}`);
+                        }
+                    }
+                    return response.text();
+                },
+            }),
         })
     })
 });
@@ -95,4 +119,7 @@ export const { useGetCoursesQuery,
     useGetCourseProgressQuery,
     useDeleteLessonMutation,
     useDeleteCourseMutation,
-    useGetAdminCoursesProgressQuery} = coursesGetApi;
+    useGetAdminCoursesProgressQuery,
+    useIsAdminOfCourseQuery,
+    useDownloadCourseProgressQuery,
+    useLazyDownloadCourseProgressQuery} = coursesGetApi;

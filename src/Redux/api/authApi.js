@@ -28,8 +28,17 @@ export const authApi = createApi({
                 body: newAdmin,
             }),
         }),
+        getUserInfo: builder.query({
+            query: () => ({
+                url: `account/userinfo`,
+                method: 'GET'
+            })
+        })
 
     }),
 });
 
-export const { useLoginMutation, useRegisterUserMutation, useRegisterAdminMutation } = authApi;
+export const { useLoginMutation,
+    useRegisterUserMutation,
+    useRegisterAdminMutation,
+    useGetUserInfoQuery} = authApi;
