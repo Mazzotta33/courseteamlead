@@ -21,7 +21,7 @@ const CoursesPageContent = (props) => {
         data: lessonInfo,
         isLoading: isLoadingLessonInfo,
         error: lessonInfoError
-    } = useGetSoloLessonQuery({ courseId, lessonId: selectedLessonId }, {
+    } = useGetSoloLessonQuery({courseId, lessonId: selectedLessonId}, {
         skip: !selectedLessonId || !courseId,
     });
 
@@ -106,14 +106,14 @@ const CoursesPageContent = (props) => {
     }, []);
 
 
-    const RenderFileItem = ({ fileKey, index, sectionName }) => {
+    const RenderFileItem = ({fileKey, index, sectionName}) => {
         const fileType = getFileTypeFromKey(fileKey);
         const fileName = getFileNameFromKey(fileKey, `${sectionName} ${index + 1}`);
 
         let content;
 
         if (fileType === 'image') {
-            content = <img src={fileKey} alt={fileName} className={styles.embeddedImage} />;
+            content = <img src={fileKey} alt={fileName} className={styles.embeddedImage}/>;
         } else if (fileType === 'audio') {
             content = (
                 <audio controls src={fileKey} className={styles.audioPlayer}>
@@ -126,8 +126,7 @@ const CoursesPageContent = (props) => {
                     Ваш браузер не поддерживает видео.
                 </video>
             );
-        }
-        else if (fileType === 'pdf') {
+        } else if (fileType === 'pdf') {
             content = (
                 <div className={styles.pdfEmbedContainer}>
                     <iframe
@@ -151,7 +150,8 @@ const CoursesPageContent = (props) => {
                         {content}
                     </div>
                     <div className={styles.fileDetails}>
-                        <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName} className={styles.downloadLink}>
+                        <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName}
+                           className={styles.downloadLink}>
                             Скачать {fileType.charAt(0).toUpperCase() + fileType.slice(1)}{fileType !== 'pdf' && fileType !== 'image' ? 'файл' : ''}
                         </a>
                     </div>
@@ -161,7 +161,8 @@ const CoursesPageContent = (props) => {
 
         return (
             <li key={index} className={styles.fileItem}>
-                <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName} className={styles.fileLinkContent}>
+                <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName}
+                   className={styles.fileLinkContent}>
                     <div className={styles.fileIcon}>
                         {fileType === 'document' && '📄'}
                         {fileType === 'ebook' && '📚'}
@@ -203,6 +204,7 @@ const CoursesPageContent = (props) => {
 
     return (
         <div className={styles.courses}>
+
             <aside className={styles.sidebar}>
                 <h2>Доступные уроки</h2>
                 {lessonsList.map((lesson) => (
@@ -224,7 +226,8 @@ const CoursesPageContent = (props) => {
                         {isLoadingLessonInfo && <div className={styles.loading}>Загрузка данных урока...</div>}
                         {lessonInfoError && (
                             <div className={styles.error}>
-                                Ошибка загрузки данных урока: {lessonInfoError?.data?.message || lessonInfoError?.error || JSON.stringify(lessonInfoError)}
+                                Ошибка загрузки данных
+                                урока: {lessonInfoError?.data?.message || lessonInfoError?.error || JSON.stringify(lessonInfoError)}
                             </div>
                         )}
 
@@ -272,7 +275,8 @@ const CoursesPageContent = (props) => {
                                         <h3>Материалы лекции (файлы):</h3>
                                         <ul className={styles.fileList}>
                                             {lessonInfo.lectureKeys.map((key, index) => (
-                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Материал лекции" />
+                                                <RenderFileItem key={index} fileKey={key} index={index}
+                                                                sectionName="Материал лекции"/>
                                             ))}
                                         </ul>
                                     </div>
@@ -283,7 +287,8 @@ const CoursesPageContent = (props) => {
                                         <h3>Фотографии и Документы:</h3>
                                         <ul className={styles.fileList}>
                                             {lessonInfo.photoKeys.map((key, index) => (
-                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Фото/Документ" />
+                                                <RenderFileItem key={index} fileKey={key} index={index}
+                                                                sectionName="Фото/Документ"/>
                                             ))}
                                         </ul>
                                     </div>
@@ -295,7 +300,8 @@ const CoursesPageContent = (props) => {
                                         <h3>Аудиозаписи:</h3>
                                         <ul className={styles.fileList}>
                                             {lessonInfo.audioKeys.map((key, index) => (
-                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Аудиозапись" />
+                                                <RenderFileItem key={index} fileKey={key} index={index}
+                                                                sectionName="Аудиозапись"/>
                                             ))}
                                         </ul>
                                     </div>
@@ -306,7 +312,8 @@ const CoursesPageContent = (props) => {
                                         <h3>Книги и Материалы:</h3>
                                         <ul className={styles.fileList}>
                                             {lessonInfo.ebookKeys.map((key, index) => (
-                                                <RenderFileItem key={index} fileKey={key} index={index} sectionName="Материал" />
+                                                <RenderFileItem key={index} fileKey={key} index={index}
+                                                                sectionName="Материал"/>
                                             ))}
                                         </ul>
                                     </div>

@@ -1,0 +1,62 @@
+.coursePreviewContainer {
+    display: flex; /* Enable flexbox for layout */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* To contain rounded corners properly */
+    width: 100%;
+}
+
+.courseInfo {
+    flex: 1; /* Take up half of the container width */
+    padding: 20px;
+    text-align: left; /* Align text to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+}
+
+.courseImageContainer {
+    width: 50%; /* Take up the other half of the container width */
+    overflow: hidden; /* Clip the image to the container */
+    height: 90vh;
+
+}
+
+.courseImage {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove extra space below the image */
+    border-radius: 0 8px 8px 0; /* Apply rounded corners to the right side */
+}
+
+.courseName {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.courseDescription {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.enrollButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Align button to the left within the info section */
+}
+
+.enrollButton:hover {
+    background-color: #0056b3;
+}

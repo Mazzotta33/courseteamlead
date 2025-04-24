@@ -65,14 +65,11 @@ const TopNavbar = () => {
 
                 <div className={styles.lastpart}>
                     <div>
-                        <button onClick={() => navigate('/profile')}>Профиль</button>
+                        <div onClick={() => navigate('/profile')}>
+                            <img src={"./user-svgrepo-com.svg"} className={styles.profileIcon} alt="User Icon" />
+                        </div>
                     </div>
 
-                    <div className={styles.authButtons}>
-                        <>
-                            <button onClick={handleLogout} className={styles.logout}>Выйти</button>
-                        </>
-                    </div>
                 </div>
 
 
