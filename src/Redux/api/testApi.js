@@ -28,11 +28,13 @@ export const testApi = createApi({
             })
         }),
         submitTestResult: builder.mutation({
-            query: ({lessonId, resultData}) => ({
+            query: ({lessonId, params}) => ({ // Ожидаем объект с параметрами запроса (score, testId)
                 url: `tests/lesson/${lessonId}/submitresult`,
                 method: 'POST',
-                body: resultData,
-            })
+                params: params, // <-- Отправляем данные как query-параметры
+                // Тело запроса (body) не требуется согласно новому Swagger скриншоту
+                // body: undefined, // Можно явно указать undefined или просто не включать свойство body
+            }),
         })
 
     }),

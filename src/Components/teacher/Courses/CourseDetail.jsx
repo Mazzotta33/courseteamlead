@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './CourseDetail.module.css';
-import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-import {useGetCoursesQuery, useGetLessonsQuery, useGetUsersQuery, useCreateLessonMutation} from "../../../Redux/api/coursesApi.js";
+import {
+    useGetCoursesQuery,
+    useGetLessonsQuery,
+    useCreateLessonMutation,
+    useGetCourseProgressQuery,
+    useDeleteLessonMutation,
+    useDeleteCourseMutation,
+    useLazyDownloadCourseProgressQuery} from "../../../Redux/api/coursesApi.js";
 import {useCreateTestsMutation} from "../../../Redux/api/testApi.js";
 
-// Импортируем компоненты шагов из конструктора
 import Step2LessonDetails from "../Coursebuild/Step2LessonDetails.jsx";
 import Step3ContentEditor from "../Coursebuild/Step3ContentEditor.jsx";
 import Step4TestCreator from "../Coursebuild/Step4TestCreator.jsx";
-
-
-const CourseStat = [
-    {name: "Пользователи", value: 124},
-    {name: "Курсы", value: 12},
-    {name: "Завершено", value: 89}
-]
-
 
 const CourseDetail = () => {
     const { courseId } = useParams();
@@ -32,15 +29,12 @@ const CourseDetail = () => {
     const [newContentItemsData, setNewContentItemsData] = useState([]);
     const [newTestQuestionsData, setNewTestQuestionsData] = useState([]);
 
-    const handleLessonClick = (lessonId) => {
-        console.log(`Клик по уроку ID: ${lessonId}. Перенаправление на /courses`);
-        navigate(`/teacher/courses/${courseId}`);
-    };
-
 
     const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery();
     const {data: lessonsData = [], isLoading: lessonsLoading, error: lessonsError, refetch: refetchLessons} = useGetLessonsQuery(courseId);
-    const {data: usersData = [], isLoading: usersLoading, error: usersError} = useGetUsersQuery(courseId);
+    const {data: courseProgressData = [], isLoading: courseProgressLoading, error: courseProgressError} = useGetCourseProgressQuery(courseId, {
+        skip: !courseId
+    });
 
     const [createLesson, {
         isLoading: isCreatingLesson,
@@ -59,9 +53,68 @@ const CourseDetail = () => {
         reset: resetCreateTests
     }] = useCreateTestsMutation();
 
+    const [deleteCourse, { isLoading: isDeletingLesson, error: deleteLessonError }] = useDeleteCourseMutation();
+
+    const [triggerDownloadProgress, { isFetching: isDownloadingProgress, error: downloadProgressError, data: downloadUrl }] = useLazyDownloadCourseProgressQuery(); // data теперь содержит URL строку
+
     const isAnyMutationLoading = isCreatingLesson || isCreatingTests;
     const isAnyMutationError = isCreateLessonError || isCreateTestsError;
     const mutationError = isCreateTestsError ? createTestsError : createLessonError;
+
+    const handleDeleteCourse = async () => {
+        if (!courseId) {
+            console.error("Не выбран урок или курс для удаления");
+            return;
+        }
+
+        const isConfirmed = window.confirm(`Вы уверены, что хотите удалить курс?`);
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        try {
+            await deleteCourse(courseId).unwrap();
+
+            refetchLessons();
+            navigate("/teacher/mycourses");
+            console.log(`Урок ${courseId} успешно удален.`);
+
+        } catch (error) {
+            console.error("Ошибка при удалении урока:", error);
+            alert(`Не удалось удалить урок: ${error?.data?.message || error?.error || JSON.stringify(error)}`);
+        }
+    };
+
+    const handleDownloadCourseProgress = async () => {
+        if (!courseId) {
+            console.error("Не выбран курс для загрузки прогресса");
+            return;
+        }
+
+        const isConfirmed = window.confirm(`Вы уверены, что хотите выгрузить прогресс по курсу "${course?.name}" в эксель таблицу?`);
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        try {
+            const result = await triggerDownloadProgress(courseId).unwrap(); // unwrap для перехвата ошибок API
+
+            if (result && typeof result === 'string') {
+                console.log(`Получена ссылка для скачивания: ${result}`);
+                window.open(result, '_blank');
+                console.log(`Выгрузка прогресса курса ${courseId} успешно начата.`);
+            } else {
+                console.error("Ошибка загрузки прогресса: Ответ не является строкой URL.", result);
+                alert("Не удалось получить ссылку для скачивания файла прогресса.");
+            }
+
+        } catch (error) {
+            console.error("Ошибка при загрузке прогресса курса:", error);
+            alert(`Не удалось загрузить эксель: ${error?.data?.message || error?.error || 'Неизвестная ошибка API при получении ссылки'}`);
+        }
+    };
 
     useEffect(() => {
         if (coursesData && coursesData.length > 0) {
@@ -82,7 +135,12 @@ const CourseDetail = () => {
             setLoading(false);
             console.error("Ошибка загрузки данных курсов:", coursesError);
         }
-    }, [courseId, navigate, coursesData, coursesLoading, coursesError]); // Depend on coursesData, loading, error
+    }, [courseId, navigate, coursesData, coursesLoading, coursesError]);
+
+    const handleLessonClick = (lessonId) => {
+        console.log(`Клик по уроку ID: ${lessonId}.`);
+        navigate(`/teacher/courses/${courseId}`);
+    };
 
     const handleNextAddLessonStep = (data) => {
         if (addLessonStep === 2) {
@@ -105,8 +163,7 @@ const CourseDetail = () => {
 
     const handleSubmitLesson = async (questions) => {
         console.log("handleSubmitLesson: Данные тестов получены из Step 4:", questions);
-
-        setNewTestQuestionsData(questions); // Сохраняем данные тестов в state
+        setNewTestQuestionsData(questions);
 
         if (!newLessonDetails.title.trim()) {
             alert('Ошибка: Отсутствует название урока (Шаг 2).');
@@ -115,7 +172,6 @@ const CourseDetail = () => {
         }
 
         console.log("handleSubmitLesson: Подготовка к созданию урока и тестов...");
-
         if (typeof resetCreateLesson === 'function') resetCreateLesson();
         if (typeof resetCreateTests === 'function') resetCreateTests();
 
@@ -127,7 +183,6 @@ const CourseDetail = () => {
 
         let hasContent = false;
         newContentItemsData.forEach(item => {
-            // ... логика добавления контента в FormData ...
             if (!item.content) { console.warn(`Элемент контента типа '${item.type}' не содержит содержимого.`); return; }
             if (item.type === 'text' && (!item.content || item.content.trim() === '')) { console.warn("Пропускаем пустой текстовый элемент."); return; }
             switch (item.type) {
@@ -139,7 +194,6 @@ const CourseDetail = () => {
                 default: console.warn(`Неизвестный или необработанный тип контента для FormData: ${item.type}`); break;
             }
         });
-
 
         console.log("handleSubmitLesson: FormData entries:");
         if (hasContent) {
@@ -166,20 +220,15 @@ const CourseDetail = () => {
 
             console.log("handleSubmitLesson: Урок успешно создан. ID:", lessonResult.id);
 
-            // <-- ДОБАВЛЯЕМ ЛОГ НЕПОСРЕДСТВЕННО ПЕРЕД IF
             console.log("handleSubmitLesson: Проверка условий для создания тестов после урока. Значения:", {
                 lessonResultId: lessonResult?.id,
-                questionsVariable: questions, // Логируем саму переменную questions
+                questionsVariable: questions,
                 questionsLength: questions?.length,
-                conditionResult: lessonResult?.id && questions && questions.length > 0 // Логируем результат всего условия
+                conditionResult: !!lessonResult?.id && !!questions && questions.length > 0
             });
 
-
-            if (lessonResult?.id && questions && questions.length > 0) {
-                console.log("handleSubmitLesson: Условия для создания тестов ВЫПОЛНЕНЫ. Переход к созданию тестов."); // <-- ЭТОТ ЛОГ ДОЛЖЕН ПОЯВИТЬСЯ, ЕСЛИ ВСЁ ОК
-
-                console.log("handleSubmitLesson: Подготовка к созданию тестов..."); // Этот лог можно убрать, он дублирует верхний
-
+            if (!!lessonResult?.id && !!questions && questions.length > 0) {
+                console.log("handleSubmitLesson: Условия для создания тестов ВЫПОЛНЕНЫ. Переход к созданию тестов.");
 
                 const formattedTestsData = questions.map(q => {
                     const correctAnswer = q.answers.find(a => a.isCorrect);
@@ -213,25 +262,25 @@ const CourseDetail = () => {
                     alert('Новый урок добавлен в курс. Тесты не были созданы из-за некорректных вопросов.');
                 }
             } else {
-                // <-- ЭТОТ ЛОГ ДОЛЖЕН ПОЯВИТЬСЯ, ЕСЛИ УСЛОВИЕ IF ЛОЖНО
-                console.log("handleSubmitLesson: Условия для создания тестов НЕ выполнены. Нет данных тестов для создания.");
+                console.log("handleSubmitLesson: Условия для создания тестов НЕ выполнены. Нет данных тестов для создания или lessonResult.id неверен.");
                 alert('Новый урок успешно добавлен в курс!');
             }
 
-            // <-- Эти действия выполняются в любом случае, если нет ошибки в try
             refetchLessons();
             setViewMode('details');
+
             setNewLessonDetails({ title: '', description: '' });
             setNewContentItemsData([]);
             setNewTestQuestionsData([]);
 
 
         } catch (err) {
-            console.error("handleSubmitLesson: Ошибка при создании урока или тестов:", err); // <-- Этот лог появится, если createLesson или createTests выбросит ошибку
+            console.error("handleSubmitLesson: Ошибка при создании урока или тестов:", err); // Этот лог покажет, если unwrap() отклонится (произойдет ошибка API)
             const apiError = err;
             alert(`Ошибка при добавлении урока или тестов: ${apiError?.data?.message || apiError?.error || 'Неизвестная ошибка'}`);
         }
     };
+
 
     const handleEditCourseClick = () => {
         console.log("Нажата кнопка 'Добавить урок'. Переход к добавлению урока.");
@@ -245,29 +294,36 @@ const CourseDetail = () => {
         setAddLessonStep(2);
     };
 
-    // Handler for cancelling the "add lesson" flow
     const handleCancelAddLesson = () => {
-        // Prevent cancelling if any mutation is currently running
         if (isAnyMutationLoading) return;
 
-        // Ask for confirmation before discarding entered data
         if (window.confirm('Вы уверены, что хотите отменить добавление урока? Введенные данные будут потеряны.')) {
             setViewMode('details');
             setNewLessonDetails({ title: '', description: '' });
             setNewContentItemsData([]);
             setNewTestQuestionsData([]);
+
             if (typeof resetCreateLesson === 'function') resetCreateLesson();
             if (typeof resetCreateTests === 'function') resetCreateTests();
         }
     };
 
-    if (loading || coursesLoading) {
+
+    if (loading || coursesLoading || lessonsLoading || courseProgressLoading) { // Включаем courseProgressLoading
         return <div className={styles.loading}>Загрузка данных курса...</div>;
     }
 
     if (coursesError) {
         const courseErr = coursesError?.data?.message || coursesError?.error || JSON.stringify(coursesError);
         return <div className={styles.error}>Ошибка загрузки курсов: {courseErr}</div>;
+    }
+    if (lessonsError) {
+        const lessonsErr = lessonsError?.data?.message || lessonsError?.error || JSON.stringify(lessonsError);
+        return <div className={styles.error}>Ошибка загрузки уроков: {lessonsErr}</div>;
+    }
+    if (courseProgressError) {
+        const progressErr = courseProgressError?.data?.message || courseProgressError?.error || JSON.stringify(courseProgressError);
+        return <div className={styles.error}>Ошибка загрузки прогресса учеников: {progressErr}</div>;
     }
 
     if (!course) {
@@ -310,7 +366,7 @@ const CourseDetail = () => {
                 {addLessonStep === 3 && (
                     <Step3ContentEditor
                         initialContentItems={newContentItemsData}
-                        onDataChange={setNewContentItemsData} // Pass data change handler
+                        onDataChange={setNewContentItemsData}
                         onNext={handleNextAddLessonStep}
                         onPrev={handlePrevAddLessonStep}
                         isSaving={isStepDisabled}
@@ -331,6 +387,7 @@ const CourseDetail = () => {
                         Отменить добавление урока
                     </button>
                 )}
+
             </div>
         );
     }
@@ -338,10 +395,6 @@ const CourseDetail = () => {
     return (
         <div className={styles.courseDetailPage}>
             <div className={styles.courseDetailContainer}>
-
-                <div className={styles.detailHeader}>
-                    <h3 className={styles.courseTitle}>{course.name}</h3>
-                </div>
 
                 <div className={styles.detailBody}>
                     <div className={styles.previewArea}>
@@ -353,22 +406,26 @@ const CourseDetail = () => {
                     <div className={styles.infoArea}>
                         <div className={styles.nameAndDescription}>
                             <h4>Название курса</h4>
-                            <p>{course.name}</p>
+                            <p>{course.title}</p>
                             <h4>Описание курса</h4>
                             <p>{course.description}</p>
                         </div>
-                        <button className={styles.editButton} onClick={handleEditCourseClick}>
-                            Добавить урок
+                        <button className={styles.editButton} onClick={handleDeleteCourse}>
+                            Удалить курс
                         </button>
                     </div>
                 </div>
 
                 <div className={styles.lessonsArea}>
+                    <button className={styles.editButton} onClick={handleEditCourseClick}>
+                        Добавить урок
+                    </button>
                     <h4>Уроки:</h4>
                     {lessonsLoading ? (
                         <p>Загрузка уроков...</p>
                     ) : lessonsError ? (
-                        <p className={styles.error}>Ошибка загрузки уроков: {lessonsError?.data?.message || lessonsError?.error || JSON.stringify(lessonsError)}</p>
+                        <p className={styles.error}>Ошибка загрузки
+                            уроков: {lessonsError?.data?.message || lessonsError?.error || JSON.stringify(lessonsError)}</p>
                     ) : lessonsData && lessonsData.length ? (
                         <ul>
                             {lessonsData.map((lesson, index) => (
@@ -377,7 +434,7 @@ const CourseDetail = () => {
                                     className={styles.lessonItemInList}
                                     onClick={() => handleLessonClick(lesson.id)}
                                 >
-                                    {`Урок ${index + 1}: "${lesson.name}"`} {/* Используем lesson.name */}
+                                    {`Урок ${index + 1}: "${lesson.name}"`}
                                 </li>
                             ))}
                         </ul>
@@ -385,40 +442,63 @@ const CourseDetail = () => {
                         <p>Уроки для этого курса пока не добавлены.</p>
                     )}
                     {lessonsData && lessonsData.length > 0 && (
-                        <button className={styles.exportButton}>Выгрузка в эксель</button>
+                        <button className={styles.exportButton} onClick={handleDownloadCourseProgress} disabled={isDownloadingProgress}>
+                            {isDownloadingProgress ? 'Выгрузка...' : 'Выгрузка в эксель'}
+                        </button>
+                    )}
+                    {downloadProgressError && (
+                        <p className={styles.errorMessage}>Ошибка выгрузки: {downloadProgressError.message || JSON.stringify(downloadProgressError)}</p> // Используем .message для объекта ошибки
                     )}
                 </div>
 
                 <div className={styles.studentsArea}>
-                    <h4>Список учеников</h4>
-                    {usersLoading ? (
-                        <p>Загрузка списка учеников...</p>
-                    ) : usersError ? (
-                        <p className={styles.error}>Ошибка загрузки учеников: {usersError?.data?.message || usersError?.error || JSON.stringify(usersError)}</p>
-                    ) : usersData && usersData.length ? (
-                        <div className={styles.studentGrid}>
-                            {usersData.map((student, index) => (
-                                <div key={student.id || index} className={styles.studentCard}>
-                                    <strong>{index + 1}. {student.name}</strong><br />
-                                    Прогресс по курсу: {student.percentageCourse || 0}%<br />
-                                    Прогресс по тестам: {student.percentageTests || 0}%
-                                </div>
-                            ))}
+                    <h4>Прогресс учеников по курсу</h4>
+
+                    {courseProgressLoading ? (
+                        <p>Загрузка прогресса учеников...</p>
+                    ) : courseProgressError ? (
+                        <p className={styles.error}>Ошибка загрузки прогресса учеников: {courseProgressError?.data?.message || courseProgressError?.error || JSON.stringify(courseProgressError)}</p>
+                    ) : courseProgressData && courseProgressData.length > 0 && lessonsData && lessonsData.length > 0 ? (
+                        <div className={styles.progressTableContainer}>
+                            <table className={styles.progressTable}>
+                                <thead>
+                                <tr>
+                                    <th>Ученик</th>
+                                    <th>Прогресс по курсу</th>
+                                    {lessonsData.map(lesson => (
+                                        <th key={lesson.id}>{lesson.name}</th>
+                                    ))}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {courseProgressData.map((userProgress, index) => (
+                                    <tr key={userProgress.username || index}>
+                                        <td>{userProgress.username}</td>
+                                        <td>{userProgress.completionPercentage}%</td>
+                                        {lessonsData.map(lesson => {
+                                            const lessonProgress = userProgress.lessonProgresses.find(lp => lp.lessonId === lesson.id);
+                                            return (
+                                                <td key={lesson.id}>
+                                                    {lessonProgress ?
+                                                        lessonProgress.isCompleted ?
+                                                            `Завершено (${lessonProgress.testScore || 'нет теста'})`
+                                                            : `Не завершено (${lessonProgress.testScore || 'нет теста'})`
+                                                        : '-'
+                                                    }
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
                         </div>
                     ) : (
-                        <p>Ученики на курс пока не записаны.</p>
+                        !courseProgressLoading && !courseProgressError && (
+                            <p>Нет данных о прогрессе учеников для этого курса.</p>
+                        )
                     )}
 
-                    <div className={styles.chartArea}>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={CourseStat} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Bar dataKey="value" fill="#4f46e5" radius={[10, 10, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
                 </div>
 
             </div>
