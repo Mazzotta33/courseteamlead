@@ -28,18 +28,23 @@ export const testApi = createApi({
             })
         }),
         submitTestResult: builder.mutation({
-            query: ({lessonId, params}) => ({ // Ожидаем объект с параметрами запроса (score, testId)
+            query: ({lessonId, params}) => ({
                 url: `tests/lesson/${lessonId}/submitresult`,
                 method: 'POST',
-                params: params, // <-- Отправляем данные как query-параметры
-                // Тело запроса (body) не требуется согласно новому Swagger скриншоту
-                // body: undefined, // Можно явно указать undefined или просто не включать свойство body
+                params: params,
             }),
-        })
-
+        }),
+        getQuiz: builder.query({
+            query: (theme) => ({
+                url: `tests/getquiz`,
+                method: 'GET',
+                params: { theme: theme },
+            }),
+        }),
     }),
 });
 
 export const { useCreateTestsMutation ,
     useGetLessonTestQuery,
-    useSubmitTestResultMutation} = testApi;
+    useSubmitTestResultMutation,
+    useLazyGetQuizQuery} = testApi;

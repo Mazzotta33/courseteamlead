@@ -1,0 +1,133 @@
+/* src/Components/Layout/QuizComponent.module.css */
+
+.testContainer {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.testContainer h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.questionBlock {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background-color: #fefefe;
+}
+
+.questionText {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #444;
+    line-height: 1.5;
+}
+
+.optionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.optionLabel {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    background-color: #fff;
+}
+
+.optionLabel:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+}
+
+.radioInput {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Стили для правильных и неправильных ответов после завершения теста */
+.optionLabel.correct {
+    background-color: #d4edda; /* Светло-зеленый */
+    border-color: #28a745; /* Зеленый */
+    color: #155724; /* Темно-зеленый */
+}
+
+.optionLabel.incorrect {
+    background-color: #f8d7da; /* Светло-красный */
+    border-color: #dc3545; /* Красный */
+    color: #721c24; /* Темно-красный */
+}
+
+.optionLabel.correct.incorrect {
+    /* Этот класс не должен применяться одновременно, но на всякий случай */
+    /* Если выбран неправильный ответ, но он отображается как правильный (ошибка логики),
+       можно добавить стиль для отладки. */
+}
+
+
+.submitButton {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.submitButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.results {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px dashed #007bff;
+    border-radius: 8px;
+    background-color: #e9f5ff;
+    text-align: center;
+    color: #004085;
+}
+
+.results h3 {
+    color: #002752;
+    margin-bottom: 10px;
+}
+
+.submittedMessage {
+    margin-top: 15px;
+    text-align: center;
+    color: #555;
+}
+
+.loading, .error, .noContent {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #555;
+}
+
+.error {
+    color: #dc3545;
+}

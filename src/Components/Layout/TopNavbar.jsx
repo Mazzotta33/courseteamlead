@@ -38,13 +38,14 @@ const TopNavbar = () => {
                     >
                         Курсы
                     </Link>
-                    <a
-                        href="#" // Or link to a specific test page
+                    <Link
+                        to="/take-test" // Указываем маршрут для страницы ввода темы теста
                         onMouseEnter={() => !isFeedbackModalOpen && setVisibleTooltip('test')}
                         className={styles.navLinkItem}
+                        // Удаляем href="#"
                     >
                         Пройти тест
-                    </a>
+                    </Link>
 
                     <Link
 
