@@ -38,7 +38,10 @@ export const authApi = createApi({
             query: (initDataString) => ({
                 url: `account/telegramAuth`,
                 method: 'POST',
-                body: initDataString,
+                body: JSON.stringify(initDataString),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             }),
         })
     }),

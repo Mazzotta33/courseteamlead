@@ -40,7 +40,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
-    box-sizing: border-box; /* Учитываем padding в ширине */
+    box-sizing: border-box;
 }
 
 .submitButton {
@@ -70,9 +70,9 @@
 }
 
 .error {
-    color: #dc3545; /* Красный цвет для ошибок */
+    color: #dc3545;
 }
 
 .noContentMessage {
-    color: #ffc107; /* Желтый цвет для предупреждений */
+    color: #ffc107;
 }

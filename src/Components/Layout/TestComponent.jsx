@@ -1,11 +1,9 @@
 // src/components/Teacher/TestComponent.js
 import React, { useState, useEffect } from 'react';
-import styles from './TestComponent.module.css';
-// Импортируем хуки для получения и отправки тестов
-import { useGetLessonTestQuery, useSubmitTestResultMutation } from '../../Redux/api/testApi.js'; // Импортируем useSubmitTestResultMutation
+import styles from './TestComponent.module.css'
+import { useGetLessonTestQuery, useSubmitTestResultMutation } from '../../Redux/api/testApi.js';
 
-// Компонент теперь принимает lessonId и courseId
-const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем lessonId и courseId
+const TestComponent = ({ lessonId, courseId }) => {
 
     const {
         data: lessonTests,
@@ -15,7 +13,6 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
         skip: !lessonId,
     });
 
-    // <-- ИСПОЛЬЗУЕМ ХУК ДЛЯ ОТПРАВКИ РЕЗУЛЬТАТОВ ТЕСТА
     const [submitTestResult, {
         isLoading: isSubmittingResult,
         isSuccess: isResultSubmittedSuccess,
@@ -28,19 +25,15 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
     const [submitted, setSubmitted] = useState(false);
     const [score, setScore] = useState(null);
 
-    // Сбрасываем состояние ответов, если загружаются новые тесты (при смене урока)
     useEffect(() => {
         setAnswers({});
         setSubmitted(false);
         setScore(null);
-    }, [lessonTests]); // Срабатывает при изменении данных тестов
+    }, [lessonTests]);
 
-    // Логи для отладки результата отправки
     useEffect(() => {
         if (isResultSubmittedSuccess) {
             console.log("Результаты теста успешно отправлены!");
-            // Здесь можно показать сообщение об успехе или перенаправить пользователя
-            // alert("Результаты теста успешно отправлены!"); // Пример
         }
         if (isSubmitResultError) {
             console.error("Ошибка отправки результатов теста:", submitResultError);
@@ -61,7 +54,7 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
     };
 
     const handleSubmit = async () => {
-        if (submitted || !lessonTests || !courseId || !lessonId) return; // Добавляем проверки courseId и lessonId
+        if (submitted || !lessonTests || !courseId || !lessonId) return;
 
         let correctAnswersCount = 0;
         lessonTests.forEach(q => {
@@ -70,26 +63,21 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
             }
         });
 
-        const finalScore = correctAnswersCount; // Сохраняем финальный счет
-        setScore(finalScore); // Обновляем состояние счета для отображения
+        const finalScore = correctAnswersCount;
+        setScore(finalScore);
 
-        setSubmitted(true); // Отмечаем тест как завершенный
+        setSubmitted(true);
 
-        // <-- ОТПРАВКА РЕЗУЛЬТАТОВ ТЕСТА НА БЭКЕНД
         const resultParams = {
-            // courseId: parseInt(courseId, 10), // Преобразуем courseId в число, если он строка
-            params: finalScore,// Отправляем рассчитанный счет
+            params: finalScore,
             testid: 46,
         };
 
-        // console.log(`Отправка результатов теста для урока ${lessonId}:`, resultData);
-        // console.log("handleSubmit: Вызов submitTestResult с объектом:", resultData);
-        console.log(`Отправка результатов теста для урока ${lessonId} (Тест ID: 46). Query Parameters:`, resultParams); // Логируем параметры запроса
+        console.log(`Отправка результатов теста для урока ${lessonId} (Тест ID: 46). Query Parameters:`, resultParams);
 
-        // Вызываем мутацию для отправки результатов
         submitTestResult({
-            lessonId: lessonId, // ID урока для URL
-            params: resultParams    // Тело запроса с courseId и score
+            lessonId: lessonId,
+            params: resultParams
         });
     };
 
@@ -170,24 +158,18 @@ const TestComponent = ({ lessonId, courseId }) => { // <-- Принимаем le
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            // Делаем кнопку неактивной:
-                            // - если тесты еще не загружены
-                            // - если количество ответов не соответствует количеству вопросов
-                            // - если идет отправка результата
                             className={styles.submitButton}
-                            disabled={!lessonTests || Object.keys(answers).length !== lessonTests.length || isSubmittingResult} // <-- Добавлена проверка isSubmittingResult
+                            disabled={!lessonTests || Object.keys(answers).length !== lessonTests.length || isSubmittingResult}
                         >
-                            {isSubmittingResult ? 'Отправка...' : 'Завершить тест'} {/* <-- Изменяем текст кнопки при отправке */}
+                            {isSubmittingResult ? 'Отправка...' : 'Завершить тест'}
                         </button>
                     )}
-                    {/* Отображаем сообщения о состоянии отправки результата */}
                     {isSubmittingResult && <p className={styles.submittingMessage}>Отправка результатов...</p>}
                     {isResultSubmittedSuccess && <p className={styles.successMessage}>Результаты успешно отправлены!</p>}
                     {isSubmitResultError && <p className={styles.errorMessage}>Ошибка при отправке результатов.</p>}
 
 
                     {submitted && (
-                        // Сообщение о завершении теста, отображается после отправки ИЛИ если тест был отправлен (submitted)
                         <p className={styles.submittedMessage}>Тест завершен. Вы можете просмотреть свои ответы.</p>
                     )}
                 </form>

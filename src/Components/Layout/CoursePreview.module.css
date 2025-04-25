@@ -1,35 +1,40 @@
+/* src/Components/Layout/CoursePreview.module.css */
+
 .coursePreviewContainer {
-    display: flex; /* Enable flexbox for layout */
+    display: flex;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     margin-bottom: 20px;
     background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden; /* To contain rounded corners properly */
+    overflow: hidden;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .courseInfo {
-    flex: 1; /* Take up half of the container width */
+    flex: 1;
     padding: 20px;
-    text-align: left; /* Align text to the left */
+    text-align: left;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center the content */
+    justify-content: center;
+    min-width: 300px;
 }
 
 .courseImageContainer {
-    width: 50%; /* Take up the other half of the container width */
-    overflow: hidden; /* Clip the image to the container */
+    width: 50%;
+    overflow: hidden;
     max-height: 90vh;
-
+    flex-shrink: 0;
 }
 
 .courseImage {
     width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Remove extra space below the image */
-    border-radius: 0 8px 8px 0; /* Apply rounded corners to the right side */
+    height: auto;
+    display: block;
+    border-radius: 0 8px 8px 0;
+    object-fit: cover;
 }
 
 .courseName {
@@ -54,9 +59,72 @@
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
-    align-self: flex-start; /* Align button to the left within the info section */
+    align-self: flex-start;
 }
 
 .enrollButton:hover {
     background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .coursePreviewContainer {
+        flex-direction: column;
+    }
+
+    .courseInfo,
+    .courseImageContainer {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .courseInfo {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .courseImageContainer {
+        max-height: 30vh;
+    }
+
+    .courseImage {
+        border-radius: 8px 8px 0 0
+    }
+
+    .courseName {
+        font-size: 1.3em;
+        margin-bottom: 8px;
+    }
+
+    .courseDescription {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+
+    .enrollButton {
+        align-self: center;
+        width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .coursePreviewContainer {
+        margin-bottom: 15px;
+    }
+
+    .courseInfo {
+        padding: 10px;
+    }
+
+    .courseName {
+        font-size: 1.2em;
+    }
+
+    .courseDescription {
+        font-size: 0.85em;
+    }
+
+    .enrollButton {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
 }

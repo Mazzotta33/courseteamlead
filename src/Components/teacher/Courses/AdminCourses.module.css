@@ -1,3 +1,4 @@
+/* YourDashboardComponent.module.css */
 .dashboardContainer {
     padding: 20px;
 }
@@ -9,13 +10,15 @@
     margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
 }
 
 .dashboardTitle {
-    margin: 0;
     font-size: 26px;
     color: #333;
     font-weight: 600;
+    flex-shrink: 0;
+    margin-right: 20px;
 }
 
 .createCourseButton {
@@ -27,6 +30,7 @@
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease, opacity 0.3s ease;
+    flex-shrink: 0;
 }
 
 .createCourseButton:hover {
@@ -39,21 +43,11 @@
 
 .coursesGrid {
     display: grid;
-    /* Устанавливаем 3 колонки. Ширина каждой колонки рассчитывается как */
-    /* (100% общей ширины - сумма отступов между колонками) / количество колонок */
-    /* У вас gap: 20px, между 3 колонками 2 отступа по 20px (всего 40px) */
-    grid-template-columns: repeat(3, calc((100% - (2 * 4%)) / 3));
-    gap: 20px; /* Пространство между карточками */
-    padding: 0; /* Убираем внутренний отступ если есть */
-    list-style: none; /* Убираем маркеры списка, если используете ul/li */
-
-    /* Опционально: добавьте медиа-запросы для адаптивности на меньших экранах */
-    /* @media (max-width: 1024px) {
-        grid-template-columns: repeat(2, calc((100% - (1 * 20px)) / 2)); // 2 колонки на планшетах
-    }
-    @media (max-width: 768px) {
-        grid-template-columns: repeat(1, 1fr); // 1 колонка на мобильных
-    } */
+    margin-right: 80px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0;
+    list-style: none;
 }
 
 .card {
@@ -90,11 +84,22 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 1;
+    box-sizing: border-box;
 }
 
 .card:hover figcaption {
     opacity: 1;
 }
+
+@media (max-width: 768px) {
+    .card figcaption {
+        opacity: 0.7;
+    }
+    .card:hover figcaption {
+        opacity: 1;
+    }
+}
+
 
 .image {
     width: 100%;
@@ -106,6 +111,88 @@
 }
 
 .card figcaption p {
-    margin: 0; /* Убираем отступы у параграфа внутри фигкэпшн */
-    font-size: 1em; /* Размер шрифта */
+    margin: 0;
+    font-size: 1em;
+}
+
+@media (max-width: 992px) {
+    .dashboardContainer {
+        padding: 15px;
+    }
+
+    .dashboardTitle {
+        font-size: 24px;
+    }
+
+    .createCourseButton {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+
+    .coursesGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .dashboardTitle {
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 22px;
+        margin-right: 0;
+    }
+
+    .createCourseButton {
+        width: auto;
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+
+
+    .coursesGrid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card figcaption {
+        padding: 1rem 0.8rem;
+        font-size: 0.9em;
+        opacity: 0.7;
+    }
+
+    .card:hover figcaption {
+        opacity: 1;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboardContainer {
+        padding: 10px;
+    }
+
+    .dashboardTitle {
+        font-size: 20px;
+    }
+
+    .createCourseButton {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .card figcaption {
+        padding: 0.8rem 0.6rem;
+        font-size: 0.85em;
+    }
 }

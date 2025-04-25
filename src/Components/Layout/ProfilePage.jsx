@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import styles from './ProfilePage.module.css';
 import {useGetUserInfoQuery} from "../../Redux/api/authApi.js";
 
-const mockCourses = [
-    { title: 'React для начинающих', progress: 80 },
-    { title: 'Алгоритмы и структуры данных', progress: 50 },
-    { title: 'Введение в Node.js', progress: 100 },
-];
-
 const ProfilePage = () => {
     const [avatar, setAvatar] = useState(null);
     const [phone, setPhone] = useState('+7 (999) 123-45-67');
@@ -61,12 +55,12 @@ const ProfilePage = () => {
                 <h3>Прогресс по курсам</h3>
                 {courseProgresses.length > 0 ? (
                     courseProgresses.map((course, index) => (
-                        <div key={course.courseName || index} className={styles.courseItem}> {/* Используем courseName или index для ключа */}
+                        <div key={course.courseName || index} className={styles.courseItem}>
                             <p>{course.courseName}</p>
                             <div className={styles.progressBar}>
                                 <div
                                     className={styles.progressFill}
-                                    style={{ width: `${course.completionPercentage || 0}%` }} // Используем completionPercentage
+                                    style={{ width: `${course.completionPercentage || 0}%` }}
                                 >
                                     {course.completionPercentage || 0}%
                                 </div>

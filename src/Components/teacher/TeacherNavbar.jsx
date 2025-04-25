@@ -1,17 +1,12 @@
 import React from 'react';
 import styles from '../Layout/TopNavbar.module.css';
-import { Link, useNavigate } from "react-router-dom";
+import {Link} from "react-router-dom";
 import logo from '../Layout/logo.jpg';
 
 const TeacherNavbar = ({ handleLogout }) => {
-    const navigate = useNavigate();
-
     const onLogoutClick = () => {
         console.log('Teacher logging out via prop function...');
-        // Вызываем функцию, переданную из App
         handleLogout();
-        // После вызова handleLogout, App обновит состояние,
-        // и маршрутизатор в App перенаправит пользователя.
     };
 
     const teacherLinks = [
@@ -23,7 +18,7 @@ const TeacherNavbar = ({ handleLogout }) => {
     return (
         <div className={styles.navbar}>
             <div className={styles.logoSection}>
-                <Link to="/teacher" className={styles.brand}>Барс Групп</Link> {/* Ссылка на главную учителя */}
+                <Link to="/teacher" className={styles.brand}>Барс Групп</Link>
                 <img src={logo} alt="Логотип" className={styles.logo} />
             </div>
 
@@ -36,7 +31,7 @@ const TeacherNavbar = ({ handleLogout }) => {
             </div>
 
             <div className={styles.authButtons}>
-                <button onClick={onLogoutClick} className={styles.logout}>Выйти</button>
+                <button onClick={onLogoutClick} className={styles.logoutButton}>Выйти</button>
             </div>
         </div>
     );

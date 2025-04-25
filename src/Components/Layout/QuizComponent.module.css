@@ -57,25 +57,17 @@
     cursor: pointer;
 }
 
-/* Стили для правильных и неправильных ответов после завершения теста */
 .optionLabel.correct {
-    background-color: #d4edda; /* Светло-зеленый */
-    border-color: #28a745; /* Зеленый */
-    color: #155724; /* Темно-зеленый */
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
 }
 
 .optionLabel.incorrect {
-    background-color: #f8d7da; /* Светло-красный */
-    border-color: #dc3545; /* Красный */
-    color: #721c24; /* Темно-красный */
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
 }
-
-.optionLabel.correct.incorrect {
-    /* Этот класс не должен применяться одновременно, но на всякий случай */
-    /* Если выбран неправильный ответ, но он отображается как правильный (ошибка логики),
-       можно добавить стиль для отладки. */
-}
-
 
 .submitButton {
     display: block;

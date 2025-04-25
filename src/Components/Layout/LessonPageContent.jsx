@@ -1,12 +1,12 @@
-// src/components/Teacher/CoursesPage.js
-import React, { useState, useEffect, useCallback } from 'react';
-import styles from './CoursePageContent.module.css';
+// src/components/Teacher/LessonPage.js
+import React, {useState, useEffect, useCallback} from 'react';
+import styles from './LessonPageContent.module.css';
 import TestComponent from "./TestComponent.jsx";
 import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../Redux/api/coursesApi.js";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 const CoursesPageContent = (props) => {
-    const { courseId } = useParams(); // <-- courseId получаем здесь
+    const {courseId} = useParams(); // <-- courseId получаем здесь
 
     const [selectedLessonId, setSelectedLessonId] = useState(null);
     const [mainContentView, setMainContentView] = useState('lesson');
@@ -25,7 +25,7 @@ const CoursesPageContent = (props) => {
         skip: !selectedLessonId || !courseId,
     });
 
-    const [deleteLesson, { isLoading: isDeletingLesson, error: deleteLessonError }] = useDeleteLessonMutation();
+    const [deleteLesson, {isLoading: isDeletingLesson, error: deleteLessonError}] = useDeleteLessonMutation();
 
     useEffect(() => {
         if (lessonsList && lessonsList.length > 0 && selectedLessonId === null) {
@@ -57,7 +57,7 @@ const CoursesPageContent = (props) => {
 
         try {
             // Вызываем мутацию удаления
-            await deleteLesson({ courseId, lessonId: selectedLessonId }).unwrap(); // .unwrap() для обработки ошибок
+            await deleteLesson({courseId, lessonId: selectedLessonId}).unwrap(); // .unwrap() для обработки ошибок
 
             // При успешном удалении обновляем список уроков
             refetchLessons();
@@ -296,9 +296,8 @@ const CoursesPageContent = (props) => {
 
                                 {lessonInfo.audioKeys && lessonInfo.audioKeys.length > 0 && (
                                     <div className={styles.contentSection}>
-
                                         <h3>Аудиозаписи:</h3>
-                                        <ul className={styles.fileList}>
+                                        <ul className={styles.audioList}>
                                             {lessonInfo.audioKeys.map((key, index) => (
                                                 <RenderFileItem key={index} fileKey={key} index={index}
                                                                 sectionName="Аудиозапись"/>

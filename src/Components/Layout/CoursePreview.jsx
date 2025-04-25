@@ -17,13 +17,11 @@ const CoursePreview = (props) => {
 
         try {
             console.log("Attempting to register for course:", courseId);
-            // Pass the courseId directly as a parameter
             const result = await registerUser(courseId).unwrap();
             console.log("Registration successful:", result);
             window.location.reload();
         } catch (error) {
             console.error('Failed to enroll:', error);
-            // You could display an error message to the user here
         }
     };
 

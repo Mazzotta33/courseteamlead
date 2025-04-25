@@ -8,11 +8,11 @@ import TeacherDashboard from "./Components/teacher/TeacherDashboard.jsx";
 import CourseBuilderPage from "./Components/teacher/CourseBuilderPage.jsx";
 import StatisticsPage from "./Components/teacher/StatisticsPage.jsx";
 import ChatPage from "./Components/Chat/ChatPage.jsx";
-import CoursesPage from "./Components/Layout/CoursesPage.jsx";
+import LessonPage from "./Components/Layout/LessonPage.jsx";
 import AdminCourses from "./Components/teacher/Courses/AdminCourses.jsx";
 import CourseDetail from "./Components/teacher/Courses/CourseDetail.jsx";
 import UserLayout from "./Components/Layout/UserLayout.jsx";
-import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
+import TeacherLayout from "./Components/teacher/TeacherLayout.jsx";
 import ProfilePage from "./Components/Layout/ProfilePage.jsx";
 import CoursesGrid from "./Components/Layout/CoursesGrid.jsx";
 import StudentCoursesGrid from "./Components/Layout/StudentCoursesGrid.jsx";
@@ -59,7 +59,7 @@ function App() {
 
         if (initData && !isLoggedIn) {
             console.log("Attempting Telegram auth with initData...");
-            telegramAuth({ initData: initData });
+            telegramAuth(initData);
         } else {
             console.log("No initData or already logged in. Initial loading finished.");
             setIsLoading(false);
@@ -132,7 +132,7 @@ function App() {
                     <Route path="chat" element={<ChatPage role={userRole} />} />
                     <Route path="mycourses" element={<AdminCourses />} />
                     <Route path="mycourses/detail/:courseId" element={<CourseDetail />} />
-                    <Route path="courses/:courseId" element={<CoursesPage role={userRole} />} />
+                    <Route path="courses/:courseId" element={<LessonPage role={userRole} />} />
                     <Route path="*" element={<Navigate to="/teacher" replace />} />
                 </Route>
             )}
@@ -140,7 +140,7 @@ function App() {
             {isLoggedIn && userRole === 'User' && (
                 <Route path="/*" element={<UserLayout />}>
                     <Route path="mainwindow" element={<CoursesGrid/>} />
-                    <Route path="courses/:courseId" element={<CoursesPage role={userRole} />} />
+                    <Route path="courses/:courseId" element={<LessonPage role={userRole} />} />
                     <Route path="courses" element={<StudentCoursesGrid/>} />
                     <Route path="chat" element={<ChatPage role={userRole} />} />
                     <Route path="profile" element={<ProfilePage/>}/>

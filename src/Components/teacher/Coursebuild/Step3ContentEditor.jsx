@@ -4,21 +4,13 @@ import styles from '../CoursesBuilderPage.module.css';
 
 const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving }) => {
     const [contentItems, setContentItems] = useState(initialContentItems);
-    // Типы контента будут соответствовать ключам в FormData/Swagger
-    // 'text' -> Lectures (текст вручную)
-    // 'photo' -> Photos (фотографии, общие документы типа PDF/DOCX/PPTX)
-    // 'video' -> Videos
-    // 'book' -> Books
-    // 'audio' -> Audios
     const [newItem, setNewItem] = useState({ type: 'text', title: '', content: '' });
 
-    const fileInputRef = useRef(null); // Для фото/документов
-    const videoInputRef = useRef(null); // Для видео
-    const bookInputRef = useRef(null); // Для книг (например, EPUB, PDF, FB2 - зависит от бэкенда)
-    const audioInputRef = useRef(null); // Для аудио
+    const fileInputRef = useRef(null);
+    const videoInputRef = useRef(null);
+    const bookInputRef = useRef(null);
+    const audioInputRef = useRef(null);
 
-    // Сброс значения input[type="file"] при добавлении элемента,
-    // чтобы можно было выбрать тот же файл повторно
     useEffect(() => {
         if (fileInputRef.current) fileInputRef.current.value = '';
         if (videoInputRef.current) videoInputRef.current.value = '';
@@ -37,26 +29,21 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
             return;
         }
 
-        // Проверка для всех файловых типов
         const isFileType = ['photo', 'video', 'book', 'audio'].includes(newItem.type);
         if (isFileType && !(newItem.content instanceof File)) {
-            // Определяем более точное сообщение
             let fileTypeName = 'файл';
             switch (newItem.type) {
                 case 'photo': fileTypeName = 'фотографию или документ'; break;
                 case 'video': fileTypeName = 'видеофайл'; break;
                 case 'book': fileTypeName = 'файл книги'; break;
                 case 'audio': fileTypeName = 'аудиофайл'; break;
-                default: break; // Не должно сюда попасть при правильной логике
+                default: break;
             }
             alert(`Пожалуйста, добавьте ${fileTypeName}.`);
             return;
         }
 
-        // Добавляем новый элемент с уникальным ID
         setContentItems(prev => [...prev, { id: Date.now(), ...newItem }]);
-
-        // Сбрасываем форму добавления нового элемента
         setNewItem({ type: 'text', title: '', content: '' });
     };
 
@@ -65,18 +52,16 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
         setNewItem(prev => ({ ...prev, [name]: value }));
     };
 
-    // Обработчик выбора файла. Принимает тип контента, который выбирается.
     const handleFileSelect = (event, type) => {
         const file = event.target.files[0];
         if (file) {
             setNewItem(prev => ({
                 ...prev,
-                type: type, // Сохраняем выбранный тип
-                content: file // Сохраняем сам объект File
+                type: type,
+                content: file
             }));
             console.log(`Выбран ${type === 'photo' ? 'файл (фото/документ)' : type === 'video' ? 'видео' : type === 'book' ? 'книга' : type === 'audio' ? 'аудио' : 'файл'}: '${file.name}'.`);
         } else {
-            // Если файл не выбран (отменили выбор)
             setNewItem(prev => ({
                 ...prev,
                 content: ''
@@ -88,21 +73,16 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
         setContentItems(prev => prev.filter(item => item.id !== id));
     };
 
-    // Функция для симуляции клика по скрытому input[type="file"]
     const triggerFileInput = (type) => {
-        if (isSaving) return; // Не даем кликнуть, если идет сохранение
+        if (isSaving) return;
 
-        // Сбрасываем текущее значение file input, чтобы событие change сработало,
-        // даже если пользователь выберет тот же файл снова
         if (fileInputRef.current) fileInputRef.current.value = '';
         if (videoInputRef.current) videoInputRef.current.value = '';
         if (bookInputRef.current) bookInputRef.current.value = '';
         if (audioInputRef.current) audioInputRef.current.value = '';
 
-        // Устанавливаем тип нового элемента перед открытием диалога выбора файла
-        setNewItem(prev => ({ ...prev, type: type, content: '' })); // Сбрасываем content
+        setNewItem(prev => ({ ...prev, type: type, content: '' }));
 
-        // Открываем соответствующий диалог выбора файла
         if (type === 'photo' && fileInputRef.current) {
             fileInputRef.current.click();
         } else if (type === 'video' && videoInputRef.current) {
@@ -112,7 +92,6 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
         } else if (type === 'audio' && audioInputRef.current) {
             audioInputRef.current.click();
         }
-        // Для 'text' не нужно открывать диалог, там просто textarea
     };
 
     const handleNextClick = () => {
@@ -124,7 +103,6 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
         onNext(contentItems);
     };
 
-    // Вспомогательная функция для получения отображаемого типа
     const getDisplayTypeName = (type) => {
         switch (type) {
             case 'text': return 'Текст лекции';
@@ -141,29 +119,26 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
         <div>
             <h3>Этап 3: Добавление контента курса</h3>
 
-            {/* Скрытые input для файлов */}
             <input
                 type="file"
                 ref={fileInputRef}
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileSelect(e, 'photo')} // Передаем тип 'photo'
-                // Можно добавить accept="/image/*, .pdf, .doc, .docx, .ppt, .pptx" если нужно ограничить
+                onChange={(e) => handleFileSelect(e, 'photo')}
                 disabled={isSaving}
             />
             <input
                 type="file"
                 ref={videoInputRef}
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileSelect(e, 'video')} // Передаем тип 'video'
-                accept="video/*" // Принимаем только видео
+                onChange={(e) => handleFileSelect(e, 'video')}
+                accept="video/*"
                 disabled={isSaving}
             />
             <input
                 type="file"
                 ref={bookInputRef}
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileSelect(e, 'book')} // Передаем тип 'book'
-                // Укажите нужные форматы книг: .epub, .pdf, .fb2 и т.д.
+                onChange={(e) => handleFileSelect(e, 'book')}
                 accept=".epub, .pdf, .fb2, .mobi"
                 disabled={isSaving}
             />
@@ -171,8 +146,8 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                 type="file"
                 ref={audioInputRef}
                 style={{ display: 'none' }}
-                onChange={(e) => handleFileSelect(e, 'audio')} // Передаем тип 'audio'
-                accept="audio/*" // Принимаем только аудио
+                onChange={(e) => handleFileSelect(e, 'audio')}
+                accept="audio/*"
                 disabled={isSaving}
             />
 
@@ -184,10 +159,10 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                     {contentItems.map((item) => (
                         <li key={item.id}>
                             <span>
-                                <strong>{item.title}</strong> ({getDisplayTypeName(item.type)}):{' '} {/* Отображаем более понятное имя типа */}
+                                <strong>{item.title}</strong> ({getDisplayTypeName(item.type)}):{' '}
                                 {item.type === 'text'
-                                    ? `${item.content.substring(0, 50)}${item.content.length > 50 ? '...' : ''}` // Показываем начало текста
-                                    : (item.content instanceof File ? item.content.name : 'Ошибка: файл не выбран') // Показываем имя файла
+                                    ? `${item.content.substring(0, 50)}${item.content.length > 50 ? '...' : ''}`
+                                    : (item.content instanceof File ? item.content.name : 'Ошибка: файл не выбран')
                                 }
                             </span>
                             <button onClick={() => removeItem(item.id)} className={styles.removeButton} title="Удалить" disabled={isSaving}>×</button>
@@ -224,7 +199,7 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                         </button>
                         <button
                             type="button"
-                            onClick={() => triggerFileInput('photo')} // Триггерим инпут для фото/документов
+                            onClick={() => triggerFileInput('photo')}
                             className={`${styles.typeButton} ${newItem.type === 'photo' ? styles.activeType : ''}`}
                             disabled={isSaving}
                         >
@@ -232,7 +207,7 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                         </button>
                         <button
                             type="button"
-                            onClick={() => triggerFileInput('video')} // Триггерим инпут для видео
+                            onClick={() => triggerFileInput('video')}
                             className={`${styles.typeButton} ${newItem.type === 'video' ? styles.activeType : ''}`}
                             disabled={isSaving}
                         >
@@ -240,7 +215,7 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                         </button>
                         <button
                             type="button"
-                            onClick={() => triggerFileInput('book')} // Триггерим инпут для книг
+                            onClick={() => triggerFileInput('book')}
                             className={`${styles.typeButton} ${newItem.type === 'book' ? styles.activeType : ''}`}
                             disabled={isSaving}
                         >
@@ -248,7 +223,7 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                         </button>
                         <button
                             type="button"
-                            onClick={() => triggerFileInput('audio')} // Триггерим инпут для аудио
+                            onClick={() => triggerFileInput('audio')}
                             className={`${styles.typeButton} ${newItem.type === 'audio' ? styles.activeType : ''}`}
                             disabled={isSaving}
                         >
@@ -257,7 +232,6 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
                     </div>
                 </div>
 
-                {/* Поля ввода/отображения в зависимости от выбранного типа */}
                 {newItem.type === 'text' && (
                     <div className={styles.formGroup}>
                         <label htmlFor="itemContent">Содержание (текст лекции)</label>

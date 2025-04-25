@@ -50,18 +50,18 @@
 .optionsList {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Spacing between options */
+    gap: 10px;
 }
 
 .optionLabel {
-    display: block; /* Make label take full width */
+    display: block;
     background-color: #f8f9fa;
     padding: 10px 15px;
     border-radius: 6px;
     border: 1px solid #dee2e6;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-    position: relative; /* Needed for potential feedback icons */
+    position: relative;
 }
 
 .optionLabel:hover {
@@ -71,17 +71,16 @@
 
 .radioInput {
     margin-right: 10px;
-    vertical-align: middle; /* Align radio button with text */
+    vertical-align: middle;
 }
 
-/* Styles for submitted answers */
 .optionLabel.correct {
-    background-color: #d1e7dd; /* Light green */
+    background-color: #d1e7dd;
     border-color: #a3cfbb;
-    color: #0f5132; /* Dark green */
+    color: #0f5132;
     font-weight: bold;
 }
-.optionLabel.correct::after { /* Optional: add a checkmark */
+.optionLabel.correct::after {
     content: '✔';
     color: #0f5132;
     position: absolute;
@@ -90,36 +89,33 @@
 
 
 .optionLabel.incorrect {
-    background-color: #f8d7da; /* Light red */
+    background-color: #f8d7da;
     border-color: #f1aeb5;
-    color: #842029; /* Dark red */
-    text-decoration: line-through; /* Strike through incorrect selection */
+    color: #842029;
+    text-decoration: line-through;
 }
-.optionLabel.incorrect::after { /* Optional: add a cross */
+.optionLabel.incorrect::after {
     content: '✖';
     color: #842029;
     position: absolute;
     right: 15px;
 }
 
-
-/* Disable hover effects for submitted options */
 .optionLabel.correct:hover,
 .optionLabel.incorrect:hover {
-    /* Keep submitted styles on hover */
     background-color: inherit;
     border-color: inherit;
     cursor: default;
 }
 
 .submitButton {
-    display: block; /* Center button */
-    margin: 25px auto 0; /* Add top margin and center */
+    display: block;
+    margin: 25px auto 0;
     padding: 12px 30px;
     font-size: 16px;
     font-weight: 600;
     color: #fff;
-    background-color: #7b61ff; /* Use theme color */
+    background-color: #7b61ff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -127,7 +123,7 @@
 }
 
 .submitButton:hover {
-    background-color: #6a50e0; /* Darker shade */
+    background-color: #6a50e0;
 }
 
 .submitButton:disabled {

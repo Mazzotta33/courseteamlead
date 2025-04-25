@@ -79,12 +79,12 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Учитывает padding и border в ширине */
+    box-sizing: border-box;
     font-size: 1em;
 }
 
 .formGroup textarea {
-    resize: vertical; /* Позволяет изменять высоту */
+    resize: vertical;
 }
 
 .imageUpload {
@@ -150,7 +150,6 @@
     background-color: #0056b3;
 }
 
-/* Стили для Этапа 2 */
 .lectureList ul {
     list-style: none;
     padding: 0;
@@ -214,8 +213,6 @@
     background-color: #218838;
 }
 
-
-/* Стили для Этапа 3 */
 .testPlaceholder {
     text-align: center;
     padding: 40px 20px;

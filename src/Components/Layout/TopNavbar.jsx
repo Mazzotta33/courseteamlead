@@ -39,10 +39,9 @@ const TopNavbar = () => {
                         Курсы
                     </Link>
                     <Link
-                        to="/take-test" // Указываем маршрут для страницы ввода темы теста
+                        to="/take-test"
                         onMouseEnter={() => !isFeedbackModalOpen && setVisibleTooltip('test')}
                         className={styles.navLinkItem}
-                        // Удаляем href="#"
                     >
                         Пройти тест
                     </Link>
@@ -56,12 +55,12 @@ const TopNavbar = () => {
                         Обратная связь
                     </Link>
 
-                    {!isFeedbackModalOpen && visibleTooltip === 'courses' && (
-                        <TooltipForCourse text="Подробнее о наших курсах и обучении" isVisible />
-                    )}
-                    {!isFeedbackModalOpen && visibleTooltip === 'test' && (
-                        <TooltipForTests text="Пройдите наш тест для оценки знаний" isVisible />
-                    )}
+                    {/*{!isFeedbackModalOpen && visibleTooltip === 'courses' && (*/}
+                    {/*    <TooltipForCourse text="Подробнее о наших курсах и обучении" isVisible />*/}
+                    {/*)}*/}
+                    {/*{!isFeedbackModalOpen && visibleTooltip === 'test' && (*/}
+                    {/*    <TooltipForTests text="Пройдите наш тест для оценки знаний" isVisible />*/}
+                    {/*)}*/}
                 </div>
 
                 <div className={styles.lastpart}>

@@ -309,7 +309,7 @@ const CourseDetail = () => {
     };
 
 
-    if (loading || coursesLoading || lessonsLoading || courseProgressLoading) { // Включаем courseProgressLoading
+    if (loading || coursesLoading || lessonsLoading || courseProgressLoading) {
         return <div className={styles.loading}>Загрузка данных курса...</div>;
     }
 
@@ -410,7 +410,7 @@ const CourseDetail = () => {
                             <h4>Описание курса</h4>
                             <p>{course.description}</p>
                         </div>
-                        <button className={styles.editButton} onClick={handleDeleteCourse}>
+                        <button className={styles.deleteButton} onClick={handleDeleteCourse}>
                             Удалить курс
                         </button>
                     </div>
@@ -443,7 +443,7 @@ const CourseDetail = () => {
                     )}
                     {lessonsData && lessonsData.length > 0 && (
                         <button className={styles.exportButton} onClick={handleDownloadCourseProgress} disabled={isDownloadingProgress}>
-                            {isDownloadingProgress ? 'Выгрузка...' : 'Выгрузка в эксель'}
+                            {isDownloadingProgress ? 'Выгрузка...' : 'Выгрузка в Excel'}
                         </button>
                     )}
                     {downloadProgressError && (

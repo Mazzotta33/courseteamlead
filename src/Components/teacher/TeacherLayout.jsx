@@ -1,5 +1,5 @@
 import {Navigate, Outlet} from "react-router-dom";
-import TeacherNavbar from "../teacher/TeacherNavbar.jsx";
+import TeacherNavbar from "./TeacherNavbar.jsx";
 import React from "react";
 
 const TeacherLayout = ({handleLogout}) => {
