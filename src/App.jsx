@@ -1,6 +1,7 @@
+// src/App.jsx
+
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import Login from "./Components/AuthAndReg/Login.jsx";
 import Register from "./Components/AuthAndReg/Register.jsx";
 import TeacherDashboard from "./Components/teacher/TeacherDashboard.jsx";
@@ -15,73 +16,115 @@ import TeacherLayout from "./Components/Layout/TeacherLayout.jsx";
 import ProfilePage from "./Components/Layout/ProfilePage.jsx";
 import CoursesGrid from "./Components/Layout/CoursesGrid.jsx";
 import StudentCoursesGrid from "./Components/Layout/StudentCoursesGrid.jsx";
+import { useTelegramAuthMutation } from "./Redux/api/authApi.js";
 
-const initData = null;
-//const initData = "query_id=AAH8wTozAAAAAPzBOjOX8e3U&user=%7B%22id%22%3A859488764%2C%22first_name%22%3A%22%D0%A0%D0%B0%D0%B7%D0%B8%D0%BB%D1%8C%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22Mazzotta33%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Ff45apqRNWD5RmkFvYeL-6aH5IrCwrgCfJZjFn-39XLc.svg%22%7D&auth_date=1745135545&signature=p9LbGC0ZhSGtJbi4WgIuXlP2AgwHrtjw_BffiSIIrPmYzT612SNunSV8b5ow5FUvCOZG6fJRXiIgO1UOfsceBA&hash=e48befb5bfd901c7a2ea677e193b007241fb224567ed686863eb300277b8b3c7";
+const initData = window.Telegram?.WebApp?.initData || null;
+//const initData = "query_id=AAH8wTozAAAAAPzBOjOX8e3U&user=%7B%22id%22%3A859488764%2C%22first_name%22%3A%22%D0%A0%D0%B0%D0%B7%D0%B8%D0%BB%D1%8C%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22Mazzotta33%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Ff45apqRNWD5RmkFvYeL-6aH5IrCwrgCfJZjFn-39XLc.svg%22%7D&auth_date=1745135545&signature=p9LbGC0ZhSGtJbi4WgIuXlP2AgwHrtjw_BffiSIIrPmYzT612SNunSV8b5ow5FUvCOZG6fJRXiIgO1UOfsceBA&hash=e48befb5bfd901c7a2ea677e193b007241fb224567ed686863eb300277b8b3c7"
 
-const InitialRedirect = () => {
-    const redirectPath = initData ? '/courses' : '/register';
-    return <Navigate to={redirectPath} replace />;
+const LoadingScreen = () => {
+    return <div>Загрузка приложения...</div>;
 };
 
 function App() {
     const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
     const [isLoading, setIsLoading] = useState(true);
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
     const location = useLocation();
 
+    const [telegramAuth, {
+        isLoading: isAuthLoading,
+        isSuccess: isAuthSuccess,
+        isError: isAuthError,
+        error: authError,
+        data: authData
+    }] = useTelegramAuthMutation();
+
+    const handleLogout = () => {
+        console.log('Logging out...');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('token');
+
+        setIsLoggedIn(false);
+        setUserRole(null);
+        console.log('Navigating to /register after logout.');
+    };
+
     useEffect(() => {
-        const handleStorageChange = () => {
-            setUserRole(localStorage.getItem('userRole'));
-        };
-        window.addEventListener('storage', handleStorageChange);
+        console.log("App useEffect: Checking auth status.");
+        console.log("initData:", initData ? "Available" : "Not available");
+        console.log("isLoggedIn from localStorage:", isLoggedIn);
 
-        // Отправляем initData на сервер при его наличии
-        if (initData) {
-            const authenticateTelegramUser = async () => {
-                try {
-                    const response = await axios.post('http://localhost:5231/api/account/telegramAuth', initData, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    // Сохраняем данные пользователя в localStorage
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userRole', response.data.role = 'User');
-                    localStorage.setItem('token', response.data.token);
-
-                    setUserRole(response.data.role = 'User');
-                } catch (error) {
-                    console.error('Telegram auth error:', error);
-                    // Перенаправляем на регистрацию при ошибке аутентификации
-                    //window.location.href = '/register';
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            authenticateTelegramUser();
+        if (initData && !isLoggedIn) {
+            console.log("Attempting Telegram auth with initData...");
+            telegramAuth({ initData: initData });
         } else {
+            console.log("No initData or already logged in. Initial loading finished.");
             setIsLoading(false);
         }
 
+        const handleStorageChange = () => {
+            console.log("localStorage change detected.");
+            const newIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const newUserRole = localStorage.getItem('userRole');
+            setIsLoggedIn(newIsLoggedIn);
+            setUserRole(newUserRole);
+        };
+        window.addEventListener('storage', handleStorageChange);
+
         return () => {
+            console.log("App cleanup: Removing storage listener.");
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, []);
+    }, [telegramAuth]);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    useEffect(() => {
+        if (isAuthSuccess && authData) {
+            console.log('Telegram auth successful:', authData);
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', authData.role || 'User');
+            localStorage.setItem('token', authData.token);
+
+            setIsLoggedIn(true);
+            setUserRole(authData.role || 'User');
+
+            setIsLoading(false);
+        }
+    }, [isAuthSuccess, authData]);
+
+    useEffect(() => {
+        if (isAuthError) {
+            console.error('Telegram auth error:', authError);
+            setIsLoading(false);
+        }
+    }, [isAuthError, authError]);
+
+
+    if (isLoading || isAuthLoading) {
+        return <LoadingScreen />;
+    }
+
+    let targetPath;
+    if (isLoggedIn) {
+        targetPath = userRole === 'Admin' ? '/teacher' : '/mainwindow';
+    } else {
+        targetPath = '/register';
     }
 
     return (
-        <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<InitialRedirect />} />
-            <Route path="/login" element={<Login setUserRole={setUserRole} />} />
-            <Route path="/register" element={<Register />} />
+        <Routes>
+            {location.pathname === '/' && <Route path="/" element={<Navigate to={targetPath} replace />} />}
+            {!isLoggedIn && (
+                <>
+                    <Route path="/login" element={<Login onLoginSuccess={(role) => { setIsLoggedIn(true); setUserRole(role); }} />} /> {/* /login */}
+                    <Route path="/register" element={<Register />} />
+                    <Route path="*" element={<Navigate to="/register" replace />} />
+                </>
+            )}
+
             {isLoggedIn && userRole === 'Admin' && (
-                <Route path="/teacher" element={<TeacherLayout />}>
+                <Route path="/teacher/*" element={<TeacherLayout handleLogout={handleLogout} />}>
                     <Route index element={<TeacherDashboard />} />
                     <Route path="builder" element={<CourseBuilderPage />} />
                     <Route path="stats" element={<StatisticsPage />} />
@@ -89,22 +132,25 @@ function App() {
                     <Route path="mycourses" element={<AdminCourses />} />
                     <Route path="mycourses/detail/:courseId" element={<CourseDetail />} />
                     <Route path="courses/:courseId" element={<CoursesPage role={userRole} />} />
+                    <Route path="*" element={<Navigate to="/teacher" replace />} />
                 </Route>
             )}
 
-            {isLoggedIn && userRole === 'User' ? (
-                <Route path="/" element={<UserLayout />}>
+            {isLoggedIn && userRole === 'User' && (
+                <Route path="/*" element={<UserLayout />}>
                     <Route path="mainwindow" element={<CoursesGrid/>} />
                     <Route path="courses/:courseId" element={<CoursesPage role={userRole} />} />
                     <Route path={"courses"} element={<StudentCoursesGrid/>} />
                     <Route path="chat" element={<ChatPage role={userRole} />} />
                     <Route path="profile" element={<ProfilePage/>}/>
+                    <Route path="*" element={<Navigate to="/mainwindow" replace />} />
                 </Route>
-            ) : null}
+            )}
 
-            <Route path="*" element={
-                <Navigate to={isLoggedIn ? (userRole === 'Admin' ? '/teacher' : '/mainwindow') : '/login'} replace />
-            } />
+            {isLoggedIn && (
+                <Route path="*" element={<Navigate to={userRole === 'Admin' ? '/teacher' : '/mainwindow'} replace />} />
+            )}
+
         </Routes>
     );
 }

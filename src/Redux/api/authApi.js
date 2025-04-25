@@ -33,12 +33,19 @@ export const authApi = createApi({
                 url: `account/userinfo`,
                 method: 'GET'
             })
+        }),
+        telegramAuth: builder.mutation({
+            query: (initDataString) => ({
+                url: `account/telegramAuth`,
+                method: 'POST',
+                body: initDataString,
+            }),
         })
-
     }),
 });
 
 export const { useLoginMutation,
     useRegisterUserMutation,
     useRegisterAdminMutation,
-    useGetUserInfoQuery} = authApi;
+    useGetUserInfoQuery,
+    useTelegramAuthMutation} = authApi;

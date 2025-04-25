@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../../Redux/api/authApi';
 import { setCredentials } from '../../Redux/slices/authSlice';
 import styles from './AuthForm.module.css';
+import {useState} from "react";
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -31,7 +32,6 @@ const Login = () => {
             const tokenPayload = JSON.parse(atob(response.token.split('.')[1]));
             const userRole = tokenPayload.role || 'User';
 
-
             dispatch(setCredentials(response));
 
             localStorage.setItem('token', response.token);
@@ -40,8 +40,9 @@ const Login = () => {
             localStorage.setItem('userRole', userRole);
 
             alert(`Вы вошли как ${userRole}`);
-            navigate(userRole === 'Admin' ? '/teacher' : '/mainwindow');
-            // window.location.reload();
+            if (onLoginSuccess) {
+                onLoginSuccess(userRole);
+            }
 
         } catch (err) {
             console.error('Login error:', err);

@@ -3,13 +3,15 @@ import styles from '../Layout/TopNavbar.module.css';
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../Layout/logo.jpg';
 
-const TeacherNavbar = () => {
+const TeacherNavbar = ({ handleLogout }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        console.log('Teacher logged out');
-        alert('Выход учителя (симуляция)');
-        navigate('/login');
+    const onLogoutClick = () => {
+        console.log('Teacher logging out via prop function...');
+        // Вызываем функцию, переданную из App
+        handleLogout();
+        // После вызова handleLogout, App обновит состояние,
+        // и маршрутизатор в App перенаправит пользователя.
     };
 
     const teacherLinks = [
@@ -34,7 +36,7 @@ const TeacherNavbar = () => {
             </div>
 
             <div className={styles.authButtons}>
-                <button onClick={handleLogout} className={styles.logout}>Выйти</button>
+                <button onClick={onLogoutClick} className={styles.logout}>Выйти</button>
             </div>
         </div>
     );
