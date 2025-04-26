@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import ChatSidebar from './ChatSidebar';
 import ChatWindow from './ChatWindow';
 import styles from './ChatPage.module.css';
-import TopNavbar from "../Layout/TopNavbar.jsx";
 
 const currentUser = {id: 'user-me', name: 'Вы'};
 

@@ -11,24 +11,12 @@ const TeacherDashboard = () => {
     const {data: coursesData = [], isLoading: coursesLoading, error: coursesError} = useGetCoursesQuery();
     const {data: coursesProgress = [], isLoading: loading, error: progressError} = useGetAdminCoursesProgressQuery();
 
-    const assignedCourses = [
-        { id: 1, name: 'Введение в React', students: 25 },
-        { id: 2, name: 'Основы JavaScript', students: 30 },
-        { id: 3, name: 'Продвинутый CSS', students: 18 },
-    ];
 
     const recentMessages = [
         { id: 1, sender: 'Иван Петров', preview: 'Здравствуйте, не могу сдать ДЗ...' },
         { id: 2, sender: 'Администрация', preview: 'Важное обновление платформы...' },
         { id: 3, sender: 'Елена Сидорова', preview: 'Вопрос по лекции №5' },
     ];
-
-    const stats = {
-        activeStudents: 73,
-        coursesTaught: 3,
-        pendingSubmissions: 5,
-        overallProgress: 78,
-    };
 
     return (
         <div style={{ padding: '20px' }}>
@@ -40,7 +28,7 @@ const TeacherDashboard = () => {
             <div className={styles.dashboardGrid}>
                 <div className={styles.widgetCard}>
                     <h3 className={styles.widgetTitle}>Мои курсы</h3>
-                    {assignedCourses.length > 0 ? (
+                    {coursesData.length > 0 ? (
                         <ul className={styles.widgetList}>
                             {coursesData.map(course => (
                                 <li key={course.id} className={styles.widgetListItem}>

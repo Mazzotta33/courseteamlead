@@ -1,7 +1,4 @@
 /* YourDashboardComponent.module.css */
-/* Добавьте это правило где-то вне медиа-запросов,
-   обычно в начале файла или в глобальных стилях,
-   для предотвращения нежелательной горизонтальной прокрутки */
 body {
     overflow-x: hidden;
 }
@@ -14,20 +11,17 @@ body {
 
 .navbar {
     width: 100%;
-    /* Предполагается, что navbar находится над .courses и занимает всю ширину.
-       Стили для его адаптивности должны быть в его собственном CSS файле/блоке. */
 }
 
 .sidebar {
     width: 30%;
-    min-width: 250px; /* Min width on larger screens */
+    min-width: 250px;
     background-color: #f7f8fa;
     border-radius: 12px;
     padding: 16px;
     box-sizing: border-box;
-    flex-shrink: 0; /* Prevents shrinking below min-width on larger screens */
-    height: fit-content; /* Sidebar height adjusts to content */
-    /* transition: all 0.3s ease; /* Optional: Smooth transition if sidebar is hidden/shown */
+    flex-shrink: 0;
+    height: fit-content;
 }
 
 .sidebar h2 {
@@ -53,7 +47,6 @@ body {
     font-size: 16px;
     font-weight: 500;
     color: #333;
-    /* Ensure text wraps if needed */
     word-break: break-word;
 }
 .menuItem:hover {
@@ -62,7 +55,7 @@ body {
     color: #7b61ff;
 }
 
-.lessonItem { /* Элемент урока в сайдбаре */
+.lessonItem {
     background-color: white;
     border-radius: 12px;
     padding: 12px;
@@ -71,7 +64,7 @@ body {
     border: 1px solid #e0e0e0;
     transition: background-color 0.2s, border 0.2s;
     color: #333;
-    word-break: break-word; /* Ensure text wraps */
+    word-break: break-word;
 }
 
 .lessonItem:hover {
@@ -84,14 +77,14 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: inherit;
-    word-break: break-word; /* Ensure text wraps */
+    word-break: break-word;
 }
 
 .lessonItem p {
     margin: 4px 0;
     font-size: 14px;
     color: #555;
-    word-break: break-word; /* Ensure text wraps */
+    word-break: break-word;
 }
 
 .duration {
@@ -131,8 +124,8 @@ body {
 }
 
 .content {
-    flex-grow: 1; /* Takes remaining space on larger screens */
-    padding: 0; /* Adjust padding in media queries if needed */
+    flex-grow: 1;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -221,6 +214,7 @@ body {
 
 .takeTestButton {
     color: #fff;
+    margin-left: 10px;
     background-color: #7b61ff;
 }
 
@@ -311,7 +305,6 @@ body {
 .audioPlayer,
 .videoPlayer {
 }
-
 
 .pdfEmbedContainer {
     width: 100%;

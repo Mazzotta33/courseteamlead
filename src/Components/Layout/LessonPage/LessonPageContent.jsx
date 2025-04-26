@@ -1,13 +1,13 @@
 // src/components/Teacher/LessonPage.js
 import React, {useState, useEffect, useCallback} from 'react';
 import styles from './LessonPageContent.module.css';
-import TestComponent from "./TestComponent.jsx";
-import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../Redux/api/coursesApi.js";
+import TestComponent from "../TestComponent.jsx";
 import {useParams} from "react-router-dom";
+import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../../Redux/api/lessonApi.js";
+import RenderFileItem from "./RenderFileItem.jsx";
 
 const CoursesPageContent = (props) => {
-    const {courseId} = useParams(); // <-- courseId получаем здесь
-
+    const {courseId} = useParams();
     const [selectedLessonId, setSelectedLessonId] = useState(null);
     const [mainContentView, setMainContentView] = useState('lesson');
 
@@ -43,30 +43,16 @@ const CoursesPageContent = (props) => {
     };
 
     const handleDeleteLesson = async () => {
-        if (!selectedLessonId || !courseId) {
-            console.error("Не выбран урок или курс для удаления");
-            return;
-        }
-
-        // Запрос подтверждения у пользователя
         const isConfirmed = window.confirm(`Вы уверены, что хотите удалить урок "${lessonInfo?.name || 'без названия'}"?`);
 
         if (!isConfirmed) {
-            return; // Если пользователь отменил, ничего не делаем
+            return;
         }
 
         try {
-            // Вызываем мутацию удаления
-            await deleteLesson({courseId, lessonId: selectedLessonId}).unwrap(); // .unwrap() для обработки ошибок
-
-            // При успешном удалении обновляем список уроков
-            refetchLessons();
-            // Очищаем выбранный урок, так как он удален
+            await deleteLesson({courseId, lessonId: selectedLessonId}).unwrap();
             setSelectedLessonId(null);
-            console.log(`Урок ${selectedLessonId} успешно удален.`);
-
         } catch (error) {
-            console.error("Ошибка при удалении урока:", error);
             alert(`Не удалось удалить урок: ${error?.data?.message || error?.error || JSON.stringify(error)}`);
         }
     };
@@ -104,90 +90,6 @@ const CoursesPageContent = (props) => {
 
         return 'unknown';
     }, []);
-
-
-    const RenderFileItem = ({fileKey, index, sectionName}) => {
-        const fileType = getFileTypeFromKey(fileKey);
-        const fileName = getFileNameFromKey(fileKey, `${sectionName} ${index + 1}`);
-
-        let content;
-
-        if (fileType === 'image') {
-            content = <img src={fileKey} alt={fileName} className={styles.embeddedImage}/>;
-        } else if (fileType === 'audio') {
-            content = (
-                <audio controls src={fileKey}>
-                    Ваш браузер не поддерживает аудио.
-                </audio>
-            );
-        } else if (fileType === 'video_file') {
-            content = (
-                <video controls src={fileKey} className={styles.videoPlayer}>
-                    Ваш браузер не поддерживает видео.
-                </video>
-            );
-        } else if (fileType === 'pdf') {
-            content = (
-                <div className={styles.pdfEmbedContainer}>
-                    <iframe
-                        src={fileKey}
-                        width="100%"
-                        height="100%"
-                        style={{border: 'none'}}
-                        title={`Просмотр PDF: ${fileName}`}
-                        allowFullScreen
-                    >
-                        Ваш браузер не поддерживает встраивание PDF.
-                    </iframe>
-                </div>
-            );
-        }
-
-        if (['image', 'audio', 'video_file', 'pdf'].includes(fileType) && content) {
-            return (
-                <li key={index} className={styles.fileItem}>
-                    <div className={styles.filePreview}>
-                        {content}
-                    </div>
-                    <div className={styles.fileDetails}>
-                        <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName}
-                           className={styles.downloadLink}>
-                            Скачать {fileType.charAt(0).toUpperCase() + fileType.slice(1)}{fileType !== 'pdf' && fileType !== 'image' ? 'файл' : ''}
-                        </a>
-                    </div>
-                </li>
-            );
-        }
-
-        return (
-            <li key={index} className={styles.fileItem}>
-                <a href={fileKey} target="_blank" rel="noopener noreferrer" download={fileName}
-                   className={styles.fileLinkContent}>
-                    <div className={styles.fileIcon}>
-                        {fileType === 'document' && '📄'}
-                        {fileType === 'ebook' && '📚'}
-                        {fileType === 'text' && '📝'}
-                        {fileType === 'archive' && '📦'}
-                        {fileType === 'image' && '🖼️'}
-                        {fileType === 'audio' && '🎵'}
-                        {fileType === 'video_file' && '🎥'}
-                        {fileType === 'pdf' && '📄'}
-                        {fileType === 'unknown' && '❓'}
-                    </div>
-                    <div className={styles.fileInfo}>
-                        <p className={styles.linkedFileName}>{fileName}</p>
-                        {fileType !== 'unknown' && (
-                            <p className={styles.linkedFileType}>{fileType.charAt(0).toUpperCase() + fileType.slice(1)} файл</p>
-                        )}
-                    </div>
-                    <div className={styles.downloadIcon}>
-                        ⬇️
-                    </div>
-                </a>
-            </li>
-        );
-
-    };
 
     if (isLoadingLessons) {
         return <div className={styles.loading}>Загрузка уроков...</div>;
@@ -327,9 +229,9 @@ const CoursesPageContent = (props) => {
 
                                     {props.role === 'Admin' && (
                                         <button
-                                            onClick={handleDeleteLesson} // Привязываем обработчик удаления
-                                            className={styles.deleteLessonButton} // Можете создать отдельный стиль для кнопки удаления
-                                            disabled={isDeletingLesson} // Отключаем кнопку во время выполнения удаления
+                                            onClick={handleDeleteLesson}
+                                            className={styles.takeTestButton}
+                                            disabled={isDeletingLesson}
                                         >
                                             {isDeletingLesson ? 'Удаление...' : 'Удалить урок'}
                                         </button>
@@ -339,7 +241,6 @@ const CoursesPageContent = (props) => {
                         )}
                     </>
                 )}
-
                 {mainContentView === 'test' && (
                     <TestComponent lessonId={selectedLessonId} courseId={courseId}/>
                 )}

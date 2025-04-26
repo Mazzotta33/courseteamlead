@@ -60,7 +60,6 @@ const Step4TestCreator = ({ initialQuestions = [], onPrev, onFinish, isSaving })
         };
 
         setQuestions([...questions, newQuestion]);
-
         setCurrentQuestionText('');
         setCurrentAnswers([{ id: Date.now(), text: '', isCorrect: false }]);
     };
@@ -174,9 +173,11 @@ const Step4TestCreator = ({ initialQuestions = [], onPrev, onFinish, isSaving })
             <hr className={styles.separator} />
 
             <div className={styles.navigationButtons}>
-                <button onClick={onPrev} className={styles.navButton} disabled={isSaving}>Назад</button>
+                <button onClick={onPrev} className={styles.navButton} disabled={isSaving}>
+                    {'<<'}
+                </button>
                 <button onClick={handleFinishClick} className={styles.navButton} disabled={isSaving}>
-                    {isSaving ? 'Создание курса...' : 'Завершить создание курса'}
+                    {isSaving ? 'Создание курса...' : 'Завершить создание'}
                 </button>
             </div>
         </div>

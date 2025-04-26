@@ -26,30 +26,11 @@ export const coursesGetApi = createApi({
                 body: courseData,
             }),
         }),
-        createLesson: builder.mutation({
-            query: ({ courseId, params, lessonData }) => ({
-                url: `courses/${courseId}/lessons`,
-                method: 'POST',
-                body: lessonData,
-                params: params,
-            }),
-        }),
+
         getUsers: builder.query({
             query: (id) => ({
                 url: `courses/${id}/users`,
                 method: 'GET'
-            })
-        }),
-        getLessons: builder.query({
-            query: (courseId) => ({
-                url: `courses/${courseId}/lessons`,
-                method: 'GET'
-            })
-        }),
-        getSoloLesson: builder.query({
-            query: ({courseId, lessonId}) => ({
-                url: `courses/${courseId}/lessons/${lessonId}`,
-                method: 'GET',
             })
         }),
         getPlatformProgress: builder.query({
@@ -62,12 +43,6 @@ export const coursesGetApi = createApi({
             query: (courseId) => ({
                 url: `courses/${courseId}/allusersprogress`,
                 method: 'GET',
-            })
-        }),
-        deleteLesson: builder.mutation({
-            query: ({courseId, lessonId}) => ({
-                url: `courses/${courseId}/lessons/${lessonId}`,
-                method: 'DELETE',
             })
         }),
         deleteCourse: builder.mutation({
@@ -111,15 +86,9 @@ export const coursesGetApi = createApi({
 
 export const { useGetCoursesQuery,
     useCreateCourseMutation,
-    useCreateLessonMutation,
-    useGetUsersQuery,
-    useGetLessonsQuery,
-    useGetSoloLessonQuery,
     useGetPlatformProgressQuery,
     useGetCourseProgressQuery,
-    useDeleteLessonMutation,
     useDeleteCourseMutation,
     useGetAdminCoursesProgressQuery,
     useIsAdminOfCourseQuery,
-    useDownloadCourseProgressQuery,
     useLazyDownloadCourseProgressQuery} = coursesGetApi;

@@ -1,26 +1,12 @@
 import React, { useState } from 'react';
-import styles from './TopNavbar.module.css'; // Убедитесь, что этот файл существует и стили определены
+import styles from './TopNavbar.module.css';
 import { Link, useNavigate } from "react-router-dom";
-import TooltipForCourse from "./TooltipForCourse.jsx"; // Assuming this exists
 import logo from './logo.jpg';
-
-
-const TooltipForTests = ({ text, isVisible }) => (
-    <div className={`${styles.tool} ${isVisible ? styles.visible : ''}`}>{text}</div>
-);
 
 const TopNavbar = () => {
     const [visibleTooltip, setVisibleTooltip] = useState(null);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
     const navigate = useNavigate();
-
-    const isLoggedIn = false;
-
-    const handleLogout = () => {
-        console.log('User logged out');
-        alert('Logout successful (simulation)');
-        navigate('/');
-    };
 
     return (
         <>
@@ -54,13 +40,6 @@ const TopNavbar = () => {
                     >
                         Обратная связь
                     </Link>
-
-                    {/*{!isFeedbackModalOpen && visibleTooltip === 'courses' && (*/}
-                    {/*    <TooltipForCourse text="Подробнее о наших курсах и обучении" isVisible />*/}
-                    {/*)}*/}
-                    {/*{!isFeedbackModalOpen && visibleTooltip === 'test' && (*/}
-                    {/*    <TooltipForTests text="Пройдите наш тест для оценки знаний" isVisible />*/}
-                    {/*)}*/}
                 </div>
 
                 <div className={styles.lastpart}>
@@ -69,10 +48,7 @@ const TopNavbar = () => {
                             <img src={"./user-svgrepo-com.svg"} className={styles.profileIcon} alt="User Icon" />
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
         </>
     );

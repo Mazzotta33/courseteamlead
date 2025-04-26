@@ -1,6 +1,6 @@
 // src/components/Teacher/TestComponent.js
 import React, { useState, useEffect } from 'react';
-import styles from './TestComponent.module.css'
+import styles from './TestComponent.module.css';
 import { useGetLessonTestQuery, useSubmitTestResultMutation } from '../../Redux/api/testApi.js';
 
 const TestComponent = ({ lessonId, courseId }) => {
@@ -31,19 +31,6 @@ const TestComponent = ({ lessonId, courseId }) => {
         setScore(null);
     }, [lessonTests]);
 
-    useEffect(() => {
-        if (isResultSubmittedSuccess) {
-            console.log("Результаты теста успешно отправлены!");
-        }
-        if (isSubmitResultError) {
-            console.error("Ошибка отправки результатов теста:", submitResultError);
-            const submitErrorMsg = submitResultError?.data?.message || submitResultError?.error || JSON.stringify(submitResultError);
-            alert(`Ошибка отправки результатов теста: ${submitErrorMsg}`);
-            console.log(submitErrorMsg);
-        }
-    }, [isResultSubmittedSuccess, isSubmitResultError, submitResultError]);
-
-
     const handleAnswerSelect = (questionId, selectedOption) => {
         if (!submitted && lessonTests) {
             setAnswers(prevAnswers => ({
@@ -53,35 +40,7 @@ const TestComponent = ({ lessonId, courseId }) => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (submitted || !lessonTests || !courseId || !lessonId) return;
-
-        let correctAnswersCount = 0;
-        lessonTests.forEach(q => {
-            if (answers[q.id] === q.correctAnswer) {
-                correctAnswersCount++;
-            }
-        });
-
-        const finalScore = correctAnswersCount;
-        setScore(finalScore);
-
-        setSubmitted(true);
-
-        const resultParams = {
-            params: finalScore,
-            testid: 46,
-        };
-
-        console.log(`Отправка результатов теста для урока ${lessonId} (Тест ID: 46). Query Parameters:`, resultParams);
-
-        submitTestResult({
-            lessonId: lessonId,
-            params: resultParams
-        });
-    };
-
-    const getOptionClassName = (question, option) => {
+    const testUtils = (question, option) => {
         if (!submitted) return styles.optionLabel;
 
         const originalQuestion = lessonTests?.find(q => q.id === question.id);
@@ -99,12 +58,37 @@ const TestComponent = ({ lessonId, courseId }) => {
         return styles.optionLabel;
     };
 
+    const handleSubmit = async () => {
+        if (submitted || !lessonTests || !courseId || !lessonId) return;
+
+        let correctAnswersCount = 0;
+        lessonTests.forEach(q => {
+            if (answers[q.id] === q.correctAnswer) {
+                correctAnswersCount++;
+            }
+        });
+
+        const finalScore = correctAnswersCount;
+        setScore(finalScore);
+        setSubmitted(true);
+
+        const resultParams = {
+            score: finalScore,
+            testid: 46,
+        };
+
+        submitTestResult({
+            lessonId: lessonId,
+            params: resultParams
+        });
+    };
+
     if (isLoadingTests) {
         return <div className={styles.loading}>Загрузка тестов...</div>;
     }
 
     if (testsError) {
-        const testsErrorMsg = testsError?.data?.message || testsError?.error || JSON.stringify(testsError);
+        const testsErrorMsg = testsError?.data?.message || testsError?.error || 'Неизвестная ошибка'
         return <div className={styles.error}>Ошибка загрузки тестов: {testsErrorMsg}</div>;
     }
 
@@ -137,7 +121,7 @@ const TestComponent = ({ lessonId, courseId }) => {
                             <p className={styles.questionText}>{q.question}</p>
                             <div className={styles.optionsList}>
                                 {q.answers.map((option, index) => (
-                                    <label key={index} className={getOptionClassName(q, option)}>
+                                    <label key={index} className={testUtils(q, option)}>
                                         <input
                                             type="radio"
                                             name={q.id}
@@ -167,7 +151,6 @@ const TestComponent = ({ lessonId, courseId }) => {
                     {isSubmittingResult && <p className={styles.submittingMessage}>Отправка результатов...</p>}
                     {isResultSubmittedSuccess && <p className={styles.successMessage}>Результаты успешно отправлены!</p>}
                     {isSubmitResultError && <p className={styles.errorMessage}>Ошибка при отправке результатов.</p>}
-
 
                     {submitted && (
                         <p className={styles.submittedMessage}>Тест завершен. Вы можете просмотреть свои ответы.</p>

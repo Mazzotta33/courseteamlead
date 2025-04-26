@@ -11,9 +11,7 @@ const Login = ({ onLoginSuccess }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [login, { isLoading }] = useLoginMutation();
-
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
 

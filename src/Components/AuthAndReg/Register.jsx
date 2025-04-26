@@ -8,11 +8,10 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('student');
     const [error, setError] = useState('');
     const [telegramusername, setTelegramUsername] = useState('');
 
-    const [registerAdmin, {isLoading}] = useRegisterAdminMutation(); // Assuming you have a separate mutation for admin registration
+    const [registerAdmin, {isLoading}] = useRegisterAdminMutation();
 
     const navigate = useNavigate();
 
@@ -87,28 +86,6 @@ const Register = () => {
                         type="password" id="confirmPassword" placeholder="Повторите пароль"
                         value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
                     />
-                </div>
-
-                <div className={styles.inputGroup}>
-                    <label>Зарегистрироваться как:</label>
-                    {/*<div className={styles.roleSelection}>*/}
-                    {/*    <label className={styles.radioLabel}>*/}
-                    {/*        <input*/}
-                    {/*            type="radio" name="role" value="user"*/}
-                    {/*            checked={role === 'user'}*/}
-                    {/*            onChange={(e) => setRole(e.target.value)}*/}
-                    {/*        />*/}
-                    {/*        Ученик*/}
-                    {/*    </label>*/}
-                    {/*    <label className={styles.radioLabel}>*/}
-                    {/*        <input*/}
-                    {/*            type="radio" name="role" value="admin"*/}
-                    {/*            checked={role === 'admin'}*/}
-                    {/*            onChange={(e) => setRole(e.target.value)}*/}
-                    {/*        />*/}
-                    {/*        Учитель*/}
-                    {/*    </label>*/}
-                    {/*</div>*/}
                 </div>
 
                 <button type="submit" className={styles.submitButton} disabled={isLoading}>

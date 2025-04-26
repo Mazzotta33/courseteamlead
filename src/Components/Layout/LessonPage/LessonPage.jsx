@@ -1,9 +1,9 @@
 import React from 'react';
-import CoursePageContent from "./LessonPageContent.jsx";
-import {useIsRegisteredQuery} from "../../Redux/api/studentApi.js";
+import {useIsRegisteredQuery} from "../../../Redux/api/studentApi.js";
 import {useParams} from "react-router-dom";
 import CoursePreview from "./CoursePreview.jsx";
-import {useIsAdminOfCourseQuery} from "../../Redux/api/coursesApi.js";
+import {useIsAdminOfCourseQuery} from "../../../Redux/api/coursesApi.js";
+import LessonPageContent from "./LessonPageContent.jsx";
 
 const LessonPage = (props) => {
     const {courseId} = useParams();
@@ -16,7 +16,7 @@ const LessonPage = (props) => {
 
     return (
         <div>
-            {isRegistered || isAdmin ? <CoursePageContent {...props}/> : <CoursePreview courseId={courseId} idAdmin={isAdmin}/>}
+            {isRegistered || isAdmin ? <LessonPageContent {...props}/> : <CoursePreview courseId={courseId} idAdmin={isAdmin}/>}
         </div>
     )
 }

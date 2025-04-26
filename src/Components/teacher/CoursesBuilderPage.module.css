@@ -9,6 +9,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.answerOption{
+    display: flex;
+}
+
 .courseBuilderContainer h2,
 .courseBuilderContainer h3 {
     text-align: center;
@@ -22,6 +26,12 @@
     justify-content: space-between;
     margin-bottom: 30px;
     padding: 0 20px;
+}
+
+.checkbox{
+    width: 20px;
+    height: 20px;
+    color: #4f46e5;
 }
 
 .step {
@@ -143,6 +153,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 1em;
+    margin-left: 10px;
     transition: background-color 0.2s ease;
 }
 

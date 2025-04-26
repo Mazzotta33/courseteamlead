@@ -265,9 +265,11 @@ const Step3ContentEditor = ({ initialContentItems = [], onNext, onPrev, isSaving
             </div>
 
             <div className={styles.navigationButtons}>
-                <button onClick={onPrev} className={styles.navButton} disabled={isSaving}>Назад</button>
+                <button onClick={onPrev} className={styles.navButton} disabled={isSaving}>
+                    {'<<'}
+                </button>
                 <button onClick={handleNextClick} className={styles.navButton} disabled={isSaving}>
-                    {isSaving ? 'Создание курса...' : 'Продолжить'}
+                    {isSaving ? 'Создание курса...' : '>>'}
                 </button>
             </div>
         </div>

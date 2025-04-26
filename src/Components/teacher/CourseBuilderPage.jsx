@@ -6,8 +6,9 @@ import Step2LessonDetails from "./Coursebuild/Step2LessonDetails.jsx";
 import Step3ContentEditor from "./Coursebuild/Step3ContentEditor.jsx";
 import Step4TestCreator from "./Coursebuild/Step4TestCreator.jsx";
 
-import { useCreateCourseMutation, useCreateLessonMutation} from '../../Redux/api/coursesApi';
+import { useCreateCourseMutation} from '../../Redux/api/coursesApi';
 import {useCreateTestsMutation} from "../../Redux/api/testApi.js";
+import {useCreateLessonMutation} from "../../Redux/api/lessonApi.js";
 
 const CourseBuilderPage = () => {
     const [currentStep, setCurrentStep] = useState(1);

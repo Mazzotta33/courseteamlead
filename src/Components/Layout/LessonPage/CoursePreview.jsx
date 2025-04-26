@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './CoursePreview.module.css';
-import {useGetCoursePreviewQuery, useRegisterUserMutation} from "../../Redux/api/studentApi.js";
+import {useGetCoursePreviewQuery, useRegisterUserMutation} from "../../../Redux/api/studentApi.js";
 import {useParams} from "react-router-dom";
 
 const CoursePreview = (props) => {
@@ -25,13 +25,12 @@ const CoursePreview = (props) => {
         }
     };
 
-
     return (
         <div className={styles.coursePreviewContainer}>
             <div className={styles.courseInfo}>
                 <h2 className={styles.courseName}>{courseData.title}</h2>
                 <p className={styles.courseDescription}>{courseData.description}</p>
-                {props.isAdmin && <button className={styles.enrollButton} onClick={() => handleEnrollClick()}>Записаться на
+                {!props.idAdmin && <button className={styles.enrollButton} onClick={() => handleEnrollClick()}>Записаться на
                     курс</button>}
             </div>
             <div className={styles.courseImageContainer}>

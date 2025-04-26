@@ -100,7 +100,7 @@ const Step1CourseDetails = ({ courseData, setCourseData, onNext, isSaving }) => 
                     className={styles.navButton}
                     disabled={isSaving}
                 >
-                    {isSaving ? 'Создание курса...' : 'Продолжить'}
+                    {isSaving ? 'Создание курса...' : '>>'}
                 </button>
             </div>
         </div>

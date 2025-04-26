@@ -69,9 +69,6 @@
         gap: 20px;
     }
 
-    .card {
-        /* min-height: 120px; */ /* Можно немного уменьшить минимальную высоту карточки */
-    }
 
     .card figcaption {
         padding: 1rem 0.8rem;
@@ -88,10 +85,6 @@
     .grid {
         gap: 15px;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    }
-
-    .card {
-        /* min-height: 100px; */ /* Можно еще уменьшить минимальную высоту карточки */
     }
 
     .card figcaption {
