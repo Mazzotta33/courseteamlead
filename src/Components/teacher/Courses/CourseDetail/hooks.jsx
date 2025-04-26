@@ -1,7 +1,7 @@
 // src/components/Teacher/CourseDetail/hooks/useAddLessonWorkflow.js
 import { useState } from 'react';
-import { useCreateLessonMutation } from '../../../../Redux/api/lessonApi.js'; // Скорректируйте путь при необходимости
-import { useCreateTestsMutation } from '../../../../Redux/api/testApi.js'; // Скорректируйте путь при необходимости
+import { useCreateLessonMutation } from '../../../../Redux/api/lessonApi.js';
+import { useCreateTestsMutation } from '../../../../Redux/api/testApi.js';
 
 const useAddLessonWorkflow = (courseId, refetchLessons, onSuccessfulSubmit) => {
     const [addLessonStep, setAddLessonStep] = useState(2);
@@ -137,13 +137,11 @@ const useAddLessonWorkflow = (courseId, refetchLessons, onSuccessfulSubmit) => {
                     alert('Новый урок и тесты успешно добавлены в курс!');
 
                 } else {
-                    console.warn("После форматирования не осталось корректных вопросов для тестов. Тесты не будут созданы."); // Предупреждение
-                    alert('Новый урок добавлен в курс. Тесты не были созданы из-за некорректных вопросов.'); // UI-уведомление
+                    alert('Новый урок добавлен в курс. Тесты не были созданы из-за некорректных вопросов.');
                 }
             } else {
                 alert('Новый урок успешно добавлен в курс!');
             }
-
             if (refetchLessons) {
                 refetchLessons();
             }
@@ -154,7 +152,7 @@ const useAddLessonWorkflow = (courseId, refetchLessons, onSuccessfulSubmit) => {
             resetWorkflow();
 
         } catch (err) {
-            console.error("Ошибка при создании урока или тестов:", err); // Лог ошибки API
+            console.error("Ошибка при создании урока или тестов:", err);
             const apiError = err;
             alert(`Ошибка при добавлении урока или тестов: ${apiError?.data?.message || apiError?.error || 'Неизвестная ошибка'}`);
         }

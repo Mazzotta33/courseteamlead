@@ -1,179 +1,986 @@
+/* CourseDetails.module.css */
+
+/* Убедитесь, что шрифты 'Inter' и 'Poppins' подключены в вашем проекте */
+/* Например, в index.html или главном CSS файле */
+
+/* ------------- Стили для модального оверлея ------------- */
 .modalOverlay {
     position: fixed;
+    /* Фиксированное позиционирование для перекрытия всего экрана */
     top: 65px;
+    /* Отступ сверху, учитывающий высоту хедера */
     left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
+    /* Полупрозрачный черный фон */
     z-index: 1000;
+    /* Высокий z-index, чтобы быть поверх другого контента */
     overflow-y: auto;
+    /* Добавляем прокрутку, если содержимое модального окна не помещается по высоте */
+    display: flex;
+    /* Используем flexbox для центрирования содержимого модального окна */
+    justify-content: center;
+    /* Центрирование содержимого по горизонтали */
+    align-items: flex-start;
+    /* Выравнивание содержимого по верху */
+    padding: 20px 0;
+    /* Добавляем вертикальный паддинг для отступа содержимого от верха/низа оверлея */
 }
 
+/* ------------- Стили для содержимого модального окна ------------- */
 .modalContent {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 0;
+    /* Белый фон содержимого */
+    border-radius: 12px;
+    /* Скругление углов, как в .courseBuilderContainer */
     width: 100%;
-    max-width: none;
-    min-height: 100vh;
+    max-width: 1000px;
+    /* Увеличиваем максимальную ширину модального окна */
     position: relative;
-    box-shadow: none;
+    /* Для позиционирования кнопки закрытия */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    /* Тень */
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    gap: 30px;
+    /* Отступ между основными секциями модального окна */
+    padding: 30px;
+    /* Внутренние отступы содержимого */
+    box-sizing: border-box;
+    /* Убедимся, что паддинг учитывается в ширине */
+    font-family: 'Inter', sans-serif;
+    /* Основной шрифт для содержимого */
+    color: #333;
+    /* Основной цвет текста */
 }
 
+/* ------------- Стили для кнопки закрытия модального окна ------------- */
 .closeButton {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
+    top: 15px;
+    /* Отступ сверху */
+    right: 15px;
+    /* Отступ справа */
+    font-size: 1.8rem;
+    /* Размер иконки */
     border: none;
     background: none;
     cursor: pointer;
+    color: #555;
+    /* Цвет иконки */
+    transition: color 0.2s ease;
     z-index: 1001;
+    /* Убедимся, что поверх содержимого */
 }
 
+.closeButton:hover {
+    color: #3A0068;
+    /* Цвет акцентный при ховере */
+}
+
+/* ------------- Стили для заголовка деталей курса ------------- */
 .detailHeader {
     border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
+    /* Отступ снизу под линией */
+    margin-bottom: 15px;
+    /* Отступ снизу над следующей секцией */
 }
 
-.courseTitle {
+.detailHeader h3.courseTitle {
+    margin: 0 0 5px 0;
+    /* Отступ снизу */
+    font-family: 'Poppins', sans-serif;
+    /* Шрифт для заголовков */
+    font-size: 2.2em;
+    /* Увеличиваем шрифт заголовка */
+    color: #3A0068;
+    /* Цвет акцентный */
+    word-break: break-word;
+    /* Перенос длинных названий */
+}
+
+.detailHeader p {
     margin: 0;
+    font-size: 1.1em;
+    /* Увеличиваем шрифт описания */
+    color: #555;
+    word-break: break-word;
+    /* Перенос длинного описания */
 }
 
+
+/* ------------- Стили для основной части модального окна (фото слева, инфо справа) ------------- */
 .detailBody {
     display: flex;
-    gap: 20px;
+    gap: 40px;
+    /* Отступ между левой (фото) и правой (инфо) колонками */
     flex-wrap: wrap;
+    /* Позволяет колонкам переноситься на новую строку на маленьких экранах */
+    align-items: flex-start;
+    /* Выравнивание элементов по верху */
 }
 
 .previewArea {
-    flex: 1;
+    /* Область только для фото */
+    flex: 0 0 50%;
+    /* Фиксированная базовая ширина 50%, не сжимается и не увеличивается */
+    max-width: 50%;
+    /* Максимальная ширина 50% на десктопе */
+    width: 100%;
+    /* На мобильных может занимать всю ширину */
+    display: flex;
+    flex-direction: column;
+    /* Содержимое внутри previewArea (фото) идет вертикально */
+    align-items: flex-start;
+    /* Выравниваем фото по левому краю внутри его колонки */
 }
 
+/* Контейнер для изображения превью */
 .previewPlaceholder {
-    width: 200px;
-    height: 180px;
-    background-color: #ffffff;
-    margin-top: 10px;
+    width: 100%;
+    /* Фото занимает всю ширину своей 50%-й колонки */
+    height: 300px;
+    /* Увеличиваем высоту фото */
+    background-color: #eef2ff;
+    /* Легкий фон */
+    border: 1px solid #d1d5db;
+    /* Легкий бордер */
+    border-radius: 8px;
+    /* Скругление углов */
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #555;
-    border-radius: 4px;
-    object-fit: cover;
+    color: #6c2eb7;
+    /* Цвет иконки/текста плейсхолдера */
+    font-size: 1.2em;
+    /* Увеличиваем шрифт плейсхолдера */
+    overflow: hidden;
+    /* Обрезает изображение, если оно больше контейнера */
+    flex-shrink: 0;
+    /* Предотвращаем сжатие на маленьких экранах */
 }
 
 .previewPlaceholder img {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: 4px;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    /* Изображение заполняет контейнер без искажений */
+    object-fit: cover;
+    /* Обрезка изображения */
+    border-radius: 8px;
+    /* Скругление углов изображения */
 }
 
 .infoArea {
-    flex: 2;
+    /* Область для названия, описания и кнопки удаления */
+    flex: 1;
+    /* Занимает оставшееся пространство справа от фото */
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    /* Отступ между блоками внутри infoArea */
 }
 
 .nameAndDescription h4 {
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
+    font-size: 1.3em;
+    /* Увеличиваем шрифт подзаголовка */
+    font-weight: 600;
+    color: #2d3748;
 }
 
-.editButton {
-    align-self: flex-start;
-    padding: 8px 15px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.nameAndDescription p {
+    font-size: 1.1em;
+    /* Увеличиваем шрифт текста описания */
+    margin: 0;
+    /* Убираем стандартный нижний маргин у параграфов */
 }
 
+/* ------------- Стили для кнопки "Удалить курс" ------------- */
 .deleteButton {
+    display: inline-block;
+    /* Остается инлайн-блочным на десктопе */
     align-self: flex-start;
-    padding: 8px 15px;
-    background-color: rgba(225, 51, 51, 0.88);
+    /* Выравнивание по левому краю */
+    padding: 10px 20px;
+    /* Паддинг */
+    background-color: #dc3545;
+    /* Красный цвет для удаления */
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    /* Скругление углов */
     cursor: pointer;
+    font-size: 1em;
+    /* Размер шрифта */
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    /* Плавные переходы */
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+    /* Тень */
+    margin-top: auto;
+    /* Прижимает кнопку к низу flex-контейнера infoArea */
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+    box-shadow: 0 6px 20px rgba(200, 35, 51, 0.25);
+}
+
+.deleteButton:active {
+    background-color: #bd2130;
+    box-shadow: 0 2px 8px rgba(200, 35, 51, 0.15);
 }
 
 
+/* ------------- Стили для кнопки "Добавить урок" ------------- */
+.editButton {
+    display: block;
+    width: 50%;
+    /* Устанавливаем ширину 50% */
+    margin: 20px 0 0 0;
+    /* Смещаем к левому краю */
+    padding: 12px 20px;
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+}
+
+.editButton:hover {
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
+}
+
+.editButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.15);
+}
+
+/* ------------- Стили для секции лекций ------------- */
 .lessonsArea {
     border-top: 1px solid #eee;
     padding-top: 20px;
+    margin-top: 20px;
+}
+
+.lessonsArea h4 {
+    margin: 0 0 15px 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4em;
+    color: #3A0068;
+    font-weight: 600;
 }
 
 .lessonsArea ul {
     list-style: none;
     padding: 0;
     margin-bottom: 15px;
+    width: 100%;
+    /* Ширина списка уроков на всю ширину */
+    display: flex;
+    /* Активируем Flexbox */
+    flex-wrap: wrap;
+    /* Разрешаем перенос элементов на новую строку */
+    gap: 15px;
+    /* Отступ между элементами списка */
 }
 
 .lessonsArea li {
-    margin-bottom: 5px;
+    /* Стили для каждого элемента списка урока */
+    width: calc(50% - 7.5px);
+    /* Ширина элемента 50% минус половина gap */
+    margin-bottom: 0;
+    /* Убираем нижний маргин, используем gap */
+    color: #555;
+    font-family: 'Inter', sans-serif;
+    background-color: #f8faff;
+    border: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    word-break: break-word;
+    font-size: 1.1em;
+    box-sizing: border-box;
+    /* Учитываем паддинг в ширине */
 }
 
+.lessonsArea li:hover {
+    background-color: #eef2ff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Кнопка "Выгрузить в Excel" */
 .exportButton {
-    padding: 8px 15px;
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.exportButton:hover {
+    background-color: #218838;
+    box-shadow: 6px 20px rgba(33, 136, 56, 0.25);
+}
+
+.exportButton:active {
+    background-color: #1e7e34;
+    box-shadow: 2px 8px rgba(33, 136, 56, 0.15);
+}
+
+.exportButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    background-color: #28a745;
 }
 
 
+/* ------------- Стили для секции студентов (Таблица прогресса) ------------- */
 .studentsArea {
     border-top: 1px solid #eee;
     padding-top: 20px;
+    margin-top: 20px;
 }
 
-@media (max-width: 768px) {
+.studentsArea h4 {
+    margin: 0 0 15px 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4em;
+    color: #3A0068;
+    font-weight: 600;
+}
+
+/* Контейнер для таблицы прогресса с возможностью горизонтальной прокрутки */
+.progressTableContainer {
+    width: 100%;
+    /* Таблица занимает всю доступную ширину контейнера модального окна */
+    overflow-x: auto;
+    /* Горизонтальная прокрутка при необходимости */
+    margin-top: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+/* Стили для таблицы прогресса */
+.progressTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    /* Минимальная ширина таблицы, чтобы избежать сильного сжатия на широких экранах */
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.progressTable th,
+.progressTable td {
+    padding: 12px 15px;
+    /* Отступы внутри ячеек */
+    text-align: left;
+    /* Выравнивание текста */
+    border-bottom: 1px solid #eee;
+    /* Граница между строками */
+    white-space: nowrap;
+    /* Предотвращает перенос текста в заголовках столбцов уроков */
+    overflow: hidden;
+    /* Обрезает содержимое, которое не помещается */
+    text-overflow: ellipsis;
+    /* Добавляет многоточие для обрезанного текста */
+}
+
+.progressTable th {
+    background-color: #f8faff;
+    /* Легкий фон для заголовков */
+    font-weight: 600;
+    color: #3A0068;
+    text-transform: uppercase;
+    /* Заголовки заглавными буквами */
+    font-size: 1em;
+    /* Увеличиваем шрифт заголовков таблицы */
+    letter-spacing: 0.5px;
+}
+
+/* Ширина столбцов */
+.progressTable th:first-child,
+.progressTable td:first-child {
+    width: 20%;
+    /* Ширина столбца "Ученик" */
+    min-width: 150px;
+    /* Минимальная ширина для имени ученика */
+}
+
+.progressTable th:nth-child(2),
+.progressTable td:nth-child(2) {
+    width: 15%;
+    /* Ширина столбца "Прогресс по курсу" */
+    min-width: 100px;
+}
+
+.progressTable th:nth-child(n+3),
+.progressTable td:nth-child(n+3) {
+    width: auto;
+    /* Автоматическое распределение ширины для столбцов уроков */
+    min-width: 120px;
+    /* Минимальная ширина для столбца урока */
+}
+
+
+.progressTable tbody tr:last-child td {
+    border-bottom: none;
+    /* Убираем границу у последней строки */
+}
+
+.progressTable tbody tr:nth-child(even) {
+    background-color: #fcfaff;
+    /* Чередующийся фон строк */
+}
+
+.progressTable td {
+    font-size: 1em;
+    /* Увеличиваем шрифт текста в таблице */
+    color: #555;
+}
+
+/* Стиль для ячеек с прогрессом конкретного урока */
+.progressTable td:nth-child(n+3) {
+    /* Применяем ко всем td, начиная с 3-го (столбцы уроков) */
+    text-align: center;
+    /* Центрируем текст в ячейках уроков */
+    font-weight: 500;
+}
+
+
+/* Классы для выделения цветом ячеек уроков */
+.progressTable td.completed {
+    background-color: #e9f7ef;
+    /* Очень светлый зеленый фон */
+    color: #28a745;
+    /* Зеленый текст */
+}
+
+.progressTable td.notCompleted {
+    background-color: #fdeded;
+    /* Очень светлый красный фон */
+    color: #dc3545;
+    /* Красный текст */
+}
+
+
+/* Стили для отображения статуса завершения и оценки теста внутри ячейки */
+/* Эти стили могут быть изменены, если вы будете использовать другие элементы внутри td */
+.completionStatus {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.testScore {
+    display: inline-block;
+    font-size: 0.9em;
+    /* Увеличиваем шрифт оценки теста */
+    color: #666;
+    /* Темнее, чтобы было видно на фоне */
+}
+
+
+/* ------------- Стили для режима добавления урока ------------- */
+/* Контейнер для формы добавления урока, если это отдельный viewMode */
+.courseDetailAddLesson {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    max-width: 800px;
+    margin: 30px auto;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.courseDetailAddLesson h3 {
+    text-align: center;
+    color: #3A0068;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+/* Стиль для кнопки "Отменить добавление урока" */
+.cancelButton {
+    display: block;
+    width: 100%;
+    margin-top: 30px;
+    padding: 12px 20px;
+    background-color: transparent;
+    color: #dc3545;
+    border: 1.5px solid #dc3545;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.cancelButton:hover {
+    background-color: #dc3545;
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+.cancelButton:active {
+    background-color: #c82333;
+    box-shadow: 0 1px 5px rgba(220, 53, 69, 0.15);
+}
+
+/* Стили для оверлея загрузки и сообщений об ошибке */
+.loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    color: #3A0068;
+    z-index: 10;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.errorMessage {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    word-break: break-word;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95em;
+}
+
+.validationErrors {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f2dede;
+    border: 1px solid #ebcccc;
+    border-radius: 4px;
+    font-size: 0.85em;
+    white-space: pre-wrap;
+}
+
+/* ------------- Адаптивность ------------- */
+
+/* Начиная с ширины 1024px и меньше */
+@media (max-width: 1024px) {
     .modalContent {
-        padding: 15px;
-        padding-top: 40px;
-        padding-bottom: 20px;
+        max-width: 800px;
+    }
+
+    .detailBody {
+        gap: 30px;
+    }
+
+    .previewArea {
+        flex: 0 0 40%;
+        max-width: 40%;
+    }
+
+    .previewPlaceholder {
+        height: 250px;
+    }
+
+    .infoArea {
+        gap: 10px;
+    }
+
+    .nameAndDescription h4 {
+        font-size: 1.2em;
+    }
+
+    .nameAndDescription p {
+        font-size: 1em;
+    }
+
+    .editButton {
+        width: 50%;
+        /* Возвращаем ширину кнопки 50% */
+        font-size: 1em;
+    }
+
+    .lessonsArea ul {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .lessonsArea li {
+        width: calc(50% - 5px);
+        padding: 12px 15px;
+    }
+
+
+    .lessonsArea h4,
+    .studentsArea h4 {
+        font-size: 1.3em;
+    }
+
+
+    .exportButton {
+        font-size: 0.95em;
+    }
+
+    .studentsArea {
+        margin-top: 15px;
+    }
+
+    .progressTable {
+        min-width: 500px;
+    }
+
+    .progressTable th,
+    .progressTable td {
+        padding: 10px 12px;
+        font-size: 0.9em;
+    }
+
+    .testScore {
+        font-size: 0.85em;
+    }
+
+
+    /* Режим добавления урока */
+    .courseDetailAddLesson {
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .courseDetailAddLesson h3 {
+        font-size: 1.3em;
+    }
+
+    .cancelButton {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+}
+
+
+/* Начиная с ширины 768px и меньше */
+@media (max-width: 768px) {
+    .modalOverlay {
+        padding: 10px 0;
+    }
+
+    .modalContent {
+        padding: 20px;
+        gap: 20px;
+        border-radius: 0;
+        box-shadow: none;
+        max-width: none;
+    }
+
+    .closeButton {
+        top: 10px;
+        right: 10px;
+        font-size: 1.5rem;
+    }
+
+    .detailHeader h3.courseTitle {
+        font-size: 1.8em;
+    }
+
+    .detailHeader p {
+        font-size: 1em;
     }
 
     .detailBody {
         flex-direction: column;
+        gap: 20px;
+    }
+
+    .previewArea {
+        flex: auto;
+        max-width: 100%;
+        align-items: center;
+    }
+
+    .previewPlaceholder {
+        width: 280px;
+        height: 200px;
+    }
+
+    .infoArea {
+        flex: auto;
+        gap: 10px;
+    }
+
+    .nameAndDescription h4 {
+        font-size: 1.1em;
+    }
+
+    .nameAndDescription p {
+        font-size: 1em;
+    }
+
+
+    .deleteButton {
+        align-self: stretch;
+        text-align: center;
+        padding: 10px 15px;
+        font-size: 0.95em;
+        margin-top: 10px;
+    }
+
+
+    .editButton {
+        width: 100%;
+        margin: 20px 0 0 0;
+        padding: 12px 15px;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .lessonsArea {
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+
+    .lessonsArea h4 {
+        font-size: 1.3em;
+    }
+
+    .lessonsArea ul {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+
+    .lessonsArea li {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 0;
+    }
+
+    .exportButton {
+        padding: 8px 15px;
+        font-size: 0.95em;
+    }
+
+
+    .studentsArea {
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+
+    .studentsArea h4 {
+        font-size: 1.3em;
+    }
+
+    .progressTableContainer {
+        min-width: auto;
+        overflow-x: auto;
+    }
+
+    .progressTable {
+        min-width: 500px;
+    }
+
+    .progressTable th,
+    .progressTable td {
+        padding: 10px 12px;
+        font-size: 0.9em;
+    }
+
+    .testScore {
+        font-size: 0.85em;
+    }
+
+
+    /* Режим добавления урока */
+    .courseDetailAddLesson {
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .courseDetailAddLesson h3 {
+        font-size: 1.3em;
+    }
+
+    .cancelButton {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+}
+
+/* Начиная с ширины 480px и меньше (очень маленькие телефоны) */
+@media (max-width: 480px) {
+    .modalOverlay {
+        padding: 5px 0;
+    }
+
+    .modalContent {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .closeButton {
+        top: 8px;
+        right: 8px;
+        font-size: 1.3rem;
+    }
+
+    .detailHeader h3.courseTitle {
+        font-size: 1.5em;
+    }
+
+    .detailHeader p {
+        font-size: 0.9em;
+    }
+
+    .detailBody {
         gap: 15px;
     }
 
     .previewArea {
-        min-width: auto;
+        align-items: center;
+    }
+
+    .previewPlaceholder {
+        width: 250px;
+        height: 180px;
+    }
+
+    .infoArea {
+        gap: 8px;
+    }
+
+    .nameAndDescription h4 {
+        font-size: 1em;
+    }
+
+    .nameAndDescription p {
+        font-size: 0.95em;
+    }
+
+    .deleteButton {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        margin-top: 8px;
     }
 
     .editButton {
-        width: 200px;
+        width: 100%;
+        /* На мобильных кнопка всегда 100% */
+        margin-top: 15px;
+        padding: 10px 12px;
+        font-size: 0.9em;
     }
 
-    .deleteButton{
-        width: 200px;
+    .lessonsArea {
+        padding-top: 10px;
+        margin-top: 10px;
     }
-}
 
-.studentGrid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(3, auto);
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 12px;
-}
+    .lessonsArea h4 {
+        font-size: 1.2em;
+    }
 
-.studentCard {
-    background-color: #fff;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    width: 180px;
+    .lessonsArea ul {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .lessonsArea li {
+        width: 100%;
+        padding: 10px 12px;
+    }
+
+
+    .exportButton {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+
+    .studentsArea {
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    .studentsArea h4 {
+        font-size: 1.2em;
+    }
+
+    .progressTableContainer {
+        min-width: auto;
+    }
+
+    .progressTable {
+        min-width: 350px;
+    }
+
+
+    .progressTable th,
+    .progressTable td {
+        padding: 6px 8px;
+        font-size: 0.8em;
+    }
+
+    .progressTable td:nth-child(n+3) {
+        font-size: 0.75em;
+        padding: 4px 6px;
+    }
+
+
+    /* Режим добавления урока */
+    .courseDetailAddLesson {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .courseDetailAddLesson h3 {
+        font-size: 1.2em;
+    }
+
+    .cancelButton {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
 }

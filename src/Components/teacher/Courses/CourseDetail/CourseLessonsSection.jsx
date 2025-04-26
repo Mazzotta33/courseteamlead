@@ -8,7 +8,7 @@ const CourseLessonsSection = ({
                                   lessonsData,
                                   lessonsLoading,
                                   lessonsError,
-                                  handleEditCourseClick,
+                                  handleAddLessonClick,
                                   handleLessonClick
                               }) => {
     const { courseId } = useParams();
@@ -49,7 +49,7 @@ const CourseLessonsSection = ({
 
     return (
         <div className={styles.lessonsArea}>
-            <button className={styles.editButton} onClick={handleEditCourseClick}>
+            <button className={styles.editButton} onClick={handleAddLessonClick}>
                 Добавить урок
             </button>
             <h4>Уроки:</h4>

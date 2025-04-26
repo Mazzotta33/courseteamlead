@@ -1,57 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 .statisticsContainer {
     padding: 40px;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif; /* Используем Inter как основной шрифт */
+    color: #333; /* Основной цвет текста */
+    max-width: 1200px; /* Ограничиваем максимальную ширину для контента */
+    margin: 0 auto; /* Центрируем контейнер */
 }
 
 .title {
-    font-size: 28px;
-    margin-bottom: 20px;
+    font-size: 2.2em; /* Увеличиваем размер заголовка */
+    margin-bottom: 30px; /* Увеличиваем нижний отступ */
+    font-family: 'Poppins', sans-serif; /* Шрифт для заголовков */
+    color: #3A0068; /* Цвет акцентный */
+    text-align: center; /* Центрируем заголовок */
+    font-weight: 700;
 }
 
 .cardsContainer {
     display: flex;
-    gap: 20px;
+    gap: 30px; /* Увеличиваем отступ между карточками */
     margin-bottom: 40px;
     flex-wrap: wrap;
+    justify-content: center; /* Центрируем карточки */
 }
 
 .statCard {
-    background-color: #f5f5f5;
+    background-color: #f8faff; /* Светлый фон */
     border-radius: 12px;
-    padding: 20px;
+    padding: 25px; /* Увеличиваем паддинг */
     flex: 1;
-    min-width: 200px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-width: 220px; /* Увеличиваем минимальную ширину */
+    max-width: 300px; /* Ограничиваем максимальную ширину */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Более выраженная тень */
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Плавные переходы */
+    border: 1px solid #eef2ff; /* Легкий бордер */
 }
+
+.statCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+.statCard h3 {
+    font-size: 1.3em; /* Увеличиваем шрифт заголовка карточки */
+    margin-bottom: 10px;
+    color: #3A0068; /* Цвет акцентный */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
 
 .statNumber {
-    font-size: 24px;
-    color: #4f46e5;
-    margin-top: 10px;
+    font-size: 2.5em; /* Значительно увеличиваем размер цифры */
+    color: #6c2eb7; /* Фирменный цвет */
+    margin-top: 5px;
+    font-weight: 700;
 }
 
-.chartSection {
-    margin-bottom: 40px;
+/* Секции графика, топ-студентов, список курсов */
+.chartSection,
+.topStudentsSection,
+.coursesListSection { /* Добавляем класс для секции списка курсов */
+    background-color: #fff; /* Белый фон для секций */
+    border-radius: 12px;
+    padding: 30px; /* Внутренние отступы */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px; /* Отступ между секциями */
 }
+
 
 .sectionTitle {
-    margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 1.8em; /* Увеличиваем шрифт заголовка секции */
+    margin-bottom: 20px; /* Увеличиваем нижний отступ */
+    font-family: 'Poppins', sans-serif;
+    color: #3A0068;
+    font-weight: 700;
+    border-bottom: 1px solid #eee; /* Линия под заголовком */
+    padding-bottom: 10px;
 }
 
+/* Стили для графика (recharts) */
+/* Recharts использует inline стили или props, поэтому здесь общие контейнерные стили */
+
+
 .topStudentsSection {
-    margin-bottom: 20px;
+    /* Стили для контейнера топ-студентов, если нужны специфические */
 }
 
 .studentsList {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .studentItem {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-    font-size: 16px;
+    padding: 12px 0; /* Увеличиваем вертикальный паддинг */
+    border-bottom: 1px solid #eee; /* Легкая граница */
+    font-size: 1.1em; /* Увеличиваем шрифт */
+    color: #555; /* Цвет текста */
+    transition: color 0.2s ease;
 }
 
+.studentItem:last-child {
+    border-bottom: none; /* Убираем границу у последнего элемента */
+}
+
+.studentItem:hover {
+    color: #3A0068; /* Цвет при ховере */
+}
+
+
+/* Стили для секции списка курсов */
+/* Использует те же классы .studentsList и .studentItem */
+
+.coursesListSection .sectionTitle {
+    /* Если нужен специфический стиль для заголовка списка курсов, переопределите здесь */
+}
+
+.coursesListSection .studentsList .studentItem {
+    cursor: pointer; /* Курсор-указатель для кликабельных элементов */
+    /* Другие стили из .studentItem уже применены */
+}
+
+.coursesListSection .studentsList .studentItem:hover {
+    background-color: #f8faff; /* Легкий фон при ховере для кликабельных элементов */
+}
+
+
+/* Стили для сообщений о загрузке и ошибке */
+.loading, .error {
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+    padding: 20px;
+}
+
+.error {
+    color: #dc3545; /* Красный для ошибок */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+
+/* ------------- Адаптивность ------------- */
+
+/* Начиная с ширины 768px и меньше */
+@media (max-width: 768px) {
+    .statisticsContainer {
+        padding: 20px; /* Уменьшаем паддинг */
+    }
+
+    .title {
+        font-size: 1.8em; /* Уменьшаем заголовок */
+        margin-bottom: 20px;
+    }
+
+    .cardsContainer {
+        gap: 15px; /* Уменьшаем отступ */
+        margin-bottom: 30px;
+    }
+
+    .statCard {
+        padding: 20px;
+        min-width: 180px; /* Уменьшаем мин. ширину */
+        max-width: none; /* Убираем макс. ширину */
+    }
+
+    .statCard h3 {
+        font-size: 1.1em;
+    }
+
+    .statNumber {
+        font-size: 2em; /* Уменьшаем размер цифры */
+    }
+
+    .chartSection,
+    .topStudentsSection,
+    .coursesListSection {
+        padding: 20px; /* Уменьшаем паддинг */
+        margin-bottom: 20px;
+    }
+
+    .sectionTitle {
+        font-size: 1.5em; /* Уменьшаем заголовок секции */
+        margin-bottom: 15px;
+    }
+
+    .studentItem {
+        padding: 10px 0; /* Уменьшаем паддинг */
+        font-size: 1em; /* Уменьшаем шрифт */
+    }
+}
+
+/* Начиная с ширины 480px и меньше */
+@media (max-width: 480px) {
+    .statisticsContainer {
+        padding: 15px;
+    }
+
+    .title {
+        font-size: 1.6em;
+        margin-bottom: 15px;
+    }
+
+    .cardsContainer {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .statCard {
+        padding: 15px;
+        min-width: 140px;
+    }
+
+    .statCard h3 {
+        font-size: 1em;
+    }
+
+
+    .statNumber {
+        font-size: 1.8em;
+    }
+
+    .chartSection,
+    .topStudentsSection,
+    .coursesListSection {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .sectionTitle {
+        font-size: 1.3em;
+        margin-bottom: 10px;
+    }
+
+    .studentItem {
+        padding: 8px 0;
+        font-size: 0.95em;
+    }
+}

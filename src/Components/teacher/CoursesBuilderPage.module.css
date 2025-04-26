@@ -1,194 +1,354 @@
-/* CourseBuilder.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Общие стили для всей страницы */
+body {
+    margin: 0;
+    padding: 0;
+    /* Используем Inter как шрифт по умолчанию */
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f6;
+    /* Легкий фон для страницы, чтобы виджеты выделялись */
+    color: #333;
+    /* Основной цвет текста */
+}
+
+/* ------------- Стили для контейнера конструктора курсов ------------- */
 .courseBuilderContainer {
-    padding: 20px;
+    padding: 30px;
     max-width: 800px;
-    margin: 20px auto;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Ограничение максимальной ширины */
+    margin: 30px auto;
+    /* Центрирование блока */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    position: relative;
+    /* Для позиционирования кнопки "Начать заново" */
+    box-sizing: border-box;
+    /* Убедимся, что паддинг учитывается в ширине */
 }
 
-.answerOption{
-    display: flex;
-}
-
+/* Стили для основных заголовков (Конструктор курсов, Этап X) */
 .courseBuilderContainer h2,
 .courseBuilderContainer h3 {
     text-align: center;
-    color: #333;
+    color: #3A0068;
     margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
+.courseBuilderContainer h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.courseBuilderContainer h3 {
+    font-size: 1.5em;
+    margin-bottom: 25px;
+}
+
+/* ------------- Стили для прогресс-бара ------------- */
 .progressBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
-    padding: 0 20px;
-}
-
-.checkbox{
-    width: 20px;
-    height: 20px;
-    color: #4f46e5;
+    margin-bottom: 40px;
+    padding: 0 10px;
 }
 
 .step {
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    /* Размер кружка */
+    height: 35px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
     background-color: #fff;
-    color: #aaa;
+    color: #a0aec0;
     transition: all 0.3s ease;
-    font-size: 0.9em;
+    font-size: 1em;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    flex-shrink: 0;
+    /* Предотвращаем сжатие */
 }
 
 .step.active {
-    border-color: #007bff;
-    background-color: #007bff;
-    color: #fff;
-    font-weight: bold;
+    border-color: #8A2BE2;
+    background: linear-gradient(45deg, #8A2BE2 0%, #4B0082 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.2);
 }
 
 .connector {
     flex-grow: 1;
-    height: 2px;
-    background-color: #ccc;
+    /* Соединительная линия заполняет пространство */
+    height: 3px;
+    background-color: #e2e8f0;
     margin: 0 10px;
     transition: background-color 0.3s ease;
 }
 
 .connector.active {
-    background-color: #007bff;
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
 }
 
-
+/* ------------- Стили для содержимого текущего этапа ------------- */
 .stepContent {
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 5px;
+    padding: 30px;
+    /* Внутренние отступы блока */
+    border: none;
+    border-radius: 12px;
     background-color: #fff;
-    margin-top: 20px;
+    margin-top: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
+/* Стили для заголовков внутри stepContent (например, "Добавить новый вопрос") */
+.stepContent h4 {
+    margin-bottom: 15px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #3A0068;
+}
+
+/* Стили для подзаголовков (например, "Варианты ответа:") */
+.stepContent h5 {
+    margin-bottom: 10px;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+
+/* ------------- Стили для групп полей формы (метка + инпут/текстареа) ------------- */
 .formGroup {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    /* Отступ между группами полей */
 }
 
 .formGroup label {
     display: block;
+    /* Метка на отдельной строке */
     margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.95em;
+    font-family: 'Inter', sans-serif;
 }
 
+/* Стили для полей ввода текста и текстареа (базовые) */
 .formGroup input[type="text"],
-.formGroup textarea {
+.formGroup textarea,
+.inputField {
+    /* Этот класс используется в Step4TestCreator */
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    /* Поле ввода занимает всю доступную ширину */
+    padding: 12px 15px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
     box-sizing: border-box;
+    /* Паддинг и бордер включаются в ширину */
     font-size: 1em;
+    font-family: 'Inter', sans-serif;
+    color: #2d3748;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    /* Плавный переход при фокусе */
+}
+
+/* Стили при фокусе на полях ввода */
+.formGroup input[type="text"]:focus,
+.formGroup textarea:focus,
+.inputField:focus {
+    border-color: #8A2BE2;
+    outline: 0;
+    /* Убираем стандартный аутлайн */
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+    /* Пользовательский аутлайн */
 }
 
 .formGroup textarea {
     resize: vertical;
+    /* Разрешаем изменять размер только по вертикали */
+    min-height: 100px;
+    /* Минимальная высота для текстареа */
 }
 
+
+/* ------------- Стили для области загрузки изображения (Step 1) ------------- */
 .imageUpload {
-    border: 2px dashed #ccc;
-    padding: 20px;
+    border: 2px dashed #8A2BE2;
+    /* Пунктирный бордер акцентного цвета */
+    padding: 30px;
     text-align: center;
-    border-radius: 5px;
-    background-color: #fdfdfd;
-    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fcfaff;
+    /* Очень светлый фон */
+    margin-bottom: 25px;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.imageUpload:hover {
+    border-color: #4B0082;
+    background-color: #f7f2ff;
 }
 
 .imagePlaceholder {
-    color: #aaa;
+    color: #6c2eb7;
     margin-bottom: 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 .imagePlaceholder svg {
     display: block;
     margin: 0 auto 10px auto;
+    width: 40px;
+    height: 40px;
+    fill: #6c2eb7;
 }
 
 .previewImage {
     max-width: 100%;
-    max-height: 200px;
-    margin-bottom: 15px;
-    border-radius: 4px;
+    /* Изображение не выходит за пределы контейнера */
+    max-height: 250px;
+    /* Ограничение высоты */
+    margin: 0 auto 20px auto;
+    /* Центрирование и отступ снизу */
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.uploadButton {
+/* ------------- Стили для кнопок (вторичные - залитые) ------------- */
+.uploadButton,
+    /* Используется в Step 1 */
+.addLectureForm .addButton
+
+    /* Используется в Step 3 для кнопки "Добавить" */
+{
     display: inline-block;
     padding: 10px 20px;
-    background-color: #5cb85c;
+    background-color: #6c2eb7;
+    /* Солидный пурпурный цвет */
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 2px 8px rgba(108, 46, 183, 0.2);
 }
 
-.uploadButton:hover {
-    background-color: #4cae4c;
+.uploadButton:hover,
+.addLectureForm .addButton:hover {
+    background-color: #4B0082;
+    box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3);
 }
 
+.uploadButton:active,
+.addLectureForm .addButton:active {
+    background-color: #3A0068;
+    box-shadow: 0 1px 5px rgba(75, 0, 130, 0.2);
+}
 
+/* ------------- Стили для кнопок навигации (Назад, Далее, Завершить) ------------- */
 .navigationButtons {
     display: flex;
+    /* Кнопки в строку */
     justify-content: space-between;
-    margin-top: 30px;
+    /* Распределяем пространство */
+    margin-top: 40px;
+    /* Отступ сверху */
 }
 
 .navButton {
-    padding: 10px 25px;
-    background-color: #007bff;
+    padding: 12px 30px;
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
+    /* Градиент */
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1em;
-    margin-left: 10px;
-    transition: background-color 0.2s ease;
+    font-weight: 600;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+    font-family: 'Inter', sans-serif;
 }
 
 .navButton:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
 }
 
+.navButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.15);
+}
+
+/* ------------- Стили для списка добавленных лекций (Step 3) ------------- */
 .lectureList ul {
     list-style: none;
     padding: 0;
-    margin-top: 10px;
+    margin: 0;
 }
 
 .lectureList li {
-    background-color: #f0f0f0;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
+    background-color: #f8faff;
+    /* Легкий фон */
+    border: 1px solid #e0e0e0;
+    /* Легкий бордер */
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
     display: flex;
+    /* Элементы в строку */
     justify-content: space-between;
+    /* Название слева, кнопка справа */
     align-items: center;
+    font-family: 'Inter', sans-serif;
+    color: #555;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    word-break: break-word;
+    /* Перенос длинных названий */
 }
 
+/* Стиль кнопки удаления элемента списка (лекции) */
 .removeButton {
+    /* Этот класс используется в Step 3 */
     background: none;
     border: none;
     color: #dc3545;
+    /* Цвет ошибки/удаления */
     cursor: pointer;
     font-size: 0.9em;
     margin-left: 10px;
-}
-.removeButton:hover {
-    text-decoration: underline;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
 }
 
+.removeButton:hover {
+    text-decoration: underline;
+    color: #c82333;
+}
+
+
+/* ------------- Стили для области добавления лекции (Step 3) ------------- */
 .addLectureForm {
     margin-top: 30px;
     padding-top: 20px;
@@ -198,40 +358,609 @@
 .addLectureForm h4 {
     margin-bottom: 15px;
     text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #3A0068;
 }
 
+/* Стили для кнопок выбора типа лекции (текст, фото, видео и т.д.) */
 .addLectureForm button {
+    /* Этот селектор слишком общий, лучше использовать класс */
+    /*
+         * Убедись, что кнопки выбора типа лекции имеют отдельный класс
+         * и стилизуются по нему, а не по общему 'button' внутри '.addLectureForm'.
+         * Например: '.addLectureForm .lectureTypeButton'
+         * Иначе этот стиль может применяться к другим кнопкам внутри этой формы.
+         */
     margin-right: 10px;
     padding: 8px 15px;
     cursor: pointer;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border-radius: 6px;
+    border: 1.5px solid #d1d5db;
     background-color: #f8f9fa;
+    font-size: 0.95em;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: #4a5568;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
+
+.addLectureForm button:hover {
+    background-color: #eef2ff;
+    border-color: #8A2BE2;
+    color: #3A0068;
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.08);
+}
+
 .addLectureForm button.activeType {
-    background-color: #e2e6ea;
-    border-color: #dae0e5;
-}
-
-.addLectureForm .addButton {
-    background-color: #28a745;
+    background-color: #6c2eb7;
+    border-color: #6c2eb7;
     color: white;
-    border: none;
-    margin-top: 15px;
-    padding: 10px 20px;
-}
-.addLectureForm .addButton:hover {
-    background-color: #218838;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(108, 46, 183, 0.3);
 }
 
+.addLectureForm button.activeType:hover {
+    background-color: #4B0082;
+    border-color: #4B0082;
+    color: white;
+    box-shadow: 0 4px 12px rgba(75, 0, 130, 0.4);
+}
+
+/* Стили для кнопки "Добавить" в Step 3 (использует класс .addButton) */
+/* Этот стиль уже определен выше вместе с .uploadButton */
+/*
+     .addLectureForm .addButton { ... }
+     .addLectureForm .addButton:hover { ... }
+     .addLectureForm .addButton:active { ... }
+     */
+
+
+/* ------------- Стили для плейсхолдера теста (Step 4) ------------- */
 .testPlaceholder {
     text-align: center;
     padding: 40px 20px;
-    border: 2px dashed #eee;
-    border-radius: 5px;
+    border: 2px dashed #8A2BE2;
+    border-radius: 8px;
     margin-top: 20px;
-    color: #aaa;
+    color: #6c2eb7;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1em;
+    font-weight: 500;
 }
+
 .testPlaceholder svg {
     margin-bottom: 15px;
+    width: 40px;
+    height: 40px;
+    fill: #6c2eb7;
+}
+
+
+/* ------------- Стили для кнопки "Начать заново" (глобальное позиционирование) ------------- */
+.resetButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #6c2eb7;
+    border: 1.5px solid #6c2eb7;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+
+    /* Позиционирование в левый верхний угол родительского блока с position: relative */
+    position: absolute;
+    top: 30px;
+    /* Отступ сверху, соответствует padding контейнера */
+    left: 30px;
+    /* Отступ слева, соответствует padding контейнера */
+    z-index: 10;
+    /* Убедимся, что кнопка поверх остального контента */
+}
+
+.resetButton:hover {
+    background-color: #6c2eb7;
+    color: white;
+    border-color: #6c2eb7;
+    box-shadow: 0 4px 12px rgba(108, 46, 183, 0.2);
+}
+
+.resetButton:active {
+    background-color: #4B0082;
+    border-color: #4B0082;
+    box-shadow: 0 1px 5px rgba(75, 0, 130, 0.3);
+}
+
+.resetButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ------------- Стили для списка добавленных вопросов (Step 4) ------------- */
+.questionList {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.questionList h4 {
+    margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #3A0068;
+}
+
+.questionList p {
+    color: #555;
+    font-style: italic;
+}
+
+.questionList ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.questionListItem {
+    background-color: #f8faff;
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    /* Элементы в строку */
+    justify-content: space-between;
+    /* Текст слева, кнопка справа */
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    word-break: break-word;
+    /* Перенос длинных текстов */
+}
+
+/* Стиль кнопки удаления вопроса (в списке вопросов) */
+.questionListItem .deleteButton {
+    /* Этот класс используется в Step 4 */
+    background: none;
+    border: none;
+    color: #dc3545;
+    /* Цвет ошибки/удаления */
+    cursor: pointer;
+    font-size: 1.4em;
+    /* Чуть крупнее */
+    margin-left: 15px;
+    padding: 0 5px;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    /* Предотвращаем сжатие */
+}
+
+.questionListItem .deleteButton:hover {
+    color: #c82333;
+}
+
+
+/* Горизонтальный разделитель */
+.separator {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 30px 0;
+    /* Отступы сверху и снизу */
+}
+
+
+/* ------------- Стили для формы добавления нового вопроса (Step 4) ------------- */
+.addQuestionForm {
+    /* Контейнер формы добавления вопроса */
+}
+
+/* Заголовок формы добавления вопроса - стилизован как h4 выше */
+/* .addQuestionForm h4 { ... } */
+
+/* Группа полей формы (для текста вопроса и вариантов ответа) - стилизован как .formGroup выше */
+/* .formGroup { ... } */
+/* .formGroup label { ... } */
+
+
+/* ------------- Стили для вариантов ответа (Step 4) ------------- */
+.answerOptionsSection {
+    /* Контейнер для всех вариантов ответа, если такой есть */
+    margin-top: 20px;
+}
+
+.answerOption {
+    display: flex;
+    /* Элементы в строку: чекбокс, инпут, кнопка */
+    align-items: center;
+    margin-bottom: 10px;
+    /* Отступ между вариантами ответа */
+    gap: 10px;
+    /* Отступ между элементами внутри варианта */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    /* Плавные переходы */
+    border-radius: 8px;
+    /* Скругление */
+    padding: 5px 10px;
+    /* Внутренний отступ */
+    border: 1.5px solid transparent;
+    /* Прозрачный бордер по умолчанию */
+}
+
+/* !!! Новый стиль для LABEL, который оборачивает чекбокс и инпут !!! */
+.answerLabel {
+    display: flex;
+    /* Делаем label flex-контейнером для выравнивания чекбокса и инпута */
+    align-items: center;
+    flex-grow: 1;
+    /* Позволяем label занимать оставшееся пространство в .answerOption */
+    gap: 10px;
+    /* Пространство между скрытым чекбозсом и полем ввода текста */
+    cursor: pointer;
+    /* Меняем курсор, чтобы показать кликабельность */
+    /* Наследуем шрифт и цвет текста от родителя или явно устанавливаем */
+    font-family: 'Inter', sans-serif;
+    color: #2d3748;
+}
+
+
+/* Стилизация чекбокса - делаем его видимым и стандартным */
+.checkbox {
+    /* Этот класс используется в Step 4 */
+    opacity: 1;
+    /* Делаем видимым */
+    width: 20px;
+    /* Стандартный размер */
+    height: 20px;
+    position: static;
+    /* Возвращаем в обычный поток документа */
+    pointer-events: auto;
+    /* Разрешаем прямые клики (хотя label все равно работает) */
+    margin: 0;
+    /* Убираем стандартный маргин, используем gap в answerLabel */
+    flex-shrink: 0;
+    /* Предотвращаем сжатие */
+    /* Можно добавить базовые стили для единообразия, но appearance: checkbox обычно достаточно */
+    appearance: checkbox;
+    /* Используем нативное оформление чекбокса */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 4px; */
+    /* background-color: #fff; */
+}
+
+/* !!! Удаляем стили заливки inputField при выбранном чекбоксе !!! */
+/* Эти селекторы больше не нужны для заливки поля ввода */
+/*
+.answerLabel .checkbox:checked~.inputField {
+    background-color: #eef2ff;
+    color: #3A0068;
+    border-color: #a78bfa;
+}
+
+.answerLabel .checkbox:checked~.inputField:hover {
+    background-color: #e0e7ff;
+    border-color: #8B5CF6;
+}
+*/
+
+/* !!! Фокус стиль для чекбокса (важно для доступности с клавиатуры!) !!! */
+/* Когда чекбокс получает фокус (например, через Tab), добавляем outline ему самому */
+.answerLabel .checkbox:focus-visible {
+    outline: 2px solid rgba(138, 43, 226, 0.4);
+    outline-offset: 2px;
+    /* Отступ от бордера элемента */
+    border-radius: 4px;
+    /* Скругляем outline, если чекбокс квадратный */
+}
+
+/* Стиль для поля ввода текста варианта ответа (базовый) */
+/* Этот стиль применяется к .inputField, который находится ВНУТРИ .answerLabel */
+.answerLabel .inputField {
+    flex-grow: 1;
+    /* Инпут занимает оставшееся пространство внутри label */
+    padding: 10px 12px;
+    /* Чуть меньше паддинг, чем у других инпутов формы */
+    margin-right: 0;
+    /* Убираем инлайн-маргин, используем gap */
+    /* Наследует остальные базовые стили от .inputField (бордер, фон, цвет текста по умолчанию) */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Плавные переходы */
+    background-color: #fff;
+    /* Явно задаем белый фон по умолчанию */
+    border: 1.5px solid #d1d5db;
+    /* Явно задаем бордер по умолчанию */
+    color: #2d3748;
+    /* Явно задаем цвет текста по умолчанию */
+}
+
+
+/* Стиль при фокусе НА САМОМ поле ввода (если кликнули прямо в него) */
+/* Сохраняем стиль фокуса для самого поля ввода */
+.answerLabel .inputField:focus {
+    border-color: #8A2BE2;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+}
+
+
+/* Стиль кнопки удаления варианта ответа ('x') */
+.answerOption .deleteButton {
+    /* Этот класс используется в Step 4 */
+    background: none;
+    border: none;
+    color: #dc3545;
+    /* Цвет ошибки/удаления */
+    cursor: pointer;
+    font-size: 1.2em;
+    /* Размер */
+    margin-left: 0;
+    /* Убираем маргин, используем gap */
+    padding: 0 5px;
+    /* Небольшой паддинг для области клика */
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    /* Предотвращаем сжатие */
+    line-height: 1;
+    /* Выравниваем по вертикали */
+}
+
+.answerOption .deleteButton:hover {
+    color: #c82333;
+}
+
+
+/* ------------- Стили для кнопки "Добавить вариант ответа" (вторичная кнопка с обводкой) ------------- */
+.formGroup .addButton {
+    /* Стиль для .addButton внутри .formGroup */
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: transparent;
+    /* Фон прозрачный */
+    color: #6c2eb7;
+    /* Цвет текста и бордера акцентный */
+    border: 1.5px solid #6c2eb7;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    margin-top: 10px;
+    /* Отступ сверху */
+}
+
+.formGroup .addButton:hover {
+    background-color: #6c2eb7;
+    color: white;
+    border-color: #6c2eb7;
+    box-shadow: 0 2px 8px rgba(108, 46, 183, 0.2);
+}
+
+.formGroup .addButton:active {
+    background-color: #4B0082;
+    border-color: #4B0082;
+    box-shadow: 0 1px 5px rgba(75, 0, 130, 0.3);
+}
+
+
+/* ------------- Стили для кнопки "Добавить вопрос в тест" (вторичная кнопка с заливкой) ------------- */
+.addQuestionForm>.addButton {
+    /* Стиль для .addButton прямо внутри .addQuestionForm */
+    display: inline-block;
+    background-color: #6c2eb7;
+    /* Солидный пурпурный цвет */
+    color: white;
+    border: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1em;
+    /* Чуть крупнее, чем addAnswerOptionButton */
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(108, 46, 183, 0.2);
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+}
+
+.addQuestionForm>.addButton:hover {
+    background-color: #4B0082;
+    box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3);
+}
+
+.addQuestionForm>.addButton:active {
+    background-color: #3A0068;
+    box-shadow: 0 1px 5px rgba(75, 0, 130, 0.2);
+}
+
+
+/*
+         * ======================================
+         * МЕДИА-ЗАПРОСЫ ДЛЯ АДАПТИВНОСТИ (ТЕЛЕФОНЫ)
+         * ======================================
+         */
+
+/* Начиная с ширины 768px и меньше */
+@media (max-width: 768px) {
+    .courseBuilderContainer {
+        padding: 20px;
+        /* Уменьшаем общий паддинг контейнера */
+    }
+
+    /* Корректировка позиции и размера кнопки "Начать заново" */
+    .resetButton {
+        top: 20px;
+        left: 20px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    /* Добавляем паддинг снизу для навигационных кнопок, если кнопка "Начать заново" их перекрывает */
+    .navigationButtons {
+        padding-bottom: 40px;
+        /*
+             * Если кнопки навигации все еще слишком широкие и не помещаются в строку,
+             * можно сделать их блочными или уменьшить горизонтальный паддинг:
+             * flex-direction: column;
+             * align-items: stretch; // Растягиваем по ширине
+             * gap: 10px; // Отступ между кнопками в колонке
+             * .navButton { width: 100%; text-align: center; padding: 10px 15px;}
+             */
+    }
+
+    /* Корректировка прогресс-бара на средних экранах */
+    .progressBar .step {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9em;
+    }
+
+    .progressBar .connector {
+        margin: 0 8px;
+    }
+
+    /* Адаптация элементов списка вопросов */
+    .questionListItem {
+        flex-direction: column;
+        /* Элементы в колонку */
+        align-items: flex-start;
+        /* Выравниваем по левому краю */
+        gap: 5px;
+        /* Отступ между элементами */
+        padding: 10px 15px;
+        /* Скорректируем паддинг */
+    }
+
+    .questionListItem .deleteButton {
+        margin-left: 0;
+        /* Убираем маргин, используем gap */
+        margin-top: 5px;
+        /* Добавляем небольшой отступ сверху */
+    }
+
+    /* Адаптация элементов варианта ответа */
+    .answerOption {
+        flex-wrap: wrap;
+        /* Разрешаем перенос элементов на новую строку */
+        gap: 5px;
+        /* Уменьшаем отступ */
+        padding: 5px;
+        /* Уменьшаем паддинг */
+    }
+
+    .answerLabel {
+        /* Корректировка label внутри варианта ответа */
+        width: 100%;
+        /* Label занимает всю ширину */
+        gap: 8px;
+        /* Уменьшаем gap внутри label */
+    }
+
+    .answerLabel .inputField {
+        padding: 8px 10px;
+        /* Уменьшаем паддинг инпута */
+    }
+
+    .answerOption .deleteButton {
+        margin-top: 5px;
+        /* Отступ сверху у кнопки удаления варианта */
+    }
+
+}
+
+/* Начиная с ширины 480px и меньше (очень маленькие телефоны) */
+@media (max-width: 480px) {
+    .courseBuilderContainer {
+        padding: 15px;
+        /* Уменьшаем общий паддинг еще больше */
+    }
+
+    /* Корректировка позиции и размера кнопки "Начать заново" для самых маленьких */
+    .resetButton {
+        top: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    /* Если кнопки навигации не помещаются даже в 768px брейкпоинте */
+    .navigationButtons {
+        flex-direction: column;
+        /* Делаем кнопки в колонку */
+        align-items: stretch;
+        /* Растягиваем по ширине */
+        gap: 10px;
+        /* Отступ между кнопками */
+        padding-bottom: 30px;
+        /* Корректируем нижний паддинг */
+    }
+
+    .navButton {
+        width: 100%;
+        /* Кнопки занимают всю ширину */
+        text-align: center;
+        padding: 10px 15px;
+        /* Уменьшаем горизонтальный паддинг */
+        font-size: 0.9em;
+        /* Уменьшаем шрифт */
+    }
+
+    /* Корректировка прогресс-бара на самых маленьких экранах */
+    .progressBar {
+        padding: 0 5px;
+        /* Уменьшаем боковой паддинг прогресс-бара */
+    }
+
+    .progressBar .step {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8em;
+    }
+
+    .progressBar .connector {
+        margin: 0 5px;
+    }
+
+    /* Корректировка элементов списка вопросов на самых маленьких экранах */
+    .questionListItem {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    /* Корректировка элементов варианта ответа на самых маленьких экранах */
+    .answerOption {
+        gap: 3px;
+        /* Уменьшаем отступ еще больше */
+        padding: 3px;
+        /* Уменьшаем паддинг */
+    }
+
+    .answerLabel {
+        gap: 5px;
+        /* Уменьшаем gap внутри label */
+    }
+
+    .answerLabel .inputField {
+        padding: 6px 8px;
+        /* Уменьшаем паддинг инпута */
+        font-size: 0.9em;
+        /* Уменьшаем шрифт */
+    }
+
+    .answerOption .deleteButton {
+        font-size: 1em;
+        /* Корректируем размер кнопки */
+        margin-top: 3px;
+        /* Отступ сверху */
+    }
 }

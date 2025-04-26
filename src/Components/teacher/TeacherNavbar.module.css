@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #8A2BE2;
+    box-sizing: border-box;
+    /* Убедимся, что паддинг включен в ширину */
+}
+
+.logoSection {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+    /* Лого не сжимается */
+}
+
+.brand {
+    color: #3A0068;
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 10px;
+}
+
+.logo {
+    height: 30px;
+    width: auto;
+    display: block;
+    /* Убираем возможные нижние отступы у img */
+}
+
+.navLinks {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    gap: 20px;
+    /* На мобильных эти ссылки будут скрыты по умолчанию */
+}
+
+.navLinkItem {
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 1.4em;
+    font-weight: 500;
+    padding: 5px 0;
+    transition: color 0.2s, border-bottom-color 0.2s;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 2px solid transparent;
+}
+
+.navLinkItem:hover {
+    color: #8A2BE2;
+    border-bottom-color: #8A2BE2;
+}
+
+/* Стили для блока кнопки выхода */
+.authButtons {
+    margin-left: 20px;
+    flex-shrink: 0;
+    /* Кнопка выхода не сжимается */
+    display: flex;
+    /* Включаем flexbox для выравнивания внутри блока */
+    align-items: center;
+}
+
+.logoutButton {
+    padding: 8px 15px;
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.10);
+    font-family: 'Inter', sans-serif;
+}
+
+.logoutButton:hover {
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.15);
+}
+
+.logoutButton:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 5px rgba(138, 43, 226, 0.10);
+}
+
+/* ------------- Стили для мобильной кнопки меню (гамбургер) ------------- */
+.mobileMenuToggle {
+    display: none;
+    /* Скрываем по умолчанию на больших экранах */
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    /* Размер иконки */
+    cursor: pointer;
+    color: #3A0068;
+    /* Цвет иконки */
+    padding: 5px;
+    /* margin-left: 10px; */
+    /* Отступ будет задан flexbox'ом */
+    z-index: 1001;
+    /* Убедимся, что кнопка кликабельна */
+    /* В мобильном виде будет располагаться между лого и кнопкой выхода */
+    margin-left: auto;
+    /* Сдвигает кнопку вправо, занимая пространство */
+}
+
+/* Стиль для блока .navLinks, когда мобильное меню открыто */
+.navLinks.open {
+    display: flex;
+    /* Переопределяем display: none из медиа-запроса */
+    flex-direction: column;
+    /* Располагаем ссылки вертикально */
+    position: absolute;
+    /* Позиционируем под навбаром */
+    top: 100%;
+    /* Начинаем сразу под основной частью навбара */
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    /* Фон открытого меню */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    /* Тень */
+    padding: 10px 0;
+    /* Вертикальный паддинг */
+    gap: 0;
+    /* Убираем промежутки между ссылками */
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    z-index: 999;
+    /* Под основной частью навбара, но над остальным контентом */
+    box-sizing: border-box;
+}
+
+/* Стиль для отдельных ссылок в открытом мобильном меню */
+.navLinks.open .navLinkItem {
+    padding: 10px 20px;
+    /* Добавляем горизонтальный паддинг ссылкам в открытом меню */
+    border-bottom: none;
+    /* Убираем подчеркивание снизу у отдельных ссылок */
+    text-align: left;
+    /* Выравниваем текст по левому краю */
+}
+
+
+/*
+ * ======================================
+ * МЕДИА-ЗАПРОСЫ ДЛЯ АДАПТИВНОСТИ НАВБАРА
+ * ======================================
+ */
+
+/* Начиная с ширины 768px и меньше (для планшетов и телефонов) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 15px;
+        /* Уменьшаем горизонтальный паддинг навбара */
+        /* Не меняем flex-direction, оставляем элементы в строку */
+    }
+
+    .logoSection {
+        margin-right: 10px;
+        /* Уменьшаем отступ справа от лого */
+    }
+
+    /* Скрываем обычные навигационные ссылки на мобильных */
+    .navLinks {
+        display: none;
+    }
+
+    /* Показываем кнопку меню-гамбургера на маленьких экранах */
+    .mobileMenuToggle {
+        display: block;
+        /* margin-left: auto; */
+        /* Уже задан в базовом стиле кнопки */
+    }
+
+    /* Кнопка выхода уже с margin-left: auto, будет справа от гамбургера */
+    .authButtons {
+        margin-left: 10px;
+        /* Небольшой отступ между гамбургером и кнопкой выхода */
+        padding: 0 5px;
+    }
+}
+
+/* Начиная с ширины 480px и меньше (для маленьких телефонов) */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 10px;
+        /* Уменьшаем горизонтальный паддинг еще больше */
+    }
+
+    .brand {
+        font-size: 1.3em;
+        /* Уменьшаем размер шрифта бренда */
+        margin-right: 5px;
+    }
+
+    .logo {
+        height: 25px;
+        /* Уменьшаем размер логотипа */
+    }
+
+    .logoutButton {
+        padding: 6px 12px;
+        /* Уменьшаем паддинг кнопки выхода */
+        font-size: 0.9em;
+        /* Уменьшаем шрифт кнопки */
+    }
+
+    /* Корректировка размера кнопки гамбургера, если нужна */
+    .mobileMenuToggle {
+        font-size: 1.6em;
+        margin-left: auto;
+        /* Снова явно указываем, чтобы быть уверенным */
+    }
+
+    /* Небольшой отступ между гамбургером и кнопкой выхода на маленьких экранах */
+    .authButtons {
+        margin-left: 8px;
+        padding: 0 3px;
+    }
+
+    /* Корректировка паддинга ссылок в открытом меню */
+    .navLinks.open .navLinkItem {
+        padding: 8px 15px;
+    }
+}

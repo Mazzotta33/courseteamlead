@@ -7,7 +7,7 @@ import Step3ContentEditor from "./Coursebuild/Step3ContentEditor.jsx";
 import Step4TestCreator from "./Coursebuild/Step4TestCreator.jsx";
 
 import { useCreateCourseMutation} from '../../Redux/api/coursesApi';
-import {useCreateTestsMutation} from "../../Redux/api/testApi.js";
+import { useCreateTestsMutation } from "../../Redux/api/testApi.js";
 import {useCreateLessonMutation} from "../../Redux/api/lessonApi.js";
 
 const CourseBuilderPage = () => {
@@ -236,8 +236,7 @@ const CourseBuilderPage = () => {
             testQuestionsData && testQuestionsData.length > 0 &&
             !isCreatingTests &&
             !testCreationAttemptedRef.current
-        )
-        {
+        ) {
             console.log("Effect 3: Условия для создания тестов ВЫПОЛНЕНЫ.");
             console.log("Effect 3: Урок успешно создан. ID:", lessonCreationResult.id, " - Подготовка к созданию тестов...");
 
@@ -387,20 +386,6 @@ const CourseBuilderPage = () => {
         <div className={styles.courseBuilderContainer}>
             <h2>Конструктор курсов</h2>
 
-            <div className={styles.progressBar}>
-                <div
-                    className={styles.progress}
-                    style={{ width: `${currentStep <= 1 ? 0 : ((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
-                ></div>
-                {[...Array(totalSteps)].map((_, index) => (
-                    <div
-                        key={index + 1}
-                        className={`${styles.stepIndicator} ${currentStep >= (index + 1) ? styles.activeStep : ''}`}
-                    >
-                        {index + 1}
-                    </div>
-                ))}
-            </div>
 
             {isAnySaving && (
                 <div className={styles.loadingOverlay}>
@@ -415,7 +400,7 @@ const CourseBuilderPage = () => {
             )}
 
             <div className={styles.stepContent}>
-                {( !isAnyError || isAnySaving ) && renderStep()}
+                {(!isAnyError || isAnySaving) && renderStep()}
             </div>
 
             {(currentStep > 1 || courseData.courseName || courseData.courseDescription || courseData.previewImageFile) && !isAnySaving && (

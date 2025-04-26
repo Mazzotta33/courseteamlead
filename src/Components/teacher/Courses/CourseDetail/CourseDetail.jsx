@@ -17,7 +17,8 @@ import Step4TestCreator from "../../Coursebuild/Step4TestCreator.jsx";
 import CourseDetailsDisplay from './CourseDetailsDisplay.jsx';
 import CourseLessonsSection from './CourseLessonsSection.jsx';
 import CourseProgressTable from './CourseProgressTable.jsx';
-import useAddLessonWorkflow from "./hooks..jsx";
+// Убедитесь, что путь к хуку правильный
+import useAddLessonWorkflow from "./hooks.jsx";
 
 
 const CourseDetail = () => {
@@ -35,18 +36,22 @@ const CourseDetail = () => {
 
     const [deleteCourse, { isLoading: isDeletingCourse, error: deleteCourseError }] = useDeleteCourseMutation();
 
+    // <-- ИСПРАВЛЕНО: Добавляем функции-сеттеры в деструктуризацию
     const {
         addLessonStep,
         newLessonDetails,
+        setNewLessonDetails, // <-- Добавлено
         newContentItemsData,
+        setNewContentItemsData, // <-- Добавлено
         newTestQuestionsData,
+        setNewTestQuestionsData, // <-- Добавлено
         isSaving: isAddingLessonOrTests,
         saveError: addLessonSaveError,
         handleNextStep: handleNextAddLessonStep,
         handlePrevStep: handlePrevAddLessonStep,
-        handleSubmit: handleSubmitLessonWorkflow,
+        handleSubmit: handleSubmitLessonWorkflow, // Переименовано из handleSubmit в хуке
         resetWorkflow: resetAddLessonWorkflow,
-    } = useAddLessonWorkflow(courseId, refetchLessons, () => setViewMode('details'));
+    } = useAddLessonWorkflow(courseId, refetchLessons, () => setViewMode('details')); // Убедитесь, что в хуке есть resetWorkflow
 
     useEffect(() => {
         if (coursesData && coursesData.length > 0) {
@@ -70,7 +75,7 @@ const CourseDetail = () => {
     }, [courseId, navigate, coursesData, coursesLoading, coursesError]);
 
     const handleLessonClick = (lessonId) => {
-        navigate(`/teacher/courses/${courseId}/lessons/${lessonId}`);
+        navigate(`/teacher/courses/${courseId}`);
     };
 
     const handleDeleteCourse = async () => {
@@ -97,18 +102,21 @@ const CourseDetail = () => {
     };
 
     const handleAddLessonClick = () => {
-        resetAddLessonWorkflow();
-        setViewMode('add-lesson');
+        // При нажатии "Добавить урок", сбрасываем workflow и переключаем режим
+        resetAddLessonWorkflow(); // Сбрасываем состояния в хуке
+        setViewMode('add-lesson'); // Переключаем режим отображения
     };
 
     const handleCancelAddLesson = () => {
         if (isAddingLessonOrTests) {
+            // Если идет сохранение, не позволяем отменить
+            alert('Дождитесь завершения сохранения.');
             return;
         }
 
         if (window.confirm('Вы уверены, что хотите отменить добавление урока? Введенные данные будут потеряны.')) {
-            resetAddLessonWorkflow();
-            setViewMode('details');
+            resetAddLessonWorkflow(); // Сбрасываем состояния в хуке
+            setViewMode('details'); // Возвращаемся к отображению деталей курса
         }
     };
 
@@ -126,21 +134,24 @@ const CourseDetail = () => {
     }
 
     if (viewMode === 'add-lesson') {
-        const isStepDisabled = isAddingLessonOrTests;
+        const isStepDisabled = isAddingLessonOrTests; // Отключаем элементы во время сохранения
 
         return (
             <div className={styles.courseDetailAddLesson}>
                 <h3>Добавление нового урока к курсу "{course.name}"</h3>
 
+                {/* Индикатор загрузки при сохранении */}
                 {isAddingLessonOrTests && (
                     <div className={styles.loadingOverlay}>
                         Сохранение урока и тестов...
                     </div>
                 )}
 
+                {/* Сообщение об ошибке сохранения */}
                 {addLessonSaveError && !isAddingLessonOrTests && (
                     <div className={styles.errorMessage}>
                         Ошибка сохранения: {addLessonSaveError?.data?.message || addLessonSaveError?.error || 'Неизвестная ошибка API'}
+                        {/* Отображение деталей валидационных ошибок, если они есть */}
                         {addLessonSaveError?.data?.errors && (
                             <pre className={styles.validationErrors}>
                                  {JSON.stringify(addLessonSaveError.data.errors, null, 2)}
@@ -149,9 +160,11 @@ const CourseDetail = () => {
                     </div>
                 )}
 
+                {/* Рендеринг шагов добавления урока */}
                 {addLessonStep === 2 && (
                     <Step2LessonDetails
                         initialDetails={newLessonDetails}
+                        // <-- Передаем функцию-сеттер из хука
                         onDataChange={setNewLessonDetails}
                         onNext={handleNextAddLessonStep}
                         onPrev={handlePrevAddLessonStep}
@@ -161,6 +174,7 @@ const CourseDetail = () => {
                 {addLessonStep === 3 && (
                     <Step3ContentEditor
                         initialContentItems={newContentItemsData}
+                        // <-- Передаем функцию-сеттер из хука
                         onDataChange={setNewContentItemsData}
                         onNext={handleNextAddLessonStep}
                         onPrev={handlePrevAddLessonStep}
@@ -170,13 +184,15 @@ const CourseDetail = () => {
                 {addLessonStep === 4 && (
                     <Step4TestCreator
                         initialQuestions={newTestQuestionsData}
-                        onDataChange={setNewTestQuestionsData}
+                        // <-- Передаем функцию-сеттер из хука (возможно, onDataChange или onQuestionsChange)
+                        onDataChange={setNewTestQuestionsData} // Убедитесь, что Step4TestCreator принимает onDataChange
                         onFinish={handleSubmitLessonWorkflow}
                         onPrev={handlePrevAddLessonStep}
                         isSaving={isStepDisabled}
                     />
                 )}
 
+                {/* Кнопка отмены добавления урока */}
                 <button
                     onClick={handleCancelAddLesson}
                     className={styles.cancelButton}
@@ -189,20 +205,23 @@ const CourseDetail = () => {
         );
     }
 
+    // Режим отображения деталей курса
     return (
         <div className={styles.courseDetailPage}>
             <div className={styles.courseDetailContainer}>
+                {/* Отображение деталей курса */}
                 <CourseDetailsDisplay
                     course={course}
                     handleDeleteCourse={handleDeleteCourse}
                     isDeletingCourse={isDeletingCourse}
                 />
 
+                {/* Секция уроков курса */}
                 <CourseLessonsSection
                     lessonsData={lessonsData}
                     lessonsLoading={lessonsLoading}
                     lessonsError={lessonsError}
-                    handleEditCourseClick={handleAddLessonClick}
+                    handleAddLessonClick={handleAddLessonClick}
                     handleLessonClick={handleLessonClick}
                 />
 
@@ -210,7 +229,7 @@ const CourseDetail = () => {
                     courseProgressData={courseProgressData}
                     courseProgressLoading={courseProgressLoading}
                     courseProgressError={courseProgressError}
-                    lessonsData={lessonsData}
+                    lessonsData={lessonsData} // lessonsData может быть нужен для сопоставления прогресса с уроками
                 />
             </div>
         </div>

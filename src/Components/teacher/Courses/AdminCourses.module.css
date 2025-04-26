@@ -1,6 +1,26 @@
 /* YourDashboardComponent.module.css */
+
+/* Убедись, что шрифты Inter и Poppins подключены в HTML (это общие стили, могут быть в index.css или подобном файле) */
+body {
+    font-family: 'Inter',
+    sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    /* Убедимся, что у body нет стандартных отступов */
+    padding: 0;
+    /* Убедимся, что у body нет стандартных отступов */
+}
+
+
 .dashboardContainer {
     padding: 20px;
+    max-width: 1800px;
+    /* Добавляем максимальную ширину для центрирования */
+    margin: 20px auto;
+    /* Центрируем контейнер и добавляем отступ сверху/снизу */
+    box-sizing: border-box;
+    /* Убедимся, что паддинг включен в ширину */
 }
 
 .dashboardHeader {
@@ -11,63 +31,81 @@
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
     flex-wrap: wrap;
+    /* Позволяем элементам переноситься на новую строку, если не помещаются */
 }
 
 .dashboardTitle {
-    font-size: 26px;
-    color: #333;
-    font-weight: 600;
+    font-size: 28px;
+    color: #3A0068;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
     flex-shrink: 0;
     margin-right: 20px;
 }
 
+/* ------------- Стили для кнопки "Создать курс" ------------- */
 .createCourseButton {
-    background-color: #007bff;
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 25px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
     flex-shrink: 0;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+    font-family: 'Inter', sans-serif;
 }
 
 .createCourseButton:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
+    opacity: 1;
 }
 
 .createCourseButton:active {
-    opacity: 0.8;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.15);
+    opacity: 1;
 }
 
+/* ------------- Стили для сетки курсов ------------- */
 .coursesGrid {
     display: grid;
-    margin-right: 80px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     padding: 0;
     list-style: none;
+    margin-right: 80px;
+    /* Убедимся, что у списка нет стандартных отступов */
 }
 
+/* ------------- Стили для карточки курса ------------- */
 .card {
     position: relative;
     width: 100%;
     background-color: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    color: #333;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Стили для подписи (figcaption) внутри карточки курса */
 .card figcaption {
     position: absolute;
     bottom: 0;
@@ -76,45 +114,198 @@
     width: 100%;
     padding: 1.5rem 1rem;
     color: white;
-    font-weight: bold;
+    font-weight: 600;
     background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
     border-radius: 0 0 12px 12px;
     word-break: break-word;
-    pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 1;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 .card:hover figcaption {
     opacity: 1;
 }
 
-@media (max-width: 768px) {
-    .card figcaption {
-        opacity: 0.7;
-    }
-    .card:hover figcaption {
-        opacity: 1;
-    }
-}
-
-
-.image {
+/* !!! Стили для изображения курса - задаем соотношение сторон !!! */
+.card .image {
+    /* Применяем только к img внутри .card */
     width: 100%;
+    /* Задаем соотношение сторон, например 16:9 или 4:3 */
     aspect-ratio: 16 / 9;
+    /* Можете изменить это значение */
     object-fit: cover;
+    /* Обрезает изображение, чтобы оно заполнило контейнер, сохраняя пропорции */
     display: block;
     border-radius: 12px 12px 0 0;
     flex-shrink: 0;
+    /* max-height больше не нужен, т.к. aspect-ratio и width: 100% контролируют размер */
+    /* max-height: 250px; */
 }
 
+/* Стили для текста параграфа внутри figcaption */
 .card figcaption p {
     margin: 0;
     font-size: 1em;
 }
 
+/* ------------- Стили для общих элементов дашборда (не связанных с сеткой курсов) ------------- */
+
+.pageTitle {
+    font-family: 'Poppins', sans-serif;
+    color: #3A0068;
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.pageDescription {
+    color: #4a5568;
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Стили для общей сетки виджетов (если используется grid для "Последние сообщения", "Статистика" и т.д.) */
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Стили для карточки виджета ("Мои курсы", "Последние сообщения", "Статистика") */
+.widgetCard {
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    display: flex;
+    flex-direction: column;
+    /* Убедимся, что виджеты адаптируются по ширине */
+    width: 100%;
+    box-sizing: border-box;
+    /* Учитываем паддинг в ширине */
+}
+
+.widgetTitle {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #3A0068;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Стили для списков внутри виджетов */
+.widgetList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Стили для отдельных элементов списка виджетов (лекций, сообщений и т.д.) */
+.widgetListItem {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1em;
+    color: #555;
+    display: flex;
+    /* Используем flexbox */
+    justify-content: space-between;
+    /* Распределяем текст и кнопку */
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    word-break: break-word;
+    /* Перенос длинных слов */
+    flex-wrap: wrap;
+    /* !!! Добавляем перенос элементов на новую строку на узких экранах !!! */
+    gap: 5px;
+    /* Небольшой отступ между элементами, когда они в строку или переносятся */
+}
+
+.widgetListItem:last-child {
+    border-bottom: none;
+}
+
+/* Стили для ссылок и кнопок внутри элементов списка виджетов */
+.widgetListItem a,
+.widgetListItem button {
+    color: #8A2BE2;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-left: 10px;
+    /* Отступ слева (для компоновки в строку) */
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    flex-shrink: 0;
+    /* Кнопки не сжимаются */
+}
+
+.widgetListItem a:hover,
+.widgetListItem button:hover {
+    text-decoration: underline;
+    color: #4B0082;
+}
+
+/* Стили для элементов статистики */
+.statItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 1em;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+    /* !!! Добавляем перенос элементов на новую строку на узких экранах !!! */
+    gap: 5px;
+    /* Отступ между меткой и значением, если переносятся */
+}
+
+.statItem:last-child {
+    border-bottom: none;
+}
+
+.statLabel {
+    color: #666;
+    flex-shrink: 0;
+    /* Метка не сжимается */
+}
+
+.statValue {
+    font-weight: 600;
+    color: #333;
+    flex-grow: 1;
+    /* Значение может занять оставшееся пространство */
+    text-align: right;
+    /* Выравнивание значения по правому краю в строку */
+}
+
+
+.noData {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+
+/*
+ * ======================================
+ * МЕДИА-ЗАПРОСЫ ДЛЯ АДАПТИВНОСТИ ДАШБОРДА
+ * ======================================
+ */
+
+/* Начиная с ширины 992px и меньше */
 @media (max-width: 992px) {
     .dashboardContainer {
         padding: 15px;
@@ -125,16 +316,17 @@
     }
 
     .createCourseButton {
-        padding: 8px 16px;
-        font-size: 15px;
+        padding: 10px 20px;
+        font-size: 0.95em;
     }
 
     .coursesGrid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
     }
 }
 
+/* Начиная с ширины 768px и меньше (для планшетов и телефонов) */
 @media (max-width: 768px) {
     .dashboardHeader {
         flex-direction: column;
@@ -151,32 +343,83 @@
 
     .createCourseButton {
         width: auto;
-        padding: 10px 15px;
-        font-size: 15px;
+        font-size: 0.9em;
     }
-
 
     .coursesGrid {
         grid-template-columns: 1fr;
+
+        /* Сетка в одну колонку */
         gap: 15px;
     }
 
     .card figcaption {
         padding: 1rem 0.8rem;
         font-size: 0.9em;
-        opacity: 0.7;
+        opacity: 0.8;
     }
 
-    .card:hover figcaption {
-        opacity: 1;
+    /* Корректировка паддинга виджетов на средних экранах */
+    .widgetCard {
+        padding: 15px;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    .widgetTitle {
+        font-size: 1.1em;
+    }
+
+    /* Убираем gap у списка, если элементы списка сами будут на всю ширину */
+    .widgetList,
+    .dashboardGrid {
+        gap: 15px;
+        /* Восстанавливаем gap для grid, у списка он не нужен */
+    }
+
+    .widgetList {
+        gap: 0;
+        /* У списка его не должно быть */
+    }
+
+
+    /* Адаптация элементов списка виджетов */
+    .widgetListItem {
+        flex-direction: column;
+        /* Располагаем текст и кнопку в колонку */
+        align-items: flex-start;
+        /* Выравниваем по левому краю */
+        gap: 5px;
+        /* Отступ между текстом и кнопкой/ссылкой */
+        padding: 10px 0;
+        /* Корректируем паддинг */
+    }
+
+    .widgetListItem a,
+    .widgetListItem button {
+        margin-left: 0;
+        /* Убираем маргин слева */
+        margin-top: 5px;
+        /* Добавляем отступ сверху */
+    }
+
+    /* Адаптация элементов статистики */
+    .statItem {
+        flex-direction: column;
+        /* Метка и значение в колонку */
+        align-items: flex-start;
+        /* Выравниваем по левому краю */
+        gap: 3px;
+        /* Отступ между меткой и значением */
+        padding: 8px 0;
+        /* Корректируем паддинг */
+    }
+
+    .statValue {
+        text-align: left;
+        /* Выравниваем значение по левому краю в колонке */
     }
 }
 
+/* Начиная с ширины 480px и меньше (для маленьких телефонов) */
 @media (max-width: 480px) {
     .dashboardContainer {
         padding: 10px;
@@ -187,12 +430,40 @@
     }
 
     .createCourseButton {
-        padding: 8px 12px;
-        font-size: 14px;
+        font-size: 0.85em;
     }
 
     .card figcaption {
         padding: 0.8rem 0.6rem;
-        font-size: 0.85em;
+        font-size: 0.8em;
+        opacity: 0.8;
+    }
+
+    .widgetCard {
+        padding: 10px;
+    }
+
+    .widgetTitle {
+        font-size: 1em;
+    }
+
+    .widgetListItem,
+    .statItem {
+        font-size: 0.9em;
+    }
+
+    .widgetListItem {
+        padding: 8px 0;
+        gap: 3px;
+    }
+
+    .widgetListItem a,
+    .widgetListItem button {
+        margin-top: 3px;
+    }
+
+    .statItem {
+        padding: 6px 0;
+        gap: 2px;
     }
 }
