@@ -102,21 +102,19 @@ const CourseDetail = () => {
     };
 
     const handleAddLessonClick = () => {
-        // При нажатии "Добавить урок", сбрасываем workflow и переключаем режим
-        resetAddLessonWorkflow(); // Сбрасываем состояния в хуке
-        setViewMode('add-lesson'); // Переключаем режим отображения
+        resetAddLessonWorkflow();
+        setViewMode('add-lesson');
     };
 
     const handleCancelAddLesson = () => {
         if (isAddingLessonOrTests) {
-            // Если идет сохранение, не позволяем отменить
             alert('Дождитесь завершения сохранения.');
             return;
         }
 
         if (window.confirm('Вы уверены, что хотите отменить добавление урока? Введенные данные будут потеряны.')) {
-            resetAddLessonWorkflow(); // Сбрасываем состояния в хуке
-            setViewMode('details'); // Возвращаемся к отображению деталей курса
+            resetAddLessonWorkflow();
+            setViewMode('details');
         }
     };
 
@@ -134,24 +132,25 @@ const CourseDetail = () => {
     }
 
     if (viewMode === 'add-lesson') {
-        const isStepDisabled = isAddingLessonOrTests; // Отключаем элементы во время сохранения
+        const isStepDisabled = isAddingLessonOrTests;
+
+        console.log('CourseDetail: typeof setNewLessonDetails перед передачей в пропс', typeof setNewLessonDetails);
+        console.log('CourseDetail: значение setNewLessonDetails перед передачей в пропс', setNewLessonDetails);
+
 
         return (
             <div className={styles.courseDetailAddLesson}>
                 <h3>Добавление нового урока к курсу "{course.name}"</h3>
 
-                {/* Индикатор загрузки при сохранении */}
                 {isAddingLessonOrTests && (
                     <div className={styles.loadingOverlay}>
                         Сохранение урока и тестов...
                     </div>
                 )}
 
-                {/* Сообщение об ошибке сохранения */}
                 {addLessonSaveError && !isAddingLessonOrTests && (
                     <div className={styles.errorMessage}>
                         Ошибка сохранения: {addLessonSaveError?.data?.message || addLessonSaveError?.error || 'Неизвестная ошибка API'}
-                        {/* Отображение деталей валидационных ошибок, если они есть */}
                         {addLessonSaveError?.data?.errors && (
                             <pre className={styles.validationErrors}>
                                  {JSON.stringify(addLessonSaveError.data.errors, null, 2)}
@@ -160,7 +159,6 @@ const CourseDetail = () => {
                     </div>
                 )}
 
-                {/* Рендеринг шагов добавления урока */}
                 {addLessonStep === 2 && (
                     <Step2LessonDetails
                         initialDetails={newLessonDetails}
@@ -174,7 +172,6 @@ const CourseDetail = () => {
                 {addLessonStep === 3 && (
                     <Step3ContentEditor
                         initialContentItems={newContentItemsData}
-                        // <-- Передаем функцию-сеттер из хука
                         onDataChange={setNewContentItemsData}
                         onNext={handleNextAddLessonStep}
                         onPrev={handlePrevAddLessonStep}

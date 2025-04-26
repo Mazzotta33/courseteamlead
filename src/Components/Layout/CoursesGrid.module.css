@@ -5,14 +5,21 @@
     width: 90%;
     max-width: 1200px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Этот шрифт, возможно, стоит заменить на фирменный */
     min-height: 80vh;
-    padding: 20px 0;
+    /* Возможно, стоит убрать или скорректировать, если контента меньше */
+    padding: 20px;
+    /* Корректируем верхний отступ, чтобы контент был ниже навбара */
+    margin-top: 80px;
+    /* Значение для десктопа */
     box-sizing: border-box;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    /* ИСПРАВЛЕНО: Указываем минимальную ширину для элементов сетки, чтобы auto-fill работал корректно */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* Теперь сетка будет адаптивно создавать колонки от 280px и расширять их до 1fr */
     gap: 30px;
     justify-items: center;
     width: 100%;
@@ -22,9 +29,12 @@
 .image {
     width: 100%;
     height: 100%;
+    /* Изображение заполняет родителя */
     object-fit: cover;
+    /* Обрезает изображение, сохраняя пропорции, чтобы заполнить контейнер */
     display: block;
     border-radius: 12px;
+    /* Сохраняем скругление */
 }
 
 .card {
@@ -33,10 +43,13 @@
     overflow: hidden;
     cursor: pointer;
     width: 100%;
-    min-height: 130px;
+    /* Карточка занимает всю ширину своей ячейки сетки */
+    aspect-ratio: 4 / 3;
+    /* Сохраняем соотношение сторон */
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    /* Контент выравнивается снизу (figcaption) */
 }
 
 .card figcaption {
@@ -48,31 +61,104 @@
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.3s;
-    background-image: linear-gradient(to top, rgba(33, 44, 55, 0.75), rgba(33, 44, 55, 0));
+    background-image: linear-gradient(to top, rgba(58, 0, 104, 0.85), rgba(58, 0, 104, 0));
+    /* Пример градиента с фирменным цветом */
     border-radius: 0 0 12px 12px;
     box-sizing: border-box;
     z-index: 1;
+    /* Убедимся, что текст поверх изображения */
+    font-family: 'Inter', sans-serif;
+    /* Фирменный шрифт */
 }
 
 .card:hover figcaption {
     opacity: 1;
 }
 
+/* Стили для параграфа описания */
+.description {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 1rem 1rem 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1;
+    box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+}
+
+.card:hover .description {
+    opacity: 1;
+}
+
+/* Адаптивность */
+
+@media (max-width: 1024px) {
+    .wrapper {
+        padding: 20px;
+        margin-top: 70px;
+        /* Отступ для этого брейкпоинта */
+    }
+
+    .grid {
+        gap: 25px;
+        /* Немного уменьшим гэп */
+        /* Можно скорректировать minmax, если нужно */
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .card {
+        aspect-ratio: 3 / 2;
+        /* Возможно, другое соотношение */
+    }
+
+    .card figcaption {
+        padding: 1.2rem 0.9rem;
+        font-size: 0.95em;
+    }
+
+    .description {
+        padding: 0 0.9rem 0.9rem 0.9rem;
+        font-size: 0.85em;
+    }
+}
+
+
 @media (max-width: 768px) {
     .wrapper {
         width: 95%;
         padding: 15px 0;
         min-height: auto;
+        margin-top: 70px;
+        /* Значение для планшетов */
     }
 
     .grid {
         gap: 20px;
+        /* Можно скорректировать minmax, если нужно */
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 
+    .card {
+        aspect-ratio: 3 / 2;
+        /* Возможно, другое соотношение на планшетах */
+    }
 
     .card figcaption {
         padding: 1rem 0.8rem;
         font-size: 0.9em;
+    }
+
+    .description {
+        padding: 0 0.8rem 0.8rem 0.8rem;
+        font-size: 0.8em;
     }
 }
 
@@ -80,24 +166,42 @@
     .wrapper {
         width: 95%;
         padding: 10px 0;
+        margin-top: 60px;
+        /* Значение для телефонов */
     }
 
     .grid {
         gap: 15px;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        /* Здесь было корректное определение */
     }
+
+    .card {
+        aspect-ratio: 16 / 9;
+        /* Возможно, другое соотношение на телефонах */
+    }
+
 
     .card figcaption {
         padding: 0.8rem 0.5rem;
         font-size: 0.8em;
     }
+
+    .description {
+        padding: 0 0.5rem 0.5rem 0.5rem;
+        font-size: 0.7em;
+    }
 }
 
-.card:focus figcaption {
+.card:focus figcaption,
+.card:focus .description {
+    /* Показываем текст при фокусе (доступность) */
     opacity: 1;
 }
 
+
 .card:focus {
-    outline: 2px solid #007bff;
+    outline: 2px solid #6c2eb7;
+    /* Фирменный цвет аутлайна */
     outline-offset: 2px;
 }

@@ -2,96 +2,172 @@
 
 .coursePreviewContainer {
     display: flex;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    flex-direction: column;
+    /* Теперь элементы всегда в колонку по умолчанию */
+    border: 1px solid #eef2ff;
+    /* Фирменная светлая граница */
+    border-radius: 12px;
+    /* Скругление контейнера */
     margin-bottom: 20px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: #f8faff;
+    /* Фирменный очень светлый фон */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Легкая тень */
     overflow: hidden;
+    /* Обрезаем контент по скруглениям */
     width: 100%;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; /* Убираем, т.к. всегда колонкой */
+    font-family: 'Inter', sans-serif;
+    /* Основной шрифт */
 }
 
 .courseInfo {
     flex: 1;
     padding: 20px;
     text-align: left;
+    /* Выравнивание текста */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-width: 300px;
+    justify-content: flex-start;
+    /* Выравнивание содержимого сверху */
+    width: 100%;
+    /* Занимает всю ширину контейнера */
+    box-sizing: border-box;
 }
 
 .courseImageContainer {
-    width: 50%;
+    width: 100%;
+    /* Занимает всю ширину контейнера */
     overflow: hidden;
-    max-height: 90vh;
+    /* max-height: 90vh; /* Возможно, стоит убрать или скорректировать */
     flex-shrink: 0;
+    /* Можно задать соотношение сторон для контейнера изображения, если нужно */
+    /* aspect-ratio: 16 / 9; */
 }
 
 .courseImage {
     width: 100%;
     height: auto;
+    /* Высота определяется автоматически по ширине */
     display: block;
-    border-radius: 0 8px 8px 0;
+    border-radius: 12px 12px 0 0;
+    /* Скругление только верхних углов */
     object-fit: cover;
+    /* Если aspect-ratio задан у контейнера, height: 100% заставит его заполнить контейнер */
+    /* height: 100%; */
 }
 
 .courseName {
-    font-size: 1.5em;
-    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    /* Фирменный шрифт для заголовка */
+    font-size: 1.6em;
+    /* Чуть крупнее */
+    font-weight: 700;
+    /* Более жирный */
     margin-bottom: 10px;
-    color: #333;
+    color: #3A0068;
+    /* Фирменный темный цвет */
+    text-align: center;
+    /* Выравнивание по центру */
 }
 
 .courseDescription {
-    color: #666;
+    color: #444;
+    /* Цвет текста */
     line-height: 1.6;
     margin-bottom: 20px;
+    font-size: 1em;
+    text-align: center;
+    /* Выравнивание по центру */
 }
 
 .enrollButton {
-    background-color: #007bff;
+    /* background-color: #007bff; /* Старый цвет */
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
+    /* Фирменный градиент */
     color: white;
-    padding: 10px 20px;
+    /* Белый текст */
+    padding: 12px 25px;
+    /* Паддинг */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    /* Скругление */
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.3s ease;
-    align-self: flex-start;
+    font-weight: 600;
+    /* Жирный шрифт */
+    transition: all 0.2s ease-in-out;
+    /* Анимация */
+    align-self: center;
+    /* Выравнивание по центру */
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+    /* Фирменная тень */
 }
 
 .enrollButton:hover {
-    background-color: #0056b3;
+    /* background-color: #0056b3; /* Старый цвет */
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    /* Фирменный градиент */
+    transform: translateY(-2px);
+    /* Эффект поднятия */
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
+    /* Усиленная тень */
 }
+
+.enrollButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.15);
+}
+
+/* Эффект нажатия */
+
+
+.enrollButton:disabled {
+    background: #cccccc;
+    /* Стандартный серый для disabled */
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    /* Убираем тень для disabled */
+    transform: none;
+    /* Убираем анимацию для disabled */
+}
+
+
+/* Адаптивность */
 
 @media (max-width: 768px) {
     .coursePreviewContainer {
         flex-direction: column;
-    }
-
-    .courseInfo,
-    .courseImageContainer {
-        width: 100%;
-        min-width: 0;
+        /* Уже column по умолчанию, но оставим для ясности */
+        border-radius: 10px;
+        /* Меньшее скругление */
+        margin-bottom: 15px;
     }
 
     .courseInfo {
+        width: 100%;
+        /* Занимает всю ширину */
+        min-width: 0;
         padding: 15px;
+        /* Меньший паддинг */
         text-align: center;
+        /* Выравнивание по центру */
     }
 
     .courseImageContainer {
-        max-height: 30vh;
+        width: 100%;
+        /* Занимает всю ширину */
+        /* max-height: 30vh; /* Можно скорректировать или убрать */
     }
 
     .courseImage {
-        border-radius: 8px 8px 0 0
+        border-radius: 10px 10px 0 0;
+        /* Скругление верхних углов */
     }
 
     .courseName {
-        font-size: 1.3em;
+        font-size: 1.4em;
         margin-bottom: 8px;
     }
 
@@ -102,29 +178,46 @@
 
     .enrollButton {
         align-self: center;
-        width: auto;
+        /* Выравнивание по центру */
+        padding: 10px 20px;
+        font-size: 0.95em;
+        border-radius: 6px;
+        /* Меньшее скругление */
     }
 }
 
 @media (max-width: 480px) {
     .coursePreviewContainer {
-        margin-bottom: 15px;
+        margin-top: 15%;
+        border-radius: 8px;
+        /* Меньшее скругление */
     }
 
     .courseInfo {
         padding: 10px;
+        /* Меньший паддинг */
     }
+
+    .courseImageContainer {
+        /* Если нужно, можно задать aspect-ratio */
+        /* aspect-ratio: 16 / 9; */
+    }
+
 
     .courseName {
         font-size: 1.2em;
+        margin-bottom: 6px;
     }
 
     .courseDescription {
         font-size: 0.85em;
+        margin-bottom: 10px;
     }
 
     .enrollButton {
         padding: 8px 15px;
         font-size: 0.9em;
+        border-radius: 5px;
+        /* Меньшее скругление */
     }
 }

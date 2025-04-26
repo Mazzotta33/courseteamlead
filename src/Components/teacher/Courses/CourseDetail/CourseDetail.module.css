@@ -1,230 +1,148 @@
-/* CourseDetails.module.css */
 
-/* Убедитесь, что шрифты 'Inter' и 'Poppins' подключены в вашем проекте */
-/* Например, в index.html или главном CSS файле */
-
-/* ------------- Стили для модального оверлея ------------- */
 .modalOverlay {
     position: fixed;
-    /* Фиксированное позиционирование для перекрытия всего экрана */
     top: 65px;
-    /* Отступ сверху, учитывающий высоту хедера */
-    left: 0;
-    right: 0;
-    bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
-    /* Полупрозрачный черный фон */
     z-index: 1000;
-    /* Высокий z-index, чтобы быть поверх другого контента */
     overflow-y: auto;
-    /* Добавляем прокрутку, если содержимое модального окна не помещается по высоте */
     display: flex;
-    /* Используем flexbox для центрирования содержимого модального окна */
     justify-content: center;
-    /* Центрирование содержимого по горизонтали */
     align-items: flex-start;
-    /* Выравнивание содержимого по верху */
     padding: 20px 0;
-    /* Добавляем вертикальный паддинг для отступа содержимого от верха/низа оверлея */
 }
-
-/* ------------- Стили для содержимого модального окна ------------- */
 .modalContent {
     background-color: #fff;
-    /* Белый фон содержимого */
     border-radius: 12px;
-    /* Скругление углов, как в .courseBuilderContainer */
     width: 100%;
     max-width: 1000px;
-    /* Увеличиваем максимальную ширину модального окна */
     position: relative;
-    /* Для позиционирования кнопки закрытия */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    /* Тень */
     display: flex;
     flex-direction: column;
     gap: 30px;
-    /* Отступ между основными секциями модального окна */
     padding: 30px;
-    /* Внутренние отступы содержимого */
     box-sizing: border-box;
-    /* Убедимся, что паддинг учитывается в ширине */
     font-family: 'Inter', sans-serif;
-    /* Основной шрифт для содержимого */
     color: #333;
-    /* Основной цвет текста */
 }
 
-/* ------------- Стили для кнопки закрытия модального окна ------------- */
+.courseDetailPage{
+    padding: 10px
+}
+
 .closeButton {
     position: absolute;
     top: 15px;
-    /* Отступ сверху */
     right: 15px;
-    /* Отступ справа */
     font-size: 1.8rem;
-    /* Размер иконки */
     border: none;
     background: none;
     cursor: pointer;
     color: #555;
-    /* Цвет иконки */
     transition: color 0.2s ease;
     z-index: 1001;
-    /* Убедимся, что поверх содержимого */
 }
 
 .closeButton:hover {
     color: #3A0068;
-    /* Цвет акцентный при ховере */
 }
 
-/* ------------- Стили для заголовка деталей курса ------------- */
 .detailHeader {
     border-bottom: 1px solid #eee;
     padding-bottom: 15px;
-    /* Отступ снизу под линией */
     margin-bottom: 15px;
-    /* Отступ снизу над следующей секцией */
 }
 
 .detailHeader h3.courseTitle {
     margin: 0 0 5px 0;
-    /* Отступ снизу */
     font-family: 'Poppins', sans-serif;
-    /* Шрифт для заголовков */
     font-size: 2.2em;
-    /* Увеличиваем шрифт заголовка */
     color: #3A0068;
-    /* Цвет акцентный */
     word-break: break-word;
-    /* Перенос длинных названий */
 }
 
 .detailHeader p {
     margin: 0;
     font-size: 1.1em;
-    /* Увеличиваем шрифт описания */
     color: #555;
     word-break: break-word;
-    /* Перенос длинного описания */
 }
 
-
-/* ------------- Стили для основной части модального окна (фото слева, инфо справа) ------------- */
 .detailBody {
     display: flex;
     gap: 40px;
-    /* Отступ между левой (фото) и правой (инфо) колонками */
     flex-wrap: wrap;
-    /* Позволяет колонкам переноситься на новую строку на маленьких экранах */
     align-items: flex-start;
-    /* Выравнивание элементов по верху */
 }
 
 .previewArea {
-    /* Область только для фото */
     flex: 0 0 50%;
-    /* Фиксированная базовая ширина 50%, не сжимается и не увеличивается */
     max-width: 50%;
-    /* Максимальная ширина 50% на десктопе */
     width: 100%;
-    /* На мобильных может занимать всю ширину */
     display: flex;
     flex-direction: column;
-    /* Содержимое внутри previewArea (фото) идет вертикально */
     align-items: flex-start;
-    /* Выравниваем фото по левому краю внутри его колонки */
 }
 
-/* Контейнер для изображения превью */
 .previewPlaceholder {
     width: 100%;
-    /* Фото занимает всю ширину своей 50%-й колонки */
     height: 300px;
-    /* Увеличиваем высоту фото */
     background-color: #eef2ff;
-    /* Легкий фон */
     border: 1px solid #d1d5db;
-    /* Легкий бордер */
     border-radius: 8px;
-    /* Скругление углов */
     display: flex;
     justify-content: center;
     align-items: center;
     color: #6c2eb7;
-    /* Цвет иконки/текста плейсхолдера */
     font-size: 1.2em;
-    /* Увеличиваем шрифт плейсхолдера */
     overflow: hidden;
-    /* Обрезает изображение, если оно больше контейнера */
     flex-shrink: 0;
-    /* Предотвращаем сжатие на маленьких экранах */
 }
 
 .previewPlaceholder img {
     display: block;
     max-width: 100%;
     max-height: 100%;
-    /* Изображение заполняет контейнер без искажений */
     object-fit: cover;
-    /* Обрезка изображения */
     border-radius: 8px;
-    /* Скругление углов изображения */
 }
 
 .infoArea {
-    /* Область для названия, описания и кнопки удаления */
     flex: 1;
-    /* Занимает оставшееся пространство справа от фото */
     display: flex;
     flex-direction: column;
     gap: 15px;
-    /* Отступ между блоками внутри infoArea */
 }
 
 .nameAndDescription h4 {
     margin: 0 0 5px 0;
     font-size: 1.3em;
-    /* Увеличиваем шрифт подзаголовка */
     font-weight: 600;
     color: #2d3748;
 }
 
 .nameAndDescription p {
     font-size: 1.1em;
-    /* Увеличиваем шрифт текста описания */
     margin: 0;
-    /* Убираем стандартный нижний маргин у параграфов */
 }
 
-/* ------------- Стили для кнопки "Удалить курс" ------------- */
 .deleteButton {
     display: inline-block;
-    /* Остается инлайн-блочным на десктопе */
     align-self: flex-start;
-    /* Выравнивание по левому краю */
     padding: 10px 20px;
-    /* Паддинг */
     background-color: #dc3545;
-    /* Красный цвет для удаления */
     color: white;
     border: none;
     border-radius: 8px;
-    /* Скругление углов */
     cursor: pointer;
     font-size: 1em;
-    /* Размер шрифта */
     font-weight: 600;
     transition: all 0.2s ease-in-out;
-    /* Плавные переходы */
     font-family: 'Inter', sans-serif;
     text-align: center;
     text-decoration: none;
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
-    /* Тень */
     margin-top: auto;
-    /* Прижимает кнопку к низу flex-контейнера infoArea */
 }
 
 .deleteButton:hover {

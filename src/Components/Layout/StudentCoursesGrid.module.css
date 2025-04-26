@@ -69,10 +69,6 @@
         gap: 20px;
     }
 
-    .card {
-        /* min-height: 120px; */ /* Можно немного уменьшить минимальную высоту карточки */
-    }
-
     .card figcaption {
         padding: 1rem 0.8rem;
         font-size: 0.9em;

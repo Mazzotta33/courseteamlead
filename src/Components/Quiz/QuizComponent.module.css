@@ -4,30 +4,52 @@
     max-width: 700px;
     margin: 40px auto;
     padding: 30px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f8faff;
+    /* Фирменный очень светлый фон */
+    border-radius: 12px;
+    /* Скругление */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Легкая тень */
+    font-family: 'Inter', sans-serif;
+    /* Основной шрифт */
+    /* Добавляем верхний отступ, чтобы контент не залезал под навбар */
+    margin-top: 80px;
+    /* Значение для десктопа */
 }
 
 .testContainer h2 {
-    color: #333;
+    color: #3A0068;
+    /* Фирменный темный цвет */
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    /* Увеличим отступ */
+    font-family: 'Poppins', sans-serif;
+    /* Фирменный шрифт для заголовков */
+    font-size: 1.8em;
 }
 
 .questionBlock {
     margin-bottom: 25px;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    background-color: #fefefe;
+    padding: 20px;
+    /* Увеличим паддинг */
+    border: 1px solid #eef2ff;
+    /* Светлая фирменная граница */
+    border-radius: 8px;
+    /* Скругление */
+    background-color: #ffffff;
+    /* Белый фон */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Легкая тень */
 }
 
 .questionText {
-    font-weight: bold;
+    font-weight: 600;
+    /* Чуть более жирный */
     margin-bottom: 15px;
-    color: #444;
+    color: #333;
+    /* Цвет текста вопроса */
     line-height: 1.5;
+    font-size: 1.1em;
 }
 
 .optionsList {
@@ -39,87 +61,287 @@
 .optionLabel {
     display: flex;
     align-items: center;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    /* Увеличим паддинг */
+    border: 1px solid #eef2ff;
+    /* Светлая фирменная граница */
+    border-radius: 8px;
+    /* Скругление */
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
-    background-color: #fff;
+    background-color: #f8faff;
+    /* Очень светлый фирменный фон */
+    color: #555;
+    /* Цвет текста */
+    font-size: 1em;
 }
 
 .optionLabel:hover {
-    background-color: #f0f0f0;
-    border-color: #ccc;
+    background-color: #eef2ff;
+    /* Светлый фирменный фон при ховере */
+    border-color: #d0d8e6;
+    /* Чуть темнее граница при ховере */
 }
 
 .radioInput {
     margin-right: 10px;
     cursor: pointer;
+    /* Возможно, здесь нужны кастомные стили для радиокнопок */
 }
 
+/* Оставляем стандартные цвета для правильного ответа */
 .optionLabel.correct {
-    background-color: #d4edda;
-    border-color: #28a745;
-    color: #155724;
+    background-color: #d1e7dd;
+    /* Светло-зеленый фон */
+    border-color: #a3cfbb;
+    /* Зеленая граница */
+    color: #0f5132;
+    /* Темно-зеленый текст */
+    font-weight: 600;
 }
 
+/* Оставляем стандартные цвета для неправильного ответа */
 .optionLabel.incorrect {
     background-color: #f8d7da;
-    border-color: #dc3545;
-    color: #721c24;
+    /* Светло-красный фон */
+    border-color: #f1aeb5;
+    /* Красная граница */
+    color: #842029;
+    /* Темно-красный текст */
+    /* text-decoration: line-through; /* Можно убрать зачеркивание, если не нужно */
+    font-weight: 600;
 }
 
 .submitButton {
     display: block;
     width: 100%;
     padding: 12px 20px;
-    margin-top: 20px;
-    background-color: #007bff;
+    margin-top: 30px;
+    /* Увеличим отступ сверху */
+    /* background-color: #007bff; /* Старый цвет */
+    background: linear-gradient(90deg, #8A2BE2 0%, #4B0082 100%);
+    /* Фирменный градиент */
     color: white;
+    /* Белый текст */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    /* Скругление */
     font-size: 1.1rem;
+    font-weight: 600;
+    /* Жирный шрифт */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease-in-out;
+    /* Анимация */
+    font-family: 'Inter', sans-serif;
+    /* Фирменный шрифт */
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+    /* Фирменная тень */
 }
 
 .submitButton:hover:not(:disabled) {
-    background-color: #0056b3;
+    /* background-color: #0056b3; /* Старый цвет */
+    background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
+    /* Фирменный градиент */
+    transform: translateY(-2px);
+    /* Эффект поднятия */
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
+    /* Усиленная тень */
 }
 
+.submitButton:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.15);
+}
+
+/* Эффект нажатия */
+
+
 .submitButton:disabled {
-    background-color: #cccccc;
+    background: #cccccc;
+    /* Стандартный серый для disabled */
     cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    /* Убираем тень для disabled */
+    transform: none;
+    /* Убираем анимацию для disabled */
 }
 
 .results {
-    margin-top: 20px;
+    margin-top: 30px;
+    /* Увеличим отступ сверху */
     padding: 20px;
-    border: 1px dashed #007bff;
+    border: 1px dashed #6c2eb7;
+    /* Фирменный акцентный цвет для границы */
     border-radius: 8px;
-    background-color: #e9f5ff;
+    /* Скругление */
+    background-color: #eef2ff;
+    /* Светлый фирменный фон */
     text-align: center;
-    color: #004085;
+    color: #3A0068;
+    /* Фирменный темный цвет текста */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Легкая тень */
 }
 
 .results h3 {
-    color: #002752;
+    color: #3A0068;
+    /* Фирменный темный цвет */
     margin-bottom: 10px;
+    font-size: 1.2em;
 }
 
 .submittedMessage {
     margin-top: 15px;
     text-align: center;
     color: #555;
+    /* Цвет текста */
+    font-style: italic;
+    font-size: 1em;
 }
 
-.loading, .error, .noContent {
+.loading,
+.error,
+.noContent {
     margin-top: 20px;
     font-size: 1.1rem;
     text-align: center;
-    color: #555;
+}
+
+.loading {
+    color: #3A0068;
+    /* Фирменный темный цвет */
 }
 
 .error {
     color: #dc3545;
+    /* Стандартный цвет ошибки */
+}
+
+.noContent {
+    color: #555;
+    /* Цвет текста */
+}
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .testContainer {
+        margin: 30px auto;
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 70px;
+        /* Отступ для планшетов */
+    }
+
+    .testContainer h2 {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+
+    .questionBlock {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .questionText {
+        font-size: 1em;
+        margin-bottom: 12px;
+    }
+
+    .optionLabel {
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 0.95em;
+    }
+
+    .submitButton {
+        padding: 12px 20px;
+        font-size: 1rem;
+        margin-top: 25px;
+    }
+
+    .results {
+        padding: 15px;
+        margin-top: 25px;
+        border-radius: 6px;
+    }
+
+    .results h3 {
+        font-size: 1.1em;
+    }
+
+    .loading,
+    .error,
+    .noContent {
+        font-size: 1em;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .testContainer {
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 60px;
+        /* Отступ для телефонов */
+    }
+
+    .testContainer h2 {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+    }
+
+
+    .questionBlock {
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .questionText {
+        font-size: 0.95em;
+        margin-bottom: 10px;
+    }
+
+    .optionsList {
+        gap: 8px;
+    }
+
+    .optionLabel {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+
+    .submitButton {
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        margin-top: 20px;
+        border-radius: 6px;
+    }
+
+    .results {
+        padding: 12px;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+
+    .results h3 {
+        font-size: 1em;
+    }
+
+    .submittedMessage {
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+
+    .loading,
+    .error,
+    .noContent {
+        font-size: 0.9em;
+        margin-top: 15px;
+    }
 }

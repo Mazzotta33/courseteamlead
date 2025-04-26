@@ -5,11 +5,14 @@ import TestComponent from "../TestComponent.jsx";
 import {useParams} from "react-router-dom";
 import {useDeleteLessonMutation, useGetLessonsQuery, useGetSoloLessonQuery} from "../../../Redux/api/lessonApi.js";
 import RenderFileItem from "./RenderFileItem.jsx";
+import {useGetCoursesQuery} from "../../../Redux/api/coursesApi.js";
 
 const CoursesPageContent = (props) => {
     const {courseId} = useParams();
     const [selectedLessonId, setSelectedLessonId] = useState(null);
     const [mainContentView, setMainContentView] = useState('lesson');
+
+    const {data: courseInfo = [],isLoading: isLoadingCourses, error: coursesError} = useGetCoursesQuery()
 
     const {
         data: lessonsList = [],
@@ -136,6 +139,9 @@ const CoursesPageContent = (props) => {
 
                         {!isLoadingLessonInfo && !lessonInfoError && lessonInfo && (
                             <div>
+                                <h2>{lessonInfo.name}</h2>
+                                <p>{lessonInfo.description}</p>
+
                                 {lessonInfo.videoKeys && lessonInfo.videoKeys.length > 0 ? (
                                     <div className={styles.videoWrapper}>
                                         <iframe
@@ -168,9 +174,6 @@ const CoursesPageContent = (props) => {
                                         ))}
                                     </div>
                                 )}
-
-                                <h2>{lessonInfo.name}</h2>
-                                <p>{lessonInfo.description}</p>
 
                                 {lessonInfo.lectureKeys && lessonInfo.lectureKeys.length > 0 && (
                                     <div className={styles.contentSection}>
@@ -237,6 +240,32 @@ const CoursesPageContent = (props) => {
                                         </button>
                                     )}
                                 </div>
+                                {
+                                    !isLoadingCourses && !coursesError && courseInfo && courseInfo.length > 0 && (
+                                        (() => {
+                                            const currentCourse = courseInfo.find(course => course.id == courseId);
+                                            const courseAdmins = currentCourse?.admins;
+
+                                            return (
+                                                <div className={styles.adminsSection}>
+                                                    <h3>Администраторы курса:</h3>
+                                                    {courseAdmins && Object.keys(courseAdmins).length > 0 ? (
+                                                        <ul className={styles.adminList}>
+                                                            {Object.entries(courseAdmins).map(([adminIdOrName, telegramHandle]) => (
+                                                                <li key={adminIdOrName}>
+                                                                    <strong>{adminIdOrName}:</strong> {telegramHandle}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    ) : (
+                                                        <p>У этого курса пока нет администраторов.</p>
+                                                    )}
+                                                </div>
+                                            );
+                                        })()
+                                    )
+                                }
+
                             </div>
                         )}
                     </>
@@ -244,7 +273,6 @@ const CoursesPageContent = (props) => {
                 {mainContentView === 'test' && (
                     <TestComponent lessonId={selectedLessonId} courseId={courseId}/>
                 )}
-
             </main>
         </div>
     );

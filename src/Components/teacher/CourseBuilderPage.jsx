@@ -10,7 +10,10 @@ import { useCreateCourseMutation} from '../../Redux/api/coursesApi';
 import { useCreateTestsMutation } from "../../Redux/api/testApi.js";
 import {useCreateLessonMutation} from "../../Redux/api/lessonApi.js";
 
+import { useNavigate } from 'react-router-dom';
+
 const CourseBuilderPage = () => {
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
 
     const [courseData, setCourseData] = useState({

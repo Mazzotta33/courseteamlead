@@ -12,12 +12,14 @@ export const coursesGetApi = createApi({
             return headers;
         }
     }),
+    tagTypes: ['Courses', 'Lessons', 'Progress', 'AdminStatus'],
     endpoints: (builder) => ({
         getCourses: builder.query({
             query: () => ({
                 url: 'courses/mycourses',
                 method: 'GET',
-            })
+            }),
+            providesTags: ['Courses'],
         }),
         createCourse: builder.mutation({
             query: (courseData) => ({
@@ -25,8 +27,8 @@ export const coursesGetApi = createApi({
                 method: 'POST',
                 body: courseData,
             }),
+            invalidatesTags: ['Courses'],
         }),
-
         getUsers: builder.query({
             query: (id) => ({
                 url: `courses/${id}/users`,
@@ -49,7 +51,8 @@ export const coursesGetApi = createApi({
             query: (courseId) =>({
                 url: `courses/${courseId}`,
                 method: 'DELETE'
-            })
+            }),
+            invalidatesTags: ['Courses'],
         }),
         getAdminCoursesProgress: builder.query({
            query: () => ({
@@ -80,7 +83,15 @@ export const coursesGetApi = createApi({
                     return response.text();
                 },
             }),
-        })
+        }),
+        updateCourseAdmins: builder.mutation({
+            query: ({ courseId, adminInfo }) => ({
+                url: `courses/${courseId}/updateadmins`,
+                method: 'POST',
+                body: adminInfo,
+            }),
+            invalidatesTags: (result, error, { courseId }) => [{ type: 'Courses', id: courseId }],
+        }),
     })
 });
 
@@ -91,4 +102,5 @@ export const { useGetCoursesQuery,
     useDeleteCourseMutation,
     useGetAdminCoursesProgressQuery,
     useIsAdminOfCourseQuery,
-    useLazyDownloadCourseProgressQuery} = coursesGetApi;
+    useLazyDownloadCourseProgressQuery,
+    useUpdateCourseAdminsMutation} = coursesGetApi;

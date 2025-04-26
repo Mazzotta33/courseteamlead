@@ -60,7 +60,7 @@ body {
     font-weight: 600;
     color: #2d3748;
     font-size: 0.95em;
-    letter-spacing: 0; /* Убираем letter-spacing, обычно он не нужен для меток */
+    letter-spacing: 0;
 }
 
 .inputGroup input {
@@ -79,16 +79,15 @@ body {
 .inputGroup input:focus {
     border-color: #8A2BE2;
     outline: 0;
-    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15); /* Чуть более выраженная тень при фокусе */
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
     background: #fff;
 }
 
 .inputGroup input::placeholder {
     color: #a0aec0;
-    opacity: 0.9; /* Чуть менее прозрачный плейсхолдер */
+    opacity: 0.9;
 }
 
-/* Кнопка отправки формы */
 .submitButton {
     width: 100%;
     padding: 14px 15px;
@@ -100,15 +99,15 @@ body {
     font-size: 1.1em;
     font-weight: 600;
     transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
-    margin-top: 20px; /* Увеличиваем отступ сверху */
-    letter-spacing: 0.8px; /* Чуть больше разряжаем буквы */
-    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20); /* Чуть более выраженная тень кнопки */
+    margin-top: 20px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
 }
 
 .submitButton:hover {
     background: linear-gradient(90deg, #7b24ca 0%, #4B0082 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25); /* Более выраженная тень при ховере */
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.25);
 }
 
 .submitButton:active {
@@ -117,13 +116,13 @@ body {
 }
 
 .switchForm {
-    margin-top: 30px; /* Увеличиваем отступ сверху */
+    margin-top: 30px;
     font-size: 0.95em;
     color: #4a5568;
 }
 
 .switchForm a {
-    color: #6A1A9F; /* Сделаем цвет ссылки ближе к цвету заголовка/градиента */
+    color: #6A1A9F;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
@@ -146,33 +145,24 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Убираем эти правила, если основной шрифт задан в body */
-/* .authForm p,
-.inputGroup label,
-.inputGroup input,
-.submitButton {
-    font-family: 'Inter', sans-serif;
-} */
-
-/* Медиа-запрос для адаптивности на очень маленьких экранах */
 @media (max-width: 480px) {
     .authForm {
-        padding: 30px 20px; /* Уменьшаем паддинг по бокам на мелких экранах */
-        max-width: 95%; /* Увеличиваем ширину на мелких экранах */
+        padding: 30px 20px;
+        max-width: 95%;
     }
 
     .authForm h2 {
-        font-size: 2em; /* Чуть уменьшаем заголовок */
+        font-size: 2em;
     }
 
     .authForm p {
-        font-size: 1em; /* Чуть уменьшаем параграф */
+        font-size: 1em;
         margin-bottom: 30px;
     }
 
     .inputGroup input,
     .submitButton {
-        padding: 12px 15px; /* Чуть меньше паддинг у инпутов и кнопки */
+        padding: 12px 15px;
         font-size: 1em;
     }
 
