@@ -1,4 +1,3 @@
-// src/components/Teacher/Coursebuild/Step1CourseDetails.jsx
 import React from 'react';
 import styles from '../CoursesBuilderPage.module.css'; // Используем те же стили
 

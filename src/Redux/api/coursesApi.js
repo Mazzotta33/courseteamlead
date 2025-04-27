@@ -27,7 +27,7 @@ export const coursesGetApi = createApi({
                 method: 'POST',
                 body: courseData,
             }),
-            invalidatesTags: ['Courses'],
+            invalidatesTags: ['Courses', 'AdminCourseProgress'],
         }),
         getUsers: builder.query({
             query: (id) => ({
@@ -55,7 +55,7 @@ export const coursesGetApi = createApi({
                 url: `courses/${courseId}`,
                 method: 'DELETE'
             }),
-            invalidatesTags: ['Courses'],
+            invalidatesTags: ['Courses', 'AdminCourseProgress'],
         }),
         getAdminCoursesProgress: builder.query({
            query: () => ({

@@ -4,7 +4,7 @@ import authReducer from '../slices/authSlice';
 import { authApi } from '../api/authApi';
 import { coursesGetApi } from '../api/coursesApi';
 import {testApi} from "../api/testApi.js";
-import { myCoursesGetApi } from "../api/studentApi.js";
+import {studentsApi} from "../api/studentApi.js";
 import {lessonApi} from "../api/lessonApi.js";
 
 export const store = configureStore({
@@ -13,7 +13,7 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [coursesGetApi.reducerPath]: coursesGetApi.reducer,
         [testApi.reducerPath]: testApi.reducer,
-        [myCoursesGetApi.reducerPath]: myCoursesGetApi.reducer,
+        [studentsApi.reducerPath]: studentsApi.reducer,
         [lessonApi.reducerPath]: lessonApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -21,6 +21,6 @@ export const store = configureStore({
             .concat(authApi.middleware)
             .concat(coursesGetApi.middleware)
             .concat(testApi.middleware)
-            .concat(myCoursesGetApi.middleware)
+            .concat(studentsApi.middleware)
             .concat(lessonApi.middleware)
 });

@@ -13,11 +13,9 @@ import { useGetLessonsQuery } from "../../../../Redux/api/lessonApi.js";
 import Step2LessonDetails from "../../Coursebuild/Step2LessonDetails.jsx";
 import Step3ContentEditor from "../../Coursebuild/Step3ContentEditor.jsx";
 import Step4TestCreator from "../../Coursebuild/Step4TestCreator.jsx";
-
 import CourseDetailsDisplay from './CourseDetailsDisplay.jsx';
 import CourseLessonsSection from './CourseLessonsSection.jsx';
 import CourseProgressTable from './CourseProgressTable.jsx';
-// Убедитесь, что путь к хуку правильный
 import useAddLessonWorkflow from "./hooks.jsx";
 
 
@@ -36,7 +34,6 @@ const CourseDetail = () => {
 
     const [deleteCourse, { isLoading: isDeletingCourse, error: deleteCourseError }] = useDeleteCourseMutation();
 
-    // <-- ИСПРАВЛЕНО: Добавляем функции-сеттеры в деструктуризацию
     const {
         addLessonStep,
         newLessonDetails,
@@ -162,7 +159,6 @@ const CourseDetail = () => {
                 {addLessonStep === 2 && (
                     <Step2LessonDetails
                         initialDetails={newLessonDetails}
-                        // <-- Передаем функцию-сеттер из хука
                         onDataChange={setNewLessonDetails}
                         onNext={handleNextAddLessonStep}
                         onPrev={handlePrevAddLessonStep}
@@ -181,15 +177,13 @@ const CourseDetail = () => {
                 {addLessonStep === 4 && (
                     <Step4TestCreator
                         initialQuestions={newTestQuestionsData}
-                        // <-- Передаем функцию-сеттер из хука (возможно, onDataChange или onQuestionsChange)
-                        onDataChange={setNewTestQuestionsData} // Убедитесь, что Step4TestCreator принимает onDataChange
+                        onDataChange={setNewTestQuestionsData}
                         onFinish={handleSubmitLessonWorkflow}
                         onPrev={handlePrevAddLessonStep}
                         isSaving={isStepDisabled}
                     />
                 )}
 
-                {/* Кнопка отмены добавления урока */}
                 <button
                     onClick={handleCancelAddLesson}
                     className={styles.cancelButton}
@@ -202,18 +196,15 @@ const CourseDetail = () => {
         );
     }
 
-    // Режим отображения деталей курса
     return (
         <div className={styles.courseDetailPage}>
             <div className={styles.courseDetailContainer}>
-                {/* Отображение деталей курса */}
                 <CourseDetailsDisplay
                     course={course}
                     handleDeleteCourse={handleDeleteCourse}
                     isDeletingCourse={isDeletingCourse}
                 />
 
-                {/* Секция уроков курса */}
                 <CourseLessonsSection
                     lessonsData={lessonsData}
                     lessonsLoading={lessonsLoading}
@@ -226,7 +217,7 @@ const CourseDetail = () => {
                     courseProgressData={courseProgressData}
                     courseProgressLoading={courseProgressLoading}
                     courseProgressError={courseProgressError}
-                    lessonsData={lessonsData} // lessonsData может быть нужен для сопоставления прогресса с уроками
+                    lessonsData={lessonsData}
                 />
             </div>
         </div>

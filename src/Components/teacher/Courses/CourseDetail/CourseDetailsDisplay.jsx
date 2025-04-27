@@ -37,41 +37,6 @@ const CourseDetailsDisplay = ({course, handleDeleteCourse, isDeletingCourse}) =>
     };
 
     const [studentUsernameToDelete, setStudentUsernameToDelete] = useState('');
-    const [
-        deleteUser,
-        {
-            isLoading: isDeletingUser,
-            isSuccess: isUserDeletedSuccess,
-            isError: isDeleteUserError,
-            error: deleteUserErrorDetails
-        }
-    ] = useDeleteUserMutation();
-
-    const handleDeleteUser = async () => {
-        if (!course || !course.id) {
-            alert("Невозможно удалить ученика: отсутствует идентификатор курса.");
-            return;
-        }
-        if (!studentUsernameToDelete.trim()) {
-            alert("Пожалуйста, введите ник Телеграма ученика для удаления.");
-            return;
-        }
-
-        const isConfirmed = window.confirm(`Вы уверены, что хотите удалить ученика "${studentUsernameToDelete.trim()}" из курса "${course.title}"?`);
-
-        if (!isConfirmed) {
-            return;
-        }
-
-        try {
-            await deleteUser({courseId: course.id, telegramUsername: studentUsernameToDelete.trim()}).unwrap();
-            setStudentUsernameToDelete('');
-        } catch (error) {
-            const deleteErrorMsg = error?.data?.message || error?.error || 'Неизвестная ошибка при удалении ученика';
-            alert(`Не удалось удалить ученика: ${deleteErrorMsg}`);
-        }
-    };
-
 
     return (
         <div className={styles.detailBody}>
@@ -127,31 +92,6 @@ const CourseDetailsDisplay = ({course, handleDeleteCourse, isDeletingCourse}) =>
                         {updateAdminsSuccess && <p style={{color: 'green'}}>Администратор сохранен/обновлен успешно!</p>}
                         {updateAdminsError && <p style={{color: 'red'}}>Ошибка
                             сохранения: {updateAdminsErrorDetails?.data?.message || updateAdminsErrorDetails?.message || 'Неизвестная ошибка'}</p>}
-                    </div>
-                    <div className={adminStyle.deleteUserSection}>
-                        <h4>Удалить ученика из курса</h4>
-                        <div>
-                            <label htmlFor="studentUsernameToDelete">Ник Телеграма ученика:</label>
-                            <input
-                                type="text"
-                                id="studentUsernameToDelete"
-                                value={studentUsernameToDelete}
-                                onChange={(e) => setStudentUsernameToDelete(e.target.value)}
-                                placeholder="@username ученика"
-                                disabled={isDeletingUser}
-                            />
-                        </div>
-                        <button
-                            className={adminStyle.deleteButton}
-                            onClick={handleDeleteUser}
-                            disabled={isDeletingUser || !studentUsernameToDelete.trim()}
-                        >
-                            {isDeletingUser ? 'Удаление ученика...' : 'Удалить ученика'}
-                        </button>
-
-                        {isUserDeletedSuccess && <p style={{color: 'green'}}>Ученик успешно удален!</p>}
-                        {isDeleteUserError && <p style={{color: 'red'}}>Ошибка удаления
-                            ученика: {deleteUserErrorDetails?.data?.message || deleteUserErrorDetails?.message || 'Неизвестная ошибка'}</p>}
                     </div>
                 </div>
 

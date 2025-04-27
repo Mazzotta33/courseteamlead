@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
-export const myCoursesGetApi = createApi({
+export const studentsApi = createApi({
     reducerPath: 'myCoursesGetApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5231/api',
@@ -33,21 +33,21 @@ export const myCoursesGetApi = createApi({
                 url: `courses/${courseId}`,
                 method: 'GET',
             }),
-            invalidatesTags: ['Course'],
+            providesTags: ['Course'],
         }),
         isRegistered: builder.query({
             query: (id) => ({
                 url: `courses/${id}/checkregister`,
                 method: 'GET',
             }),
-            invalidatesTags: ['RegistrationStatus'],
+            providesTags: ['RegistrationStatus'],
         }),
         getCoursePreview: builder.query({
             query: (courseId) => ({
                 url: `courses/${courseId}/foruser`,
                 method: 'GET',
             }),
-            invalidatesTags: ['CoursePreview'],
+            providesTags: ['CoursePreview'],
         }),
         registerUser: builder.mutation({
             query: (courseId) => ({
@@ -57,7 +57,7 @@ export const myCoursesGetApi = createApi({
                     'Content-Type': 'application/json'
                 }
             }),
-            providesTags: ['RegistrationStatus'],
+            invalidatesTags: ['RegistrationStatus'],
         }),
         deleteUser: builder.mutation({
             query: ({courseId, telegramUsername}) => ({
@@ -65,7 +65,7 @@ export const myCoursesGetApi = createApi({
                 method: 'DELETE',
                 params: { courseId, telegramUsername },
             }),
-            providesTags: ['RegistrationStatus'],
+            invalidatesTags: (result, error, { courseId }) => [{ type: 'CourseProgress', id: courseId }, 'RegistrationStatus'],
         }),
 
     })
@@ -77,4 +77,4 @@ export const { useGetMyCoursesQuery,
     useIsRegisteredQuery,
     useGetCoursePreviewQuery,
     useRegisterUserMutation,
-    useDeleteUserMutation} = myCoursesGetApi;
+    useDeleteUserMutation} = studentsApi;
