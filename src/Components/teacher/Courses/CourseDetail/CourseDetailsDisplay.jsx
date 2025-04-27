@@ -4,7 +4,6 @@ import styles from './CourseDetail.module.css';
 import adminStyle from './CourseDetailsDisplay.module.css'
 
 import {useUpdateCourseAdminsMutation} from "../../../../Redux/api/coursesApi.js";
-import {useDeleteUserMutation} from "../../../../Redux/api/studentApi.js";
 
 
 const CourseDetailsDisplay = ({course, handleDeleteCourse, isDeletingCourse}) => {

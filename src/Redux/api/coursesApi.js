@@ -97,6 +97,14 @@ export const coursesGetApi = createApi({
             }),
             invalidatesTags: (result, error, { courseId }) => [{ type: 'Courses', id: courseId }],
         }),
+        deleteUser: builder.mutation({
+            query: ({courseId, telegramUsername}) => ({
+                url: `courses/unregister`,
+                method: 'DELETE',
+                params: { courseId, telegramUsername },
+            }),
+            invalidatesTags: (result, error, { courseId }) => [{ type: 'CourseProgress', id: courseId }, 'RegistrationStatus'],
+        }),
     })
 });
 
@@ -108,4 +116,5 @@ export const { useGetCoursesQuery,
     useGetAdminCoursesProgressQuery,
     useIsAdminOfCourseQuery,
     useLazyDownloadCourseProgressQuery,
-    useUpdateCourseAdminsMutation} = coursesGetApi;
+    useUpdateCourseAdminsMutation,
+    useDeleteUserMutation} = coursesGetApi;

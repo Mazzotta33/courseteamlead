@@ -1,8 +1,8 @@
 // src/components/Teacher/CourseDetail/components/CourseProgressTable.js
 import React, { useState } from 'react';
 import styles from './CourseDetail.module.css';
-import {useDeleteUserMutation} from "../../../../Redux/api/studentApi.js";
 import {useParams} from "react-router-dom";
+import {useDeleteUserMutation} from "../../../../Redux/api/coursesApi.js";
 
 const CourseProgressTable = ({
                                  courseProgressData,
