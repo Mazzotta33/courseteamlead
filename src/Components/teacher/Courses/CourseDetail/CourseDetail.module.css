@@ -235,7 +235,6 @@
     word-break: break-word;
     font-size: 1.1em;
     box-sizing: border-box;
-    /* Учитываем паддинг в ширине */
 }
 
 .lessonsArea li:hover {
@@ -243,7 +242,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Кнопка "Выгрузить в Excel" */
 .exportButton {
     display: inline-block;
     margin-top: 10px;
@@ -278,8 +276,6 @@
     background-color: #28a745;
 }
 
-
-/* ------------- Стили для секции студентов (Таблица прогресса) ------------- */
 .studentsArea {
     border-top: 1px solid #eee;
     padding-top: 20px;

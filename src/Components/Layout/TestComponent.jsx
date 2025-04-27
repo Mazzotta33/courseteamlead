@@ -74,7 +74,7 @@ const TestComponent = ({ lessonId, courseId }) => {
 
         const resultParams = {
             score: finalScore,
-            testid: 46,
+            testid: lessonId,
         };
 
         submitTestResult({

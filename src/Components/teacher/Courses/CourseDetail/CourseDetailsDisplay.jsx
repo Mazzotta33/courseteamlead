@@ -1,9 +1,13 @@
-import React, { useState } from 'react'; // Импортируем useState
+// src/components/Teacher/CourseDetail/CourseDetailsDisplay.jsx
+import React, {useState} from 'react';
 import styles from './CourseDetail.module.css';
-import {useUpdateCourseAdminsMutation} from "../../../../Redux/api/coursesApi.js";
 import adminStyle from './CourseDetailsDisplay.module.css'
 
-const CourseDetailsDisplay = ({ course, handleDeleteCourse, isDeletingCourse }) => {
+import {useUpdateCourseAdminsMutation} from "../../../../Redux/api/coursesApi.js";
+import {useDeleteUserMutation} from "../../../../Redux/api/studentApi.js";
+
+
+const CourseDetailsDisplay = ({course, handleDeleteCourse, isDeletingCourse}) => {
     if (!course) {
         return <div>Загрузка деталей курса...</div>;
     }
@@ -13,28 +17,68 @@ const CourseDetailsDisplay = ({ course, handleDeleteCourse, isDeletingCourse }) 
 
     const [
         updateCourseAdmins,
-        { isLoading: isUpdatingAdmins, isSuccess: updateAdminsSuccess, isError: updateAdminsError, error: updateAdminsErrorDetails }
+        {
+            isLoading: isUpdatingAdmins,
+            isSuccess: updateAdminsSuccess,
+            isError: updateAdminsError,
+            error: updateAdminsErrorDetails
+        }
     ] = useUpdateCourseAdminsMutation();
 
     const handleSaveAdminInfo = () => {
         if (!course || !course.id) {
-            console.error("Course ID is missing, cannot update admins.");
+            console.error("Невозможно обновить администраторов: отсутствует ID курса.");
             return;
         }
-
         const adminInfo = {
             [adminName]: telegramHandle,
         };
-
-        updateCourseAdmins({ courseId: course.id, adminInfo });
+        updateCourseAdmins({courseId: course.id, adminInfo});
     };
+
+    const [studentUsernameToDelete, setStudentUsernameToDelete] = useState('');
+    const [
+        deleteUser,
+        {
+            isLoading: isDeletingUser,
+            isSuccess: isUserDeletedSuccess,
+            isError: isDeleteUserError,
+            error: deleteUserErrorDetails
+        }
+    ] = useDeleteUserMutation();
+
+    const handleDeleteUser = async () => {
+        if (!course || !course.id) {
+            alert("Невозможно удалить ученика: отсутствует идентификатор курса.");
+            return;
+        }
+        if (!studentUsernameToDelete.trim()) {
+            alert("Пожалуйста, введите ник Телеграма ученика для удаления.");
+            return;
+        }
+
+        const isConfirmed = window.confirm(`Вы уверены, что хотите удалить ученика "${studentUsernameToDelete.trim()}" из курса "${course.title}"?`);
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        try {
+            await deleteUser({courseId: course.id, telegramUsername: studentUsernameToDelete.trim()}).unwrap();
+            setStudentUsernameToDelete('');
+        } catch (error) {
+            const deleteErrorMsg = error?.data?.message || error?.error || 'Неизвестная ошибка при удалении ученика';
+            alert(`Не удалось удалить ученика: ${deleteErrorMsg}`);
+        }
+    };
+
 
     return (
         <div className={styles.detailBody}>
             <div className={styles.previewArea}>
                 <div className={styles.previewPlaceholder}>
                     {course.previewPhotoKey ? (
-                        <img src={course.previewPhotoKey} alt={`Превью курса "${course.title}"`} />
+                        <img src={course.previewPhotoKey} alt={`Превью курса "${course.title}"`}/>
                     ) : (
                         <p>Нет фото предпросмотра</p>
                     )}
@@ -49,43 +93,74 @@ const CourseDetailsDisplay = ({ course, handleDeleteCourse, isDeletingCourse }) 
                     <p>{course.description}</p>
                 </div>
 
-                <div className={adminStyle.adminInfoSection}>
-                    <h4>Добавить/обновить администратора курса</h4>
-                    <div>
-                        <label htmlFor="adminName">Имя/Идентификатор админа:</label>
-                        <input
-                            type="text"
-                            id="adminName"
-                            value={adminName}
-                            onChange={(e) => setAdminName(e.target.value)}
-                            placeholder="Например, IvanIvanov или ID админа"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="telegramHandle">Ник Телеграма админа:</label>
-                        <input
-                            type="text"
-                            id="telegramHandle"
-                            value={telegramHandle}
-                            onChange={(e) => setTelegramHandle(e.target.value)}
-                            placeholder="@username"
-                        />
-                    </div>
-                    <button
-                        className={adminStyle.saveButton}
-                        onClick={handleSaveAdminInfo}
-                        disabled={isUpdatingAdmins || !adminName || !telegramHandle}
-                    >
-                        {isUpdatingAdmins ? 'Сохранение...' : 'Сохранить администратора'}
-                    </button>
+                <div className={adminStyle.managementSectionsRow}>
+                    <div className={adminStyle.adminInfoSection}>
+                        <h4>Добавить/обновить администратора курса</h4>
+                        <div>
+                            <label htmlFor="adminName">Имя/Идентификатор админа:</label>
+                            <input
+                                type="text"
+                                id="adminName"
+                                value={adminName}
+                                onChange={(e) => setAdminName(e.target.value)}
+                                placeholder="Например, IvanIvanov или ID админа"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="telegramHandle">Ник Телеграма админа:</label>
+                            <input
+                                type="text"
+                                id="telegramHandle"
+                                value={telegramHandle}
+                                onChange={(e) => setTelegramHandle(e.target.value)}
+                                placeholder="@username"
+                            />
+                        </div>
+                        <button
+                            className={adminStyle.saveButton}
+                            onClick={handleSaveAdminInfo}
+                            disabled={isUpdatingAdmins || !adminName || !telegramHandle}
+                        >
+                            {isUpdatingAdmins ? 'Сохранение...' : 'Сохранить администратора'}
+                        </button>
 
-                    {updateAdminsSuccess && <p style={{ color: 'green' }}>Администратор сохранен/обновлен успешно!</p>}
-                    {updateAdminsError && <p style={{ color: 'red' }}>Ошибка сохранения: {updateAdminsErrorDetails?.data?.message || updateAdminsErrorDetails?.message || 'Неизвестная ошибка'}</p>}
+                        {updateAdminsSuccess && <p style={{color: 'green'}}>Администратор сохранен/обновлен успешно!</p>}
+                        {updateAdminsError && <p style={{color: 'red'}}>Ошибка
+                            сохранения: {updateAdminsErrorDetails?.data?.message || updateAdminsErrorDetails?.message || 'Неизвестная ошибка'}</p>}
+                    </div>
+                    <div className={adminStyle.deleteUserSection}>
+                        <h4>Удалить ученика из курса</h4>
+                        <div>
+                            <label htmlFor="studentUsernameToDelete">Ник Телеграма ученика:</label>
+                            <input
+                                type="text"
+                                id="studentUsernameToDelete"
+                                value={studentUsernameToDelete}
+                                onChange={(e) => setStudentUsernameToDelete(e.target.value)}
+                                placeholder="@username ученика"
+                                disabled={isDeletingUser}
+                            />
+                        </div>
+                        <button
+                            className={adminStyle.deleteButton}
+                            onClick={handleDeleteUser}
+                            disabled={isDeletingUser || !studentUsernameToDelete.trim()}
+                        >
+                            {isDeletingUser ? 'Удаление ученика...' : 'Удалить ученика'}
+                        </button>
+
+                        {isUserDeletedSuccess && <p style={{color: 'green'}}>Ученик успешно удален!</p>}
+                        {isDeleteUserError && <p style={{color: 'red'}}>Ошибка удаления
+                            ученика: {deleteUserErrorDetails?.data?.message || deleteUserErrorDetails?.message || 'Неизвестная ошибка'}</p>}
+                    </div>
                 </div>
 
-                <button className={styles.deleteButton} onClick={handleDeleteCourse} disabled={isDeletingCourse}>
-                    {isDeletingCourse ? 'Удаление...' : 'Удалить курс'}
-                </button>
+                <div className={styles.actionButtonsContainer}>
+                    <button className={styles.deleteButton} onClick={handleDeleteCourse} disabled={isDeletingCourse}>
+                        {isDeletingCourse ? 'Удаление курса...' : 'Удалить курс'}
+                    </button>
+                </div>
+
             </div>
         </div>
     );

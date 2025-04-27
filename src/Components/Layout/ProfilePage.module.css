@@ -1,11 +1,10 @@
-/* ProfilePage.module.css */
 .profileContainer {
-    padding: 40px 20px;
+    padding: 35px 20px;
     max-width: 900px;
     margin: 20px auto;
     font-family: 'Inter', sans-serif;
     color: #333;
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
@@ -46,7 +45,7 @@
     font-size: 1em;
     font-weight: 600;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.20);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.2);
 }
 
 .avatarUpload:hover {
@@ -63,7 +62,6 @@
 .avatarUpload input {
     display: none;
 }
-
 
 .infoSection {
     margin-top: 30px;
@@ -83,7 +81,6 @@
     font-weight: 600;
     margin-right: 5px;
 }
-
 
 .courseProgressSection {
     margin-top: 40px;
@@ -115,7 +112,6 @@
     font-size: 1.1em;
 }
 
-
 .progressBar {
     background-color: #e0e0e0;
     border-radius: 8px;
@@ -135,7 +131,6 @@
     transition: width 0.5s ease-in-out;
 }
 
-/* Адаптация */
 @media (max-width: 768px) {
     .profileContainer {
         padding: 30px 15px;
@@ -143,64 +138,52 @@
         border-radius: 8px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
-
     .profileContainer h2 {
         font-size: 1.8em;
         margin-bottom: 25px;
     }
-
     .avatarSection {
         margin-bottom: 25px;
     }
-
     .avatar {
         width: 100px;
         height: 100px;
         margin-bottom: 12px;
         border-width: 3px;
     }
-
     .avatarUpload {
         padding: 8px 16px;
         font-size: 0.95em;
         border-radius: 6px;
     }
-
     .infoSection {
         margin-top: 25px;
         padding-top: 15px;
         font-size: 1em;
     }
-
     .infoSection p {
         margin-bottom: 8px;
     }
-
     .courseProgressSection {
         margin-top: 30px;
         padding-top: 15px;
     }
-
     .courseProgressSection h3 {
         font-size: 1.3em;
         margin-bottom: 15px;
     }
-
     .courseItem {
         margin-bottom: 15px;
         padding: 12px 15px;
         border-radius: 6px;
     }
-
     .courseItem p {
         font-size: 1em;
         margin: 0 0 8px 0;
     }
-
     .progressBar {
         height: 20px;
     }
-
     .progressFill {
         line-height: 20px;
         font-size: 0.9em;
@@ -210,100 +193,61 @@
 @media (max-width: 480px) {
     .profileContainer {
         padding: 20px 10px;
-        /* Немного уменьшаем горизонтальный паддинг */
         margin: 10px auto;
-        /* Немного уменьшаем вертикальный маргин */
         border-radius: 6px;
-        /* Немного уменьшаем скругление */
         box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-        /* Более легкая тень */
     }
-
     .profileContainer h2 {
         font-size: 1.6em;
-        /* Уменьшаем заголовок страницы */
         margin-bottom: 20px;
     }
-
     .avatarSection {
         margin-bottom: 20px;
     }
-
     .avatar {
         width: 80px;
-        /* Уменьшаем размер аватара */
         height: 80px;
         margin-bottom: 10px;
-        /* Уменьшаем нижний маргин */
         border-width: 3px;
     }
-
     .avatarUpload {
         padding: 6px 12px;
-        /* Уменьшаем паддинг кнопки */
         font-size: 0.9em;
-        /* Уменьшаем шрифт кнопки */
         border-radius: 5px;
-        /* Немного уменьшаем скругление кнопки */
     }
-
     .infoSection {
         margin-top: 20px;
         padding-top: 10px;
-        /* Уменьшаем верхний паддинг */
         font-size: 0.95em;
-        /* Уменьшаем шрифт */
     }
-
     .infoSection p {
         margin-bottom: 6px;
-        /* Уменьшаем нижний маргин параграфов */
     }
-
     .infoSection strong {
         margin-right: 3px;
-        /* Уменьшаем правый маргин */
     }
-
-
     .courseProgressSection {
         margin-top: 25px;
         padding-top: 10px;
-        /* Уменьшаем верхний паддинг */
     }
-
     .courseProgressSection h3 {
         font-size: 1.2em;
-        /* Уменьшаем заголовок секции */
         margin-bottom: 12px;
-        /* Уменьшаем нижний маргин */
     }
-
     .courseItem {
         margin-bottom: 12px;
-        /* Уменьшаем нижний маргин */
         padding: 10px 12px;
-        /* Уменьшаем паддинг */
         border-radius: 5px;
-        /* Немного уменьшаем скругление */
     }
-
     .courseItem p {
         font-size: 0.95em;
-        /* Уменьшаем шрифт */
         margin: 0 0 6px 0;
-        /* Уменьшаем нижний маргин */
     }
-
     .progressBar {
         height: 18px;
-        /* Уменьшаем высоту прогресс бара */
     }
-
     .progressFill {
         line-height: 18px;
-        /* Корректируем line-height под новую высоту */
         font-size: 0.85em;
-        /* Уменьшаем шрифт внутри прогресс бара */
     }
 }

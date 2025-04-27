@@ -140,7 +140,11 @@ const CoursesPageContent = (props) => {
                         {!isLoadingLessonInfo && !lessonInfoError && lessonInfo && (
                             <div>
                                 <h2>{lessonInfo.name}</h2>
-                                <p>{lessonInfo.description}</p>
+
+                                <div className={styles.lectureText}>
+                                    <p>{lessonInfo.description}</p>
+                                </div>
+
 
                                 {lessonInfo.videoKeys && lessonInfo.videoKeys.length > 0 ? (
                                     <div className={styles.videoWrapper}>

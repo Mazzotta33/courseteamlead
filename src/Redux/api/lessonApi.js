@@ -12,6 +12,7 @@ export const lessonApi = createApi({
             return headers;
         }
     }),
+    tagTypes: ['Lessons', 'Lesson'],
     endpoints: (builder) => ({
         createLesson: builder.mutation({
             query: ({ courseId, params, lessonData }) => ({
@@ -20,24 +21,30 @@ export const lessonApi = createApi({
                 body: lessonData,
                 params: params,
             }),
+            invalidatesTags: ['Lessons']
         }),
+
         getLessons: builder.query({
             query: (courseId) => ({
                 url: `courses/${courseId}/lessons`,
                 method: 'GET'
-            })
+            }),
+            providesTags: ['Lesson'],
         }),
+        providesTags: ['Lessons'],
         getSoloLesson: builder.query({
             query: ({courseId, lessonId}) => ({
                 url: `courses/${courseId}/lessons/${lessonId}`,
                 method: 'GET',
-            })
+            }),
+            providesTags: ['Lesson']
         }),
         deleteLesson: builder.mutation({
             query: ({courseId, lessonId}) => ({
                 url: `courses/${courseId}/lessons/${lessonId}`,
                 method: 'DELETE',
-            })
+            }),
+            invalidatesTags: ['Lessons']
         }),
     })
 });

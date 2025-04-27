@@ -71,7 +71,7 @@ const TeacherDashboard = () => {
                         </div>
                         <div className={styles.statItem}>
                             <span className={styles.statLabel}>Общий прогресс (усредн.):</span>
-                            <span className={styles.statValue}>{coursesProgress.completePercentage}%</span>
+                            <span className={styles.statValue}>{coursesProgress.completionPercentage}%</span>
                         </div>
                     </div>
                 </div>

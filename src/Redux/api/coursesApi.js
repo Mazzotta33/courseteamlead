@@ -12,7 +12,7 @@ export const coursesGetApi = createApi({
             return headers;
         }
     }),
-    tagTypes: ['Courses', 'Lessons', 'Progress', 'AdminStatus'],
+    tagTypes: ['Courses', 'Lessons', 'Progress', 'AdminStatus', 'CourseUsers', 'CourseProgress', 'PlatformStats', 'AdminCourseProgress', 'CourseAdminStatus'],
     endpoints: (builder) => ({
         getCourses: builder.query({
             query: () => ({
@@ -33,19 +33,22 @@ export const coursesGetApi = createApi({
             query: (id) => ({
                 url: `courses/${id}/users`,
                 method: 'GET'
-            })
+            }),
+            providesTags: ['Courses'],
         }),
         getPlatformProgress: builder.query({
             query: () => ({
                 url: `courses/platformprogress`,
                 method: 'GET',
-            })
+            }),
+            providesTags: ['PlatformStats']
         }),
         getCourseProgress: builder.query({
             query: (courseId) => ({
                 url: `courses/${courseId}/allusersprogress`,
                 method: 'GET',
-            })
+            }),
+            providesTags: (result, error, courseId) => [{ type: 'CourseProgress', id: courseId }],
         }),
         deleteCourse: builder.mutation({
             query: (courseId) =>({
@@ -58,13 +61,15 @@ export const coursesGetApi = createApi({
            query: () => ({
                url: `courses/admincoursesprogress`,
                method: 'GET',
-           })
+           }),
+            providesTags: ['AdminCourseProgress'],
         }),
         isAdminOfCourse: builder.query({
             query: (courseId) => ({
                 url: `courses/${courseId}/checkadmin`,
                 method: 'GET',
-            })
+            }),
+            providesTags: (result, error, courseId) => [{ type: 'CourseAdminStatus', id: courseId }],
         }),
         downloadCourseProgress: builder.query({
             query: (courseId) => ({
